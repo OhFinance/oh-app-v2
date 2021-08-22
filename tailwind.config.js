@@ -1,13 +1,12 @@
 // @ts-check
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors');
 
 /** @type {import("tailwindcss/tailwind-config").TailwindConfig } */
 module.exports = {
   mode: 'jit',
-  purge: ['./pages/**/*.tsx', './components/**/*.tsx', './layouts/**/*.tsx', './lib/**/*.ts'],
+  important: true,
+  purge: ['./src/**/*.tsx'],
   darkMode: 'class',
   theme: {
     extend: {
@@ -162,6 +161,15 @@ module.exports = {
   },
   variants: {
     typography: ['dark'],
+    extend: {
+      backgroundColor: ['checked'],
+      borderColor: ['checked'],
+      inset: ['checked'],
+      zIndex: ['hover', 'active'],
+    },
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  future: {
+    purgeLayersByDefault: true,
+  },
 };
