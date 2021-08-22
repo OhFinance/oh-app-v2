@@ -1,0 +1,53 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "group": { "isDefault": true, "kind": "build" },
+      "problemMatcher": [],
+      "label": "dev",
+      "detail": "next dev"
+    },
+    {
+      "type": "npm",
+      "script": "analyze",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "analyze",
+      "detail": "cross-env ANALYZE=true next build"
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "build",
+      "detail": "next build && node ./scripts/generate-sitemap"
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "lint",
+      "detail": "npm run lint"
+    },
+    {
+      "type": "npm",
+      "script": "format",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "format",
+      "detail": "npm run format"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "start",
+      "detail": "next start"
+    }
+  ]
+}
