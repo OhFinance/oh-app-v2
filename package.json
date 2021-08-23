@@ -16,13 +16,13 @@
   "scripts": {
     "start": "next start",
     "dev": "next dev",
-    "debug": "NODE_OPTIONS='--inspect' next dev",
+    "debug": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build && node ./scripts/generate-sitemap",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir src --dir scripts",
     "format": "npx prettier src scripts ./*.js ./*.json --check",
     "format:fix": "npx prettier src scripts ./*.js ./*.json --write",
-    "prepare": "husky install"
+    "prepare": "npx husky install"
   },
   "dependencies": {
     "@fontsource/open-sans": "^4.5.0",
@@ -58,6 +58,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.4.1",
+    "husky": "^7.0.1",
     "lint-staged": "^11.1.2",
     "next-plugin-preact": "^3.0.6",
     "typescript": "4.3.5"

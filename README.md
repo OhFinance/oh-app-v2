@@ -20,8 +20,6 @@ volta install npm
 Third, install dependencies:
 
 ```bash
-# install husky globally (required for githooks)
-npm install husky -g
 # then install app dependencies
 npm install
 ```
