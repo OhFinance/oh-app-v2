@@ -4,10 +4,16 @@ const colors = require('tailwindcss/colors');
 
 /** @type {import("tailwindcss/tailwind-config").TailwindConfig } */
 module.exports = {
-  mode: 'jit',
   important: true,
-  purge: ['./src/**/*.tsx'],
+  mode: 'jit',
   darkMode: 'class',
+  purge: {
+    enabled: true,
+    content: ['./src/**/*.tsx'],
+    options: {
+      safelist: ['dark'], //specific classes
+    },
+  },
   theme: {
     extend: {
       spacing: {
