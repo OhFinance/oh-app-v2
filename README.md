@@ -10,24 +10,25 @@ First, install volta:
 curl https://get.volta.sh | bash
 ```
 
-Second, install Node & NPM:
+Second, install Node & Yarn:
 
 ```bash
 volta install node
 volta install npm
+volta install yarn
 ```
 
 Third, install dependencies:
 
 ```bash
 # then install app dependencies
-npm install
+yarn
 ```
 
 You are now ready to run the development server:
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

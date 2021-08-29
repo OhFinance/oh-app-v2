@@ -10,5 +10,8 @@
     "**/node_modules": true,
     "**/bower_components": true,
     "**/temp": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "SimonSiefke.prettier-vscode"
   }
 }
