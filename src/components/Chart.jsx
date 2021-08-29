@@ -15,10 +15,20 @@ import { AreaSeries, LineSeries } from 'react-stockcharts/lib/series';
 import { OHLCTooltip } from 'react-stockcharts/lib/tooltip';
 import { last } from 'react-stockcharts/lib/utils';
 
-function Chart({ type, data: initialData, width, ratio, interpolation, gridProps, seriesType }) {
-  const margin = { left: 70, right: 70, top: 20, bottom: 30 };
+let _Chart = ({
+  className,
+  type,
+  data: initialData,
+  width,
+  height,
+  ratio,
+  interpolation,
+  gridProps,
+  seriesName,
+  seriesType,
+}) => {
+  const margin = { left: 0, right: 0, top: 0, bottom: 0 };
 
-  const height = 400;
   const gridHeight = height - margin.top - margin.bottom;
   const gridWidth = width - margin.left - margin.right;
 
@@ -36,12 +46,13 @@ function Chart({ type, data: initialData, width, ratio, interpolation, gridProps
   const Series = seriesType === 'line' ? LineSeries : AreaSeries;
   return (
     <ChartCanvas
+      className={className}
       height={height}
       ratio={ratio}
       width={width}
-      margin={{ left: 80, right: 80, top: 10, bottom: 30 }}
+      margin={{ left: margin.left, right: margin.right, top: margin.top, bottom: margin.bottom }}
       type={type}
-      seriesName="MSFT"
+      seriesName={seriesName ?? 'MSFT'}
       data={data}
       xScale={xScale}
       xAccessor={xAccessor}
@@ -66,18 +77,17 @@ function Chart({ type, data: initialData, width, ratio, interpolation, gridProps
       <CrossHairCursor />
     </ChartCanvas>
   );
-}
+};
 
-Chart.propTypes = {
+_Chart.propTypes = {
   data: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   ratio: PropTypes.number.isRequired,
   type: PropTypes.oneOf(['svg', 'hybrid']).isRequired,
 };
 
-Chart.defaultProps = {
+_Chart.defaultProps = {
   type: 'svg',
 };
-Chart = fitWidth(Chart);
 
-export default Chart;
+export const Chart = fitWidth(_Chart);

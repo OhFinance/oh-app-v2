@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-export default function Footer() {
+export function Footer() {
   return (
     <>
       <footer className="bg-white dark:bg-gray-800 pt-4 pb-8 xl:pt-8">
@@ -12,7 +12,12 @@ export default function Footer() {
                 <h2 className="text-gray-500 dark:text-pink-500 text-2xl mb-4">Resources</h2>
                 <ul>
                   <li className="mb-4 hover:text-gray-800 dark:hover:text-pink-500 transition-colors duration-200">
-                    <Link href="docs">
+                    <Link href="/faq">
+                      <a>FAQ</a>
+                    </Link>
+                  </li>
+                  <li className="mb-4 hover:text-gray-800 dark:hover:text-pink-500 transition-colors duration-200">
+                    <Link href="/docs">
                       <a>Docs</a>
                     </Link>
                   </li>
