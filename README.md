@@ -4,25 +4,24 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, install volta:
+First, install Volta:
 
 ```bash
 curl https://get.volta.sh | bash
 ```
 
-Second, install Node & Yarn:
+Second, install Node & NPM:
 
 ```bash
 volta install node
 volta install npm
-volta install yarn
 ```
 
 Third, install dependencies:
 
 ```bash
 # then install app dependencies
-yarn
+npm install
 ```
 
 You are now ready to run the development server:

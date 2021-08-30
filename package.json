@@ -11,8 +11,7 @@
   },
   "volta": {
     "node": "14.17.5",
-    "npm": "7.21.0",
-    "yarn": "1.22.11"
+    "npm": "7.21.0"
   },
   "scripts": {
     "start": "next start",
@@ -23,7 +22,7 @@
     "lint": "next lint --fix --dir src --dir scripts",
     "format": "npx prettier src scripts ./*.js ./*.json --check",
     "format:fix": "npx prettier src scripts ./*.js ./*.json --write",
-    "prepare": "npx husky install && yarn set version berry"
+    "prepare": "npx husky install"
   },
   "dependencies": {
     "@fontsource/open-sans": "^4.5.0",
