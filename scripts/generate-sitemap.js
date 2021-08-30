@@ -6,14 +6,7 @@ const siteUrl = 'https://oh.finance';
 
 (async () => {
   const prettierConfig = await prettier.resolveConfig('./.prettierrc.js');
-  const pages = await globby([
-    'pages/*.js',
-    'data/blog/**/*.mdx',
-    'data/blog/**/*.md',
-    'public/tags/**/*.xml',
-    '!pages/_*.js',
-    '!pages/api',
-  ]);
+  const pages = await globby(['pages/*.tsx', '!pages/api']);
 
   const sitemap = `
         <?xml version="1.0" encoding="UTF-8"?>
