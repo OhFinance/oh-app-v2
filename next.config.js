@@ -1,39 +1,31 @@
+const withPlugins = require('next-compose-plugins');
+const withImages = require('next-images');
+const withBundleAnalyzer = require('@next/bundle-analyzer');
 const withTM = require('next-transpile-modules')(['react-tradingview-embed']);
-
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
 
 /**
  * @type {import('next/dist/next-server/server/config').NextConfig}
  **/
-module.exports = withBundleAnalyzer(
-  withTM({
-    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-    eslint: {
-      dirs: ['src', 'scripts'],
+module.exports = withPlugins([
+  [withImages],
+  [
+    withBundleAnalyzer,
+    {
+      enabled: process.env.ANALYZE === 'true',
     },
-    experimental: { esmExternals: true },
-    webpack: (config) => {
-      config.module.rules.push({
-        test: /\.(png|jpe?g|gif|mp4)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              publicPath: '/_next',
-              name: 'static/media/[name].[hash].[ext]',
-            },
-          },
-        ],
-      });
-
-      config.module.rules.push({
-        test: /\.svg$/,
-        use: ['@svgr/webpack'],
-      });
-
-      return config;
+  ],
+  [withTM],
+  [
+    {
+      pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+      eslint: {
+        dirs: ['src', 'scripts'],
+      },
+      // https://stackoverflow.com/a/68016564
+      images: {
+        disableStaticImages: true,
+      },
+      experimental: { esmExternals: true },
     },
-  })
-);
+  ],
+]);
