@@ -6,7 +6,8 @@
   "author": "Oh! Finance <hello@oh.finance>",
   "private": true,
   "engines": {
-    "node": "14.17.5"
+    "node": "14.17.5",
+    "npm": "7.21.1"
   },
   "volta": {
     "node": "14.17.5",
