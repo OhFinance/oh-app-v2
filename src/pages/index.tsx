@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import React, { useEffect, useRef, useState } from 'react';
-import { CaptureResize } from '~/components/CaptureResize';
-import { Chart } from '~/components/Chart';
+import CaptureResize from '~/components/CaptureResize';
+import Chart from '~/components/Chart';
 import styles from '~/pages/__styles__/index.module.css';
 import { getData } from '~/services/chartService';
 import { useWalletStore } from '~/stores/useWalletStore';

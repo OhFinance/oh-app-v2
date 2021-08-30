@@ -1,7 +1,7 @@
-import aave from '@/img/aave.svg';
+/* import aave from '@/img/aave.svg';
 import comp from '@/img/comp.svg';
 import crv from '@/img/crv.svg';
-import usdc from '@/img/usdc.svg';
+import usdc from '@/img/usdc.svg'; */
 import { Bank } from './types';
 
 const banks: Bank[] = [

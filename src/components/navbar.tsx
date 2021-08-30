@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-export function Navbar() {
+export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   // TODO: Figure out how to display hamburger menu when navbar is open
   return (
