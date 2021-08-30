@@ -1,5 +1,4 @@
 const withPlugins = require('next-compose-plugins');
-const withImages = require('next-images');
 const withBundleAnalyzer = require('@next/bundle-analyzer');
 const withTM = require('next-transpile-modules')(['react-tradingview-embed']);
 
@@ -7,7 +6,6 @@ const withTM = require('next-transpile-modules')(['react-tradingview-embed']);
  * @type {import('next/dist/next-server/server/config').NextConfig}
  **/
 module.exports = withPlugins([
-  [withImages],
   [
     withBundleAnalyzer,
     {
