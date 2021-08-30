@@ -41,6 +41,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-tradingview-embed": "^2.2.6",
+    "sharp": "^0.29.0",
     "tailwindcss": "^2.2.8",
     "web3": "^1.5.2",
     "web3-core": "^1.5.2",
