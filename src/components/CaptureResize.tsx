@@ -1,15 +1,18 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export function CaptureResize(props) {
+export function CaptureResize(props: {
+  children: (size: { width: number; height: number }) => JSX.Element;
+  captureRef: React.RefObject<HTMLDivElement> | null;
+}) {
   const { captureRef } = props;
-  function updateSize() {
-    setSize(captureRef.current.getBoundingClientRect());
-  }
-  useLayoutEffect(() => {
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-  const [size, setSize] = useState({});
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const boundingRect = captureRef?.current?.getBoundingClientRect() ?? { width: 0, height: 0 };
+    if (boundingRect.width !== 0 && boundingRect.height !== 0) {
+      setSize(boundingRect);
+    }
+  }, [captureRef]);
+
   return props.children(size);
 }

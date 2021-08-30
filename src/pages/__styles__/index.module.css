@@ -1,0 +1,14 @@
+@media (max-width: 652px) {
+  .cta-line-break {
+    display: none !important;
+  }
+}
+
+.chart-container {
+  min-height: 400px;
+}
+
+.main-container {
+  min-width: 1280px;
+  max-width: 1280px;
+}

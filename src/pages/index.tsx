@@ -1,16 +1,21 @@
-import styles from '$/Home.module.css';
 import type { NextPage } from 'next';
 import React, { useEffect, useRef, useState } from 'react';
 import { CaptureResize } from '~/components/CaptureResize';
-import { Chart } from '~/components/chart';
+import { Chart } from '~/components/Chart';
+import styles from '~/pages/__styles__/index.module.css';
 import { getData } from '~/services/chartService';
+import { useWalletStore } from '~/stores/useWalletStore';
 
+const h1 = `text-4xl text-white`;
 const textPink = `text-pink-500`;
+const textCash = `text-4xl ${textPink}`;
 
 const Home: NextPage = React.forwardRef(function Home() {
+  const { portfolioBalance, interestEarned } = useWalletStore();
   const chartRef = useRef(null as null | HTMLDivElement);
-  const [data, setData] = useState(null as null | unknown);
+  const [data, setData] = useState(null as null | unknown[]);
   const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     getData().then((data) => {
       setLoading(false);
@@ -52,37 +57,57 @@ const Home: NextPage = React.forwardRef(function Home() {
       <div
         className={`${styles['main-container']} mt-36 mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-black h-auto items-center`}
       >
-        <div className={`p-6 flex-col w-full`}>
+        <div className={`p-6 flex-col w-full h-full`}>
           <div className={`flex flex-row justify-between`}>
             <div className={`h-auto container flex flex-col justify-between w-1/4 h-auto`}>
-              <div className={`h-96 flex flex-row rounded-lg bg-gray-800 opacity-75`}></div>
-              <div className={`h-64 mt-4 flex flex-row rounded-lg bg-gray-800 opacity-75`}></div>
+              <div className={`h-96 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}></div>
+              <div className={`h-64 mt-4 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}></div>
             </div>
-            <CaptureResize captureRef={chartRef}>
-              {(size: { width: number; height: number }) => {
-                console.log('width', size.width, 'height', size.height);
-                return (
-                  <div
-                    ref={chartRef}
-                    className={`ml-6 h-full container flex flex-col justify-between rounded-lg w-3/4 h-auto bg-gray-800 opacity-75`}
-                  >
-                    {isLoading ? (
-                      'Loading...'
-                    ) : !data ? (
-                      'Error fetching data'
-                    ) : (
-                      <Chart
-                        width={size?.width ?? 0}
-                        height={size?.height ?? 0}
-                        className={`w-auto h-full flex`}
-                        type="svg"
-                        data={data}
-                      />
-                    )}
-                  </div>
-                );
-              }}
-            </CaptureResize>
+
+            <div
+              className={`ml-6 h-full container flex flex-col justify-between rounded-lg w-3/4 h-full`}
+            >
+              <div className={`h-64 flex flex-row rounded-lg bg-pink-800 bg-opacity-20`}>
+                <div className={`mt-12 ml-12 w-50 h-full justify-between`}>
+                  <h1 className={`${h1}`}>Total Portfolio Balance</h1>
+                  <p className={`mt-2 ${textCash}`}>${portfolioBalance}</p>
+                  <p className={`${textPink} mt-10`}>
+                    ${`${portfolioBalance} OUSDC (Deposited USDC)`}
+                  </p>
+                </div>
+                <div className={`ml-32 mt-12 w-50 h-full flex flex-col`}>
+                  <h1 className={`${h1}`}>Total Interest Earned</h1>
+                  <p className={`mt-2 ${textCash}`}>${interestEarned}</p>
+                  <p className={`${textPink} mt-10`}>
+                    ${`${portfolioBalance} OUSDC (Deposited USDC)`}
+                  </p>
+                </div>
+              </div>
+              <div
+                ref={chartRef}
+                className={`${styles['chart-container']} flex flex-col justify-between rounded-lg w-full bg-gray-800 bg-opacity-80`}
+              >
+                <CaptureResize captureRef={chartRef}>
+                  {(size = { width: 0, height: 0 }) => {
+                    const { width, height } = size;
+                    console.log(width, height);
+                    return (
+                      <>
+                        {isLoading || !width || !height ? (
+                          'Loading...'
+                        ) : !data ? (
+                          'Error fetching data'
+                        ) : (
+                          <div className="flex w-full h-full p-2 rounded-lg">
+                            <Chart width={Math.max(width - 10, 906)} height={height} />
+                          </div>
+                        )}
+                      </>
+                    );
+                  }}
+                </CaptureResize>
+              </div>
+            </div>
           </div>
           <div className={`flex flex-row justify-between`}></div>
         </div>
