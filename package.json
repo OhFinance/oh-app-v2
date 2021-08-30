@@ -6,18 +6,18 @@
   "author": "Oh! Finance <hello@oh.finance>",
   "private": true,
   "engines": {
-    "node": "14.17.5",
-    "npm": "7.21.0"
+    "node": "14.17.5"
   },
   "volta": {
     "node": "14.17.5",
-    "npm": "7.21.0"
+    "npm": "7.21.1"
   },
   "scripts": {
     "start": "next start",
     "dev": "next dev",
     "debug": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build && node ./scripts/generate-sitemap",
+    "export": "npm run build && next export -o _static",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir src --dir scripts",
     "format": "npx prettier src scripts ./*.js ./*.json --check",
@@ -43,6 +43,7 @@
     "react-dom": "^17.0.2",
     "react-tradingview-embed": "^2.2.6",
     "tailwindcss": "^2.2.8",
+    "typescript": "^4.4.2",
     "web3": "^1.5.2",
     "web3-core": "^1.5.2",
     "web3-eth-contract": "^1.5.2",
@@ -69,8 +70,7 @@
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
-    "trash-cli": "4.0.0",
-    "typescript": "4.4.2"
+    "trash-cli": "4.0.0"
   },
   "lint-staged": {
     "*.+(js|jsx|ts|tsx)": [
