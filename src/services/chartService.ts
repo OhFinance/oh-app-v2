@@ -2,8 +2,8 @@
 import { tsvParse } from 'd3-dsv';
 import { timeParse } from 'd3-time-format';
 
-function parseData(parse) {
-  return function (d) {
+function parseData(parse: any) {
+  return function (d: any) {
     d.date = parse(d.date);
     d.open = +d.open;
     d.high = +d.high;
