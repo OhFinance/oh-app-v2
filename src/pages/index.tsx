@@ -1,10 +1,9 @@
 import type { NextPage } from 'next';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { HintButton } from '~/components/hintButton';
 import styles from '~/pages/__styles__/index.module.css';
-import { getData } from '~/services/chartService';
 import { useWalletStore } from '~/stores/useWalletStore';
 
 const h1 = `text-4xl text-white`;
@@ -19,15 +18,6 @@ const textCashLg = `text-4xl ${textPink}`;
 const Home: NextPage = React.forwardRef(function Home() {
   const { portfolioBalance, interestEarned, availableBalance } = useWalletStore();
   const chartRef = useRef(null as null | HTMLDivElement);
-  const [data, setData] = useState(null as null | unknown[]);
-  const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getData().then((data) => {
-      setLoading(false);
-      setData(data);
-    });
-  }, [setLoading, setData]);
 
   return (
     <main className={`dark:bg-gray-800 bg-white relative overflow-hidden`}>
@@ -99,10 +89,8 @@ const Home: NextPage = React.forwardRef(function Home() {
                     console.log(width, height);
                     return (
                       <>
-                        {isLoading || !width || !height ? (
+                        {!width || !height ? (
                           'Loading...'
-                        ) : !data ? (
-                          'Error fetching data'
                         ) : (
                           <div className="flex w-full h-full p-2 rounded-lg">
                             <Chart width={Math.max(width - 10, 906)} height={height} />
