@@ -6,6 +6,7 @@ import { HintButton } from '~/components/hintButton';
 import styles from '~/pages/__styles__/index.module.css';
 import { useWalletStore } from '~/stores/useWalletStore';
 
+// TODO: Move these to Tailwind Config
 const h1 = `text-4xl text-white`;
 const h2 = `text-2xl text-white`;
 const h3 = `text-xl text-white`;
