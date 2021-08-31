@@ -1,7 +1,7 @@
 import { SymbolOverview, SymbolOverviewWidgetProps } from 'react-tradingview-embed';
-import styles from '~/components/__styles__/Chart.module.css';
+import styles from './__styles__/chart.module.css';
 
-export default function Chart({ width, height }: SymbolOverviewWidgetProps) {
+export function Chart({ width, height }: SymbolOverviewWidgetProps) {
   return (
     <div className={styles['chart']}>
       <SymbolOverview

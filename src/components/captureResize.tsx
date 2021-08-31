@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function CaptureResize(props: {
+export function CaptureResize(props: {
   children: (size: { width: number; height: number }) => JSX.Element;
   captureRef: React.RefObject<HTMLDivElement> | null;
 }) {
