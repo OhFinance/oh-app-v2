@@ -93,12 +93,12 @@ const Home: NextPage = React.forwardRef(function Home() {
                           className={`ml-3 mr-3 mb-3 w-auto h-auto flex flex-col justify-between border-4 border-pink-600 rounded-lg`}
                         >
                           <div className="mt-2 w-full h-auto flex flex-col ">
-                            <p className={`text-center text-2xl text-white`}>10-21% APR</p>
+                            <p className={`text-center text-xl text-white`}>10-21% APR</p>
                             <p className={`text-center text-xs text-white`}>in-kind</p>
                           </div>
                           <div className="mt-4 mb-2 w-full h-auto">
-                            <p className={`text-center text-2xl text-white`}>10-21% APR</p>
-                            <p className={`text-center text-xs text-white`}>in-kind</p>
+                            <p className={`text-center text-xl text-white`}>+ Bonus 10-21% APR</p>
+                            <p className={`text-center text-xs text-white`}>in OH!</p>
                           </div>
                         </div>
                       </div>
