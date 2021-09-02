@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { HintButton } from '~/components/hintButton';
+import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
 import { useWalletStore } from '~/stores/useWalletStore';
 
@@ -16,8 +17,11 @@ const textCashMd = `text-xl ${textPink}`;
 const textCashXs = `text-xs ${textPink}`;
 const textCashLg = `text-4xl ${textPink}`;
 
+const depositUsdcHint = 'This is a description of depositing USDC tokens.';
+const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
+
 const Home: NextPage = React.forwardRef(function Home() {
-  const { portfolioBalance, interestEarned, availableBalance } = useWalletStore();
+  const { portfolioBalance, interestEarned, availableOh, availableUsdc } = useWalletStore();
   const chartRef = useRef(null as null | HTMLDivElement);
 
   return (
@@ -57,8 +61,101 @@ const Home: NextPage = React.forwardRef(function Home() {
         <div className={`p-6 flex-col w-full h-full`}>
           <div className={`flex flex-row justify-between`}>
             <div className={`h-auto container flex flex-col justify-between h-auto`}>
-              <div className={`h-96 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}></div>
-              <div className={`h-64 mt-4 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}></div>
+              <div className={`h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
+                <div className={`h-full m-2 flex flex-col rounded-lg bg-black`}>
+                  <div
+                    className={`w-full h-full flex flex-col rounded-lg bg-pink-800 bg-opacity-25`}
+                  >
+                    <div className={`w-full h-full flex flex-row`}>
+                      <div className={`w-full flex flex-row justify-start`}>
+                        <div className="flex flex-col">
+                          <img
+                            className="ml-1 mt-2"
+                            width={72}
+                            height={72}
+                            alt="OH! Token Logo"
+                            src="/img/oh_usdc_token.png"
+                          />
+                        </div>
+                        <div className="ml-1 flex flex-col">
+                          <p className={`${h3} mt-4 w-full h-8`}>Deposit USDC</p>
+                          <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                        </div>
+                        <div className="ml-8 mt-8 flex">
+                          <HintButton hint={depositUsdcHint} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`w-full h-full flex flex-col`}>
+                      <div className={`w-full h-full flex flex-col`}>
+                        <p className={`${h3} w-full mt-2 h-8 text-center`}>Earning Rate</p>
+                        <div
+                          className={`ml-3 mr-3 mb-3 w-auto h-auto flex flex-col justify-between border-4 border-pink-600 rounded-lg`}
+                        >
+                          <div className="mt-2 w-full h-auto flex flex-col ">
+                            <p className={`text-center text-2xl text-white`}>10-21% APR</p>
+                            <p className={`text-center text-xs text-white`}>in-kind</p>
+                          </div>
+                          <div className="mt-4 mb-2 w-full h-auto">
+                            <p className={`text-center text-2xl text-white`}>10-21% APR</p>
+                            <p className={`text-center text-xs text-white`}>in-kind</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
+                  <UsdcInput maxValue={availableUsdc} onChange={console.log} />
+                </div>
+                <div className={`h-auto m-2 flex flex-col`}>
+                  <button
+                    className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                  >
+                    Deposit
+                  </button>
+                </div>
+              </div>
+              <div className={`h-64 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}>
+                <div className={`w-full h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
+                  <div className={`h-full m-2 flex flex-col rounded-lg bg-black`}>
+                    <div
+                      className={`w-full h-full flex flex-col rounded-lg bg-pink-800 bg-opacity-25`}
+                    >
+                      <div className={`w-full h-full flex flex-row`}>
+                        <div className={`w-full flex flex-row justify-start`}>
+                          <div className="flex flex-col">
+                            <img
+                              className="ml-1 mt-2"
+                              width={72}
+                              height={72}
+                              alt="OH! Token Logo"
+                              src="/img/oh_usdc_token.png"
+                            />
+                          </div>
+                          <div className="ml-1 flex flex-col">
+                            <p className={`${h3} mt-4 w-full h-8`}>Withdrawal USDC</p>
+                            <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                          </div>
+                          <div className="pt-2 ml-1 mt-8 flex flex-col">
+                            <HintButton hint={depositUsdcHint} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
+                    <UsdcInput maxValue={availableUsdc} onChange={console.log} />
+                  </div>
+                  <div className={`h-auto m-2 flex flex-col`}>
+                    <button
+                      className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                    >
+                      Withdrawal
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div
@@ -87,7 +184,6 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <CaptureResize captureRef={chartRef}>
                   {(size = { width: 0, height: 0 }) => {
                     const { width, height } = size;
-                    console.log(width, height);
                     return (
                       <>
                         {!width || !height ? (
@@ -134,10 +230,10 @@ const Home: NextPage = React.forwardRef(function Home() {
                   >
                     Claim OH!
                   </button>
-                  <p className="text-white">${availableBalance} Available</p>
+                  <p className="text-white">${availableOh} Available</p>
                 </div>
                 <div className="mr-3 mt-8 flex flex-col">
-                  <HintButton hint="This is a description of claiming Oh! Token rewards." />
+                  <HintButton hint={claimOhHint} />
                 </div>
               </div>
             </div>
