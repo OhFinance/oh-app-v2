@@ -2,8 +2,8 @@ import createStore from 'zustand';
 
 const initialState = {
   portfolioBalance: 0,
-  availableOh: 0,
-  availableUsdc: 0,
+  availableOh: 9999,
+  availableUsdc: 9999,
   interestEarned: 0,
 };
 

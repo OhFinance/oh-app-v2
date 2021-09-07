@@ -7,22 +7,31 @@ export function UsdcInput(props: { maxValue: number; onChange: (value: number) =
 
   return (
     <>
-      <input
-        className={styles['usdc-input']}
-        value={value}
-        onChange={(event) => {
-          if (event.target.value === '') {
-            setValue('');
-            onChange(0);
-            return;
-          }
-          const value = parseInt(event.target.value);
-          if (!isNaN(value)) {
-            setValue(String(value));
-            onChange(value);
-          }
-        }}
-      ></input>
+      <div className="w-full bg-pink-800 bg-opacity-25 rounded-lg w-full flex flex-row">
+        <button
+          onClick={() => setValue(maxValue.toString())}
+          className={`w-auto text-xl text-pink-800 pl-2 pr-2 underline`}
+        >
+          MAX
+        </button>
+        <input
+          className={`w-36 h-9 ml-1 text-xl text-pink-800 ${styles['usdc-input']}`}
+          value={value}
+          onChange={(event) => {
+            if (event.target.value === '') {
+              setValue('');
+              onChange(0);
+              return;
+            }
+            const value = parseInt(event.target.value);
+            if (!isNaN(value)) {
+              setValue(String(Math.min(value, maxValue)));
+              onChange(value);
+            }
+          }}
+        ></input>
+        <p className={`w-auto text-xl text-pink-800 p-1 pl-2 pr-2`}>USDC</p>
+      </div>
     </>
   );
 }

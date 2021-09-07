@@ -6,16 +6,16 @@ import { HintButton } from '~/components/hintButton';
 import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
 import { useWalletStore } from '~/stores/useWalletStore';
-
-// TODO: Move these to Tailwind Config
-const h1 = `text-4xl text-white`;
-const h2 = `text-2xl text-white`;
-const h3 = `text-xl text-white`;
-const textPink = `text-pink-500`;
-const textCash = `text-2xl ${textPink}`;
-const textCashMd = `text-xl ${textPink}`;
-const textCashXs = `text-xs ${textPink}`;
-const textCashLg = `text-4xl ${textPink}`;
+import {
+  h1,
+  h2,
+  h3,
+  textCash,
+  textCashLg,
+  textCashMd,
+  textCashXs,
+  textPink,
+} from '~/temporaryTailwindConfig';
 
 const depositUsdcHint = 'This is a description of depositing USDC tokens.';
 const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
@@ -247,7 +247,7 @@ const Home: NextPage = React.forwardRef(function Home() {
               <div
                 className={`h-24 container flex flex-row justify-between rounded-lg bg-gray-800 opacity-75`}
               >
-                <div className={`mt-3 ml-6 w-5/6 w-auto h-full flex flex-col`}>
+                <div className={`mt-3 ml-4 w-5/6 flex flex-col`}>
                   <h2 className={`${h2}`}>
                     Oh! Token Stats <span className={textCashXs}>/ 24hr</span>
                   </h2>
