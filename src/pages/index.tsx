@@ -15,7 +15,7 @@ import {
   textCashMd,
   textCashXs,
   textPink,
-} from '~/temporaryTailwindConfig';
+} from '~/tempTailwindConfig';
 
 const depositUsdcHint = 'This is a description of depositing USDC tokens.';
 const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
