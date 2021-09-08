@@ -20,6 +20,8 @@ import {
 
 const depositUsdcHint = 'This is a description of depositing USDC tokens.';
 const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
+const selectNetworkHint = 'This is a hint for selecting your network.';
+const connectWalletHint = 'This is a hint for connecting your wallet.';
 
 const Home: NextPage = React.forwardRef(function Home() {
   const { portfolioBalance, interestEarned, availableOh, availableUsdc } = useWalletStore();
@@ -280,6 +282,74 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <h2 className={`${h2}`}>Total Value Locked</h2>
                   <p className={`mt-2 ${textCash}`}>${interestEarned}</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        // Overlay Effect
+        className="fixed hidden inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+        id="connect-wallet-modal"
+      >
+        <div
+          // Modal Content
+          className="relative top-20 mx-auto p-5 w-10/12 shadow-lg rounded-md bg-black"
+        >
+          <div className="flex flex-row p-2">
+            <div className="bg-pink-900 flex-col w-1/4 rounded-l-md">
+              <div className="flex justify-center items-center h-full">
+                <p className="text-md text-pink-400 py-1 px-2 -lg border-2 border-transparent text-center">
+                  1. Select Network
+                </p>
+                <HintButton hint={selectNetworkHint} />
+              </div>
+            </div>
+            <div className="w-3/4">
+              <button
+                className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
+                id="eth-wallet-button"
+              >
+                Ethereum
+              </button>
+              <button
+                className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
+                id="avalanche-wallet-button"
+              >
+                Avalanche
+              </button>
+              <button
+                className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3 rounded-r-md`}
+                id="oh-wallet-button"
+              >
+                OH!
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-row  p-2">
+            <div className="bg-pink-900 flex-col w-1/4 rounded-l-md">
+              <div className="flex justify-center items-center h-full">
+                <p className="text-md text-pink-400 py-1 px-2 -lg border-2 border-transparent text-center">
+                  2. Connect Wallet
+                </p>
+                <HintButton hint={connectWalletHint} />
+              </div>
+            </div>
+            <div className="w-3/4 w-full bg-gray-900 rounded-r-md">
+              <div className="p-10">
+                <button
+                  className={` -lg border-2 border-transparent rounded-md p-5 text-white text-md bg-pink-900 hover:bg-pink-800`}
+                >
+                  <img
+                    width={72}
+                    height={72}
+                    alt="MetaMask Logo"
+                    src="/img/OhFinanceAssets_metaMaskIcon.png"
+                  />
+                  MetaMask
+                </button>
               </div>
             </div>
           </div>
