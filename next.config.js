@@ -1,16 +1,13 @@
 const withPlugins = require('next-compose-plugins');
-const withBundleAnalyzer = require('@next/bundle-analyzer');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 /**
  * @type {import('next/dist/next-server/server/config').NextConfig}
  **/
 module.exports = withPlugins([
-  [
-    withBundleAnalyzer,
-    {
-      enabled: process.env.ANALYZE === 'true',
-    },
-  ],
+  [withBundleAnalyzer],
   [
     {
       pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
