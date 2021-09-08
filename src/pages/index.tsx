@@ -298,9 +298,9 @@ const Home: NextPage = React.forwardRef(function Home() {
           className="relative top-20 mx-auto p-5 w-10/12 shadow-lg rounded-md bg-black"
         >
           <div className="flex flex-row p-2">
-            <div className="bg-pink-900 flex-col w-1/4 rounded-l-md">
+            <div className="bg-modalPink flex-col w-1/4 rounded-l-md">
               <div className="flex justify-center items-center h-full">
-                <p className="text-md text-pink-400 py-1 px-2 -lg border-2 border-transparent text-center">
+                <p className="text-md text-pink-700 py-1 px-2 -lg border-2 border-transparent text-center">
                   1. Select Network
                 </p>
                 <HintButton hint={selectNetworkHint} />
@@ -329,9 +329,9 @@ const Home: NextPage = React.forwardRef(function Home() {
           </div>
 
           <div className="flex flex-row  p-2">
-            <div className="bg-pink-900 flex-col w-1/4 rounded-l-md">
+            <div className="bg-modalPink flex-col w-1/4 rounded-l-md">
               <div className="flex justify-center items-center h-full">
-                <p className="text-md text-pink-400 py-1 px-2 -lg border-2 border-transparent text-center">
+                <p className="text-md text-pink-700 py-1 px-2 -lg border-2 border-transparent text-center">
                   2. Connect Wallet
                 </p>
                 <HintButton hint={connectWalletHint} />
@@ -340,7 +340,7 @@ const Home: NextPage = React.forwardRef(function Home() {
             <div className="w-3/4 w-full bg-gray-900 rounded-r-md">
               <div className="p-10">
                 <button
-                  className={` -lg border-2 border-transparent rounded-md p-5 text-white text-md bg-pink-900 hover:bg-pink-800`}
+                  className={` -lg border-2 border-transparent rounded-md p-5 text-white text-md bg-modalPink hover:bg-pink-800`}
                 >
                   <img
                     width={72}
