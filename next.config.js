@@ -1,6 +1,5 @@
 const withPlugins = require('next-compose-plugins');
 const withBundleAnalyzer = require('@next/bundle-analyzer');
-const withTM = require('next-transpile-modules')(['react-tradingview-embed']);
 
 /**
  * @type {import('next/dist/next-server/server/config').NextConfig}
@@ -12,7 +11,6 @@ module.exports = withPlugins([
       enabled: process.env.ANALYZE === 'true',
     },
   ],
-  [withTM],
   [
     {
       pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],

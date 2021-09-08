@@ -1,10 +1,11 @@
 import type { NextPage } from 'next';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { HintButton } from '~/components/hintButton';
 import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
+import { useChartStore } from '~/stores/useChartStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import {
   h1,
@@ -22,7 +23,12 @@ const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
 
 const Home: NextPage = React.forwardRef(function Home() {
   const { portfolioBalance, interestEarned, availableOh, availableUsdc } = useWalletStore();
+  const { isLoading, data, fetchData } = useChartStore();
   const chartRef = useRef(null as null | HTMLDivElement);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <main className={`dark:bg-gray-800 bg-white relative overflow-hidden`}>
@@ -190,7 +196,12 @@ const Home: NextPage = React.forwardRef(function Home() {
                           'Loading...'
                         ) : (
                           <div className="flex w-full h-full p-2 rounded-lg">
-                            <Chart width={Math.max(width - 10, 906)} height={height} />
+                            <Chart
+                              data={data}
+                              isLoading={isLoading}
+                              width={Math.max(width - 10, 906)}
+                              height={height}
+                            />
                           </div>
                         )}
                       </>
