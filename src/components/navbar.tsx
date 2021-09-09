@@ -51,8 +51,8 @@ export function Navbar() {
             </div>
             <div className="flex pr-4 pl-8">
               <div className="bg-modalPink flex-col rounded-l-md w-52">
-                <div className="flex flex-grow justify-center items-center w-52">
-                  <p className="text-sm text-pink-700 py-2 px-2 -lg text-center">Select Network</p>
+                <div className="flex flex-grow justify-center items-center w-48">
+                  <p className="text-sm text-pink-700 py-2 px-2 -lg text-center">Network</p>
                   <HintButton hint={selectNetworkHint} />
                 </div>
               </div>
