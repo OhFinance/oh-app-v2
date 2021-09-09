@@ -1,8 +1,11 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
+import { useWalletStore } from '~/stores/useWalletStore';
 
 export function Navbar() {
-  const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const [navbarOpen, setNavbarOpen] = useState(false);
+  const { toggleConnectWalletDialog } = useWalletStore();
+
   // TODO: Figure out how to display hamburger menu when navbar is open
   return (
     <header className="dark:bg-gray-800 h-24 sm:h-32 flex items-center z-30 w-full">
@@ -41,7 +44,10 @@ export function Navbar() {
               </div>
               <span>Light</span>
             </div>
-            <button className="ml-6 py-1 px-2 rounded-lg bg-pink-500 border-2 border-transparent text-white text-md mr-4 hover:bg-pink-400">
+            <button
+              className="ml-6 py-1 px-2 rounded-lg bg-pink-500 border-2 border-transparent text-white text-md mr-4 hover:bg-pink-400"
+              onClick={toggleConnectWalletDialog}
+            >
               Connect Wallet
             </button>
           </nav>

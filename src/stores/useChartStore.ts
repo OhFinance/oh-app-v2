@@ -17,7 +17,7 @@ export const useChartStore = createStore(
           'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=50&aggregate=3&e=Kraken'
         )
         .then((res) => {
-          set({ isLoading: false, data: res.data['Data'] });
+          setTimeout(() => set({ isLoading: false, data: res.data['Data'] }), 3000);
         })
         .catch((error) => {
           console.log(error);

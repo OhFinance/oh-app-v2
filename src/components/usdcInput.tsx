@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import styles from './__styles__/usdcInput.module.css';
 
-export function UsdcInput(props: { maxValue: number; onChange: (value: number) => void }) {
+type Props = { maxValue: number; onChange: (value: number) => void };
+
+export function UsdcInput(props: Props) {
   const { maxValue, onChange } = props;
   const [value, setValue] = useState('');
 
