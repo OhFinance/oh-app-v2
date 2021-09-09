@@ -51,6 +51,7 @@ module.exports = {
           DEFAULT: 'rgb(38,0,20)',
           dark: 'rgb(38,0,20)',
         },
+        modalPink: '#1c1019',
         code: {
           green: '#b5f4a5',
           yellow: '#ffe484',

@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import React, { useEffect, useRef } from 'react';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
+import { ConnectWalletDialog } from '~/components/connectWalletDialog';
 import { HintButton } from '~/components/hintButton';
 import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
@@ -22,7 +23,14 @@ const depositUsdcHint = 'This is a description of depositing USDC tokens.';
 const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
 
 const Home: NextPage = React.forwardRef(function Home() {
-  const { portfolioBalance, interestEarned, availableOh, availableUsdc } = useWalletStore();
+  const {
+    showConnectWalletDialog,
+    toggleConnectWalletDialog,
+    portfolioBalance,
+    interestEarned,
+    availableOh,
+    availableUsdc,
+  } = useWalletStore();
   const { isLoading, data, fetchData } = useChartStore();
   const chartRef = useRef(null as null | HTMLDivElement);
 
@@ -55,6 +63,7 @@ const Home: NextPage = React.forwardRef(function Home() {
           <div className={`mt-10 flex flex-col shadow-lg rounded-lg p-10 w-96 bg-black`}>
             <button
               className={`py-1 px-2 rounded-lg bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+              onClick={toggleConnectWalletDialog}
             >
               Connect Wallet to get started
             </button>
@@ -167,7 +176,7 @@ const Home: NextPage = React.forwardRef(function Home() {
             <div
               className={`ml-6 h-full container flex flex-col justify-between rounded-lg h-full`}
             >
-              <div className={`h-64 flex flex-row rounded-lg bg-pink-800 bg-opacity-20`}>
+              <div className={`h-64 flex flex-row rounded-t-lg bg-pink-800 bg-opacity-20`}>
                 <div className={`mt-12 ml-12 w-50 h-full justify-between`}>
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
                   <p className={`mt-2 ${textCashLg}`}>${portfolioBalance}</p>
@@ -185,7 +194,7 @@ const Home: NextPage = React.forwardRef(function Home() {
               </div>
               <div
                 ref={chartRef}
-                className={`${styles['chart-container']} flex flex-col justify-between rounded-lg w-full bg-gray-800 bg-opacity-80`}
+                className={`${styles['chart-container']} flex flex-col justify-between rounded-b-lg w-full bg-gray-800 bg-opacity-80`}
               >
                 <CaptureResize captureRef={chartRef}>
                   {(size = { width: 0, height: 0 }) => {
@@ -285,6 +294,7 @@ const Home: NextPage = React.forwardRef(function Home() {
           </div>
         </div>
       </div>
+      {showConnectWalletDialog && <ConnectWalletDialog />}
     </main>
   );
 }) as NextPage;

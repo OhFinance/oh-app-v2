@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 
-export function CaptureResize(props: {
+type Props = {
   children: (size: { width: number; height: number }) => JSX.Element;
   captureRef: React.RefObject<HTMLDivElement> | null;
-}) {
+};
+
+export function CaptureResize(props: Props) {
   const { captureRef } = props;
   const [size, setSize] = useState({ width: 0, height: 0 });
 
