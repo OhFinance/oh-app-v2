@@ -58,19 +58,45 @@ export function Navbar() {
                   <HintButton hint={selectNetworkHint} />
                 </div>
               </div>
-              <div className="w-full">
+              <div className="w-full group">
                 <button
                   className={`py-1 px-4 -lg bg-gray-900 rounded-r-md text-white text-md hover:bg-gray-800`}
                   id="eth-wallet-button"
                   onClick={() => setSelectedNetwork(0)}
                 >
-                  Ethereum
+                  {selectedNetwork == 0 && 'Ethereum'}
+                  {selectedNetwork == 1 && 'Avalanche'}
+                  {selectedNetwork == 2 && 'OH!'}
                   <div
-                    className={`object-bottom bg-pink-600 rounded-br-md h-2 -my-1 -mx-4 z-10 relative ${
-                      selectedNetwork == 0 ? '' : 'hidden'
-                    }`}
+                    className={`object-bottom bg-pink-600 rounded-br-md h-2 -my-1 -mx-4 relative`}
                   ></div>
                 </button>
+                <ul className="dropdown-menu absolute hidden group-hover:block text-white pt-1 z-10">
+                  <li className="">
+                    <button
+                      className="rounded-t bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      onClick={() => setSelectedNetwork(0)}
+                    >
+                      Ethereum
+                    </button>
+                  </li>
+                  <li className="">
+                    <button
+                      className="bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      onClick={() => setSelectedNetwork(1)}
+                    >
+                      Avalanche
+                    </button>
+                  </li>
+                  <li className="">
+                    <button
+                      className="rounded-b bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      onClick={() => setSelectedNetwork(2)}
+                    >
+                      OH!
+                    </button>
+                  </li>
+                </ul>
               </div>
             </div>
             <button
