@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useWalletStore } from '~/stores/useWalletStore';
+import { HintButton } from './hintButton';
+
+const selectNetworkHint = 'This is a hint for selecting your network.';
 
 export function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const { toggleConnectWalletDialog } = useWalletStore();
+  const { setSelectedNetwork } = useWalletStore();
+  const { selectedNetwork } = useWalletStore();
 
   // TODO: Figure out how to display hamburger menu when navbar is open
   return (
@@ -43,6 +48,30 @@ export function Navbar() {
                 </label>
               </div>
               <span>Light</span>
+            </div>
+            <div className="flex pr-4 pl-8">
+              <div className="bg-modalPink flex-col rounded-l-md w-52">
+                <div className="flex flex-grow justify-center items-center w-52">
+                  <p className="text-sm text-pink-700 py-2 px-2 -lg text-center">
+                    1. Select Network
+                  </p>
+                  <HintButton hint={selectNetworkHint} />
+                </div>
+              </div>
+              <div className="w-full">
+                <button
+                  className={`py-1 px-4 -lg bg-gray-900 rounded-r-md text-white text-md hover:bg-gray-800`}
+                  id="eth-wallet-button"
+                  onClick={() => setSelectedNetwork(0)}
+                >
+                  Ethereum
+                  <div
+                    className={`object-bottom bg-pink-600 rounded-br-md h-2 -my-1 -mx-4 z-10 relative ${
+                      selectedNetwork == 0 ? '' : 'hidden'
+                    }`}
+                  ></div>
+                </button>
+              </div>
             </div>
             <button
               className="ml-6 py-1 px-2 rounded-lg bg-pink-500 border-2 border-transparent text-white text-md mr-4 hover:bg-pink-400"
