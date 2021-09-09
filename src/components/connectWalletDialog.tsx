@@ -29,6 +29,19 @@ export function ConnectWalletDialog() {
         tabIndex={0}
       ></div>
       <div
+        // Close Button
+        className={`fixed h-12 w-12 absolute top-0 right-0 items-center`}
+      >
+        <button
+          className={`-lg border-2 border-transparent text-pink-700 text-lg`}
+          onClick={toggleConnectWalletDialog}
+        >
+          <p className="text-7xl text-pink-600 -mx-3 -lg border-2 border-transparent text-center">
+            X
+          </p>
+        </button>
+      </div>
+      <div
         // Modal Content
         className="relative top-20 mx-auto p-5 w-10/12 shadow-lg rounded-md bg-black"
       >
