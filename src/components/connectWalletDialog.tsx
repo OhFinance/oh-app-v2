@@ -5,6 +5,10 @@ import { HintButton } from './hintButton';
 const selectNetworkHint = 'This is a hint for selecting your network.';
 const connectWalletHint = 'This is a hint for connecting your wallet.';
 
+function OnClickMetaMask() {
+  console.log('clicked MetaMask');
+}
+
 export function ConnectWalletDialog() {
   const { toggleConnectWalletDialog } = useWalletStore();
   const { setSelectedNetwork } = useWalletStore();
@@ -90,6 +94,7 @@ export function ConnectWalletDialog() {
             <div className="p-10">
               <button
                 className={` -lg border-2 border-transparent rounded-md p-5 text-white text-md bg-modalPink hover:bg-pink-800`}
+                onClick={OnClickMetaMask}
               >
                 <img
                   width={72}
