@@ -31,6 +31,7 @@ module.exports = {
       colors: {
         primary: colors.teal,
         gray: colors.trueGray,
+        modalPink: '#1c1019',
         code: {
           green: '#b5f4a5',
           yellow: '#ffe484',
