@@ -31,7 +31,7 @@ const Home: NextPage = React.forwardRef(function Home() {
   }, [fetchData]);
 
   return (
-    <main className={`dark:bg-gray-800 bg-white relative overflow-hidden`}>
+    <main className={`relative overflow-hidden`}>
       <div className={`flex items-center h-auto`}>
         <div
           className={`container mx-auto px-6 flex flex-col justify-between items-center relative py-4`}
