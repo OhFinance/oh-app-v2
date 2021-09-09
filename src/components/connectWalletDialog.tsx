@@ -7,6 +7,8 @@ const connectWalletHint = 'This is a hint for connecting your wallet.';
 
 export function ConnectWalletDialog() {
   const { toggleConnectWalletDialog } = useWalletStore();
+  const { setSelectedNetwork } = useWalletStore();
+  const { selectedNetwork } = useWalletStore();
 
   return (
     <div
@@ -39,20 +41,38 @@ export function ConnectWalletDialog() {
             <button
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="eth-wallet-button"
+              onClick={() => setSelectedNetwork(0)}
             >
               Ethereum
+              <div
+                className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
+                  selectedNetwork == 0 ? '' : 'hidden'
+                }`}
+              ></div>
             </button>
             <button
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="avalanche-wallet-button"
+              onClick={() => setSelectedNetwork(1)}
             >
               Avalanche
+              <div
+                className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
+                  selectedNetwork == 1 ? '' : 'hidden'
+                }`}
+              ></div>
             </button>
             <button
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3 rounded-r-md`}
               id="oh-wallet-button"
+              onClick={() => setSelectedNetwork(2)}
             >
               OH!
+              <div
+                className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
+                  selectedNetwork == 2 ? '' : 'hidden'
+                }`}
+              ></div>
             </button>
           </div>
         </div>
