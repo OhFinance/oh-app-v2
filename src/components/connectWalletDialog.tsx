@@ -6,6 +6,7 @@ const selectNetworkHint = 'This is a hint for selecting your network.';
 const connectWalletHint = 'This is a hint for connecting your wallet.';
 
 function onClickMetaMask() {
+  // TODO: Oh! Finance will fill in MetaMask connection logic here
   console.log('clicked MetaMask');
 }
 
@@ -58,6 +59,7 @@ export function ConnectWalletDialog() {
             <button
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="eth-wallet-button"
+              // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(0)}
             >
               Ethereum
@@ -70,6 +72,7 @@ export function ConnectWalletDialog() {
             <button
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="avalanche-wallet-button"
+              // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(1)}
             >
               Avalanche
@@ -82,6 +85,7 @@ export function ConnectWalletDialog() {
             <button
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3 rounded-r-md`}
               id="oh-wallet-button"
+              // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(2)}
             >
               OH!

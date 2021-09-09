@@ -22,6 +22,21 @@ import {
 const depositUsdcHint = 'This is a description of depositing USDC tokens.';
 const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
 
+function onClickDeposit() {
+  //TODO: Oh! Finance will fill in Deposit logic here
+  console.log('clicked Deposit');
+}
+
+function onClickWithraw() {
+  //TODO: Oh! Finance will fill in Withdraw logic here
+  console.log('clicked Withdraw');
+}
+
+function onClickClaimOh() {
+  //TODO: Oh! Finance will fill in Claim Oh! logic here
+  console.log('clicked Claim Oh!');
+}
+
 const Home: NextPage = React.forwardRef(function Home() {
   const {
     showConnectWalletDialog,
@@ -126,6 +141,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <div className={`h-auto m-2 flex flex-col`}>
                   <button
                     className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                    onClick={onClickDeposit}
                   >
                     Deposit
                   </button>
@@ -165,6 +181,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <div className={`h-auto m-2 flex flex-col`}>
                     <button
                       className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                      onClick={onClickWithraw}
                     >
                       Withdrawal
                     </button>
@@ -247,6 +264,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <div className="flex flex-col">
                   <button
                     className={`mt-3 mb-1 w-36 h-12 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                    onClick={onClickClaimOh}
                   >
                     Claim OH!
                   </button>

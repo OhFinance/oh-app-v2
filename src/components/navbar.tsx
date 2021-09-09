@@ -62,7 +62,6 @@ export function Navbar() {
                 <button
                   className={`py-1 px-4 -lg bg-gray-900 rounded-r-md text-white text-md hover:bg-gray-800`}
                   id="eth-wallet-button"
-                  onClick={() => setSelectedNetwork(0)}
                 >
                   {selectedNetwork == 0 && 'Ethereum'}
                   {selectedNetwork == 1 && 'Avalanche'}
@@ -75,6 +74,7 @@ export function Navbar() {
                   <li className="">
                     <button
                       className="rounded-t bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      // TODO: Oh! Finance will fill in network selection logic here
                       onClick={() => setSelectedNetwork(0)}
                     >
                       Ethereum
@@ -83,6 +83,7 @@ export function Navbar() {
                   <li className="">
                     <button
                       className="bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      // TODO: Oh! Finance will fill in network selection logic here
                       onClick={() => setSelectedNetwork(1)}
                     >
                       Avalanche
@@ -91,6 +92,7 @@ export function Navbar() {
                   <li className="">
                     <button
                       className="rounded-b bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      // TODO: Oh! Finance will fill in network selection logic here
                       onClick={() => setSelectedNetwork(2)}
                     >
                       OH!

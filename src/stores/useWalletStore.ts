@@ -9,6 +9,7 @@ import { combine } from 'zustand/middleware';
 
 const initialState = {
   showConnectWalletDialog: false,
+  walletConnected: false,
   portfolioBalance: 0,
   availableOh: 9999,
   availableUsdc: 9999,
@@ -16,6 +17,7 @@ const initialState = {
   // TODO: try to get this into an enum
   // 0 = Ethereum, 1 = Avalanche, 2 = OH
   selectedNetwork: 0,
+  walletAddress: '0x0000000000000000000000000000000000000000',
 };
 
 export const useWalletStore = createStore(
@@ -28,5 +30,7 @@ export const useWalletStore = createStore(
     setAvailableUsdc: (availableUsdc: number) => set({ availableUsdc }),
     setInterestEarned: (interestEarned: number) => set({ interestEarned }),
     setSelectedNetwork: (selectedNetwork: number) => set({ selectedNetwork }),
+    setWalletConnected: (walletConnected: boolean) => set({ walletConnected }),
+    setWalletAddress: (walletAddress: string) => set({ walletAddress }),
   }))
 );
