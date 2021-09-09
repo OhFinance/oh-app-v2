@@ -10,11 +10,18 @@ export function ConnectWalletDialog() {
 
   return (
     <div
-      // Overlay Effect
-      className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
+      // Parent Container
+      className={`fixed inset-0 overflow-y-auto h-full w-full`}
       id="connect-wallet-modal"
-      onClick={toggleConnectWalletDialog}
     >
+      <div
+        // Darkout Overlay
+        className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
+        onClick={toggleConnectWalletDialog}
+        onKeyDown={toggleConnectWalletDialog}
+        role="button"
+        tabIndex={0}
+      ></div>
       <div
         // Modal Content
         className="relative top-20 mx-auto p-5 w-10/12 shadow-lg rounded-md bg-black"
