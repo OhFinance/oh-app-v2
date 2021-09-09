@@ -17,7 +17,7 @@ export function ConnectWalletDialog() {
   return (
     <div
       // Parent Container
-      className={`fixed inset-0 overflow-y-auto h-full w-full`}
+      className={`fixed inset-0 overflow-y-auto h-full w-full z-20`}
       id="connect-wallet-modal"
     >
       <div

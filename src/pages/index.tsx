@@ -176,7 +176,7 @@ const Home: NextPage = React.forwardRef(function Home() {
             <div
               className={`ml-6 h-full container flex flex-col justify-between rounded-lg h-full`}
             >
-              <div className={`h-64 flex flex-row rounded-lg bg-pink-800 bg-opacity-20`}>
+              <div className={`h-64 flex flex-row rounded-t-lg bg-pink-800 bg-opacity-20`}>
                 <div className={`mt-12 ml-12 w-50 h-full justify-between`}>
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
                   <p className={`mt-2 ${textCashLg}`}>${portfolioBalance}</p>
@@ -194,7 +194,7 @@ const Home: NextPage = React.forwardRef(function Home() {
               </div>
               <div
                 ref={chartRef}
-                className={`${styles['chart-container']} flex flex-col justify-between rounded-lg w-full bg-gray-800 bg-opacity-80`}
+                className={`${styles['chart-container']} flex flex-col justify-between rounded-b-lg w-full bg-gray-800 bg-opacity-80`}
               >
                 <CaptureResize captureRef={chartRef}>
                   {(size = { width: 0, height: 0 }) => {
