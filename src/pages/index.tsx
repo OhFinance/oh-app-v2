@@ -1,12 +1,12 @@
 import type { NextPage } from 'next';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { ConnectWalletDialog } from '~/components/connectWalletDialog';
 import { HintButton } from '~/components/hintButton';
 import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
-import { useChartStore } from '~/stores/useChartStore';
+import { ChartTimeRange, useChartStore } from '~/stores/useChartStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import {
   h1,
@@ -47,11 +47,16 @@ const Home: NextPage = React.forwardRef(function Home() {
     availableUsdc,
   } = useWalletStore();
   const { isLoading, data, fetchData } = useChartStore();
+  const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
   const chartRef = useRef(null as null | HTMLDivElement);
 
+  function chartTimeChanged(timeRange: ChartTimeRange) {
+    setChartTimeRange(timeRange);
+  }
+
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchData(chartTimeRange);
+  }, [fetchData, chartTimeRange]);
 
   return (
     <main className={`relative overflow-hidden`}>
@@ -165,7 +170,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                             />
                           </div>
                           <div className="ml-1 flex flex-col">
-                            <p className={`${h3} mt-4 w-full h-8`}>Withdrawal USDC</p>
+                            <p className={`${h3} mt-4 w-full h-8`}>Withdraw USDC</p>
                             <p className={`${textCashMd}`}>${availableUsdc} Available</p>
                           </div>
                           <div className="pt-2 ml-1 mt-8 flex flex-col">
@@ -183,7 +188,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                       className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
                       onClick={onClickWithraw}
                     >
-                      Withdrawal
+                      Withdraw
                     </button>
                   </div>
                 </div>
@@ -211,7 +216,7 @@ const Home: NextPage = React.forwardRef(function Home() {
               </div>
               <div
                 ref={chartRef}
-                className={`${styles['chart-container']} flex flex-col justify-between rounded-b-lg w-full bg-gray-800 bg-opacity-80`}
+                className={`${styles['chart-container']} flex flex-col justify-between rounded-b-lg bg-gray-800 bg-opacity-80`}
               >
                 <CaptureResize captureRef={chartRef}>
                   {(size = { width: 0, height: 0 }) => {
@@ -225,8 +230,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                             <Chart
                               data={data}
                               isLoading={isLoading}
-                              width={Math.max(width - 10, 906)}
+                              width={Math.max(width - 20, 906)}
                               height={height}
+                              onChartTimeChanged={chartTimeChanged}
                             />
                           </div>
                         )}

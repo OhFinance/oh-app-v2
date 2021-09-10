@@ -5,7 +5,8 @@
 }
 
 .chart-container {
-  min-height: 400px;
+  width: 912px;
+  height: 420px;
 }
 
 .main-container {
