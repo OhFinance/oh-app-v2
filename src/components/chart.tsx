@@ -3,7 +3,7 @@ import { Area, ComposedChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartTimeRange } from '~/stores/useChartStore';
 
 export type ChartProps = {
-  data: unknown[];
+  data: null | unknown[];
   isLoading: boolean;
   width: number;
   height: number;
