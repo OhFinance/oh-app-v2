@@ -58,7 +58,7 @@ export function Navbar() {
               </div>
               <div className="w-full group">
                 <button
-                  className={`py-1 px-4 -lg bg-gray-900 rounded-r-md text-white text-md hover:bg-gray-800`}
+                  className={`py-1 px-4 -lg bg-gray-900 w-40 rounded-r-md text-white text-md hover:bg-gray-800`}
                   id="eth-wallet-button"
                 >
                   {selectedNetwork == 0 && 'Ethereum'}
