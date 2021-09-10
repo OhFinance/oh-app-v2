@@ -223,9 +223,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                     const { width, height } = size;
                     return (
                       <>
-                        {!width || !height ? (
-                          'Loading...'
-                        ) : (
+                        {width && height && (
                           <div className="flex w-full h-full p-2 rounded-lg">
                             <Chart
                               data={data}
