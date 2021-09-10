@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 type Props = {
-  children: (size: { width: number; height: number }) => JSX.Element;
+  children: (size: { width: number; height: number }) => JSX.Element | null;
   captureRef: React.RefObject<HTMLDivElement> | null;
 };
 

@@ -221,20 +221,19 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <CaptureResize captureRef={chartRef}>
                   {(size = { width: 0, height: 0 }) => {
                     const { width, height } = size;
+                    if (!width || !height) {
+                      return null;
+                    }
                     return (
-                      <>
-                        {width && height && (
-                          <div className="flex w-full h-full p-2 rounded-lg">
-                            <Chart
-                              data={data}
-                              isLoading={isLoading}
-                              width={Math.max(width - 20, 906)}
-                              height={height}
-                              onChartTimeChanged={chartTimeChanged}
-                            />
-                          </div>
-                        )}
-                      </>
+                      <div className="flex w-full h-full p-2 rounded-lg">
+                        <Chart
+                          data={data}
+                          isLoading={isLoading}
+                          width={Math.max(width - 20, 906)}
+                          height={height}
+                          onChartTimeChanged={chartTimeChanged}
+                        />
+                      </div>
                     );
                   }}
                 </CaptureResize>
