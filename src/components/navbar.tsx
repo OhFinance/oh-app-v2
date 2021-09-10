@@ -32,9 +32,15 @@ export function Navbar() {
                 Docs
               </a>
             </Link>
-            <div>
-              <span className="mr-2">Dark</span>
-              <div className="relative inline-block w-10 mr-2 align-middle select-none">
+            <div className="flex">
+              <img
+                width={32}
+                height={26}
+                className="mr-2"
+                alt="DARK ON"
+                src="/img/darkModeOn.png"
+              />
+              <div className="relative inline-block w-10 mr-2 mt-1 align-middle select-none">
                 <label
                   htmlFor="blue"
                   className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
@@ -47,7 +53,7 @@ export function Navbar() {
                   />
                 </label>
               </div>
-              <span>Light</span>
+              <img className="mr-2" alt="LIGHT OFF" src="/img/lightModeOff.png" />
             </div>
             <div className="flex pr-4 pl-8">
               <div className="bg-modalPink flex-col rounded-l-md w-52">
