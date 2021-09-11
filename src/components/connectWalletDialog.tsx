@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWalletStore } from '~/stores/useWalletStore';
+import { CryptoNetwork, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
 
 const selectNetworkHint = 'This is a hint for selecting your network.';
@@ -60,12 +60,12 @@ export function ConnectWalletDialog() {
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="eth-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
-              onClick={() => setSelectedNetwork(0)}
+              onClick={() => setSelectedNetwork(CryptoNetwork.Ethereum)}
             >
               Ethereum
               <div
                 className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
-                  selectedNetwork == 0 ? '' : 'hidden'
+                  selectedNetwork === CryptoNetwork.Ethereum ? '' : 'hidden'
                 }`}
               ></div>
             </button>
@@ -73,12 +73,12 @@ export function ConnectWalletDialog() {
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="avalanche-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
-              onClick={() => setSelectedNetwork(1)}
+              onClick={() => setSelectedNetwork(CryptoNetwork.Avalanche)}
             >
               Avalanche
               <div
                 className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
-                  selectedNetwork == 1 ? '' : 'hidden'
+                  selectedNetwork === CryptoNetwork.Avalanche ? '' : 'hidden'
                 }`}
               ></div>
             </button>
@@ -86,12 +86,12 @@ export function ConnectWalletDialog() {
               className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3 rounded-r-md`}
               id="oh-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
-              onClick={() => setSelectedNetwork(2)}
+              onClick={() => setSelectedNetwork(CryptoNetwork.OH)}
             >
               OH!
               <div
                 className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
-                  selectedNetwork == 2 ? '' : 'hidden'
+                  selectedNetwork === CryptoNetwork.OH ? '' : 'hidden'
                 }`}
               ></div>
             </button>
