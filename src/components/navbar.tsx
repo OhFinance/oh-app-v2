@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { CryptoNetwork, useWalletStore } from '~/stores/useWalletStore';
+import { Network, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
 
 const selectNetworkHint = 'This is a hint for selecting your network.';
@@ -11,13 +11,13 @@ export function Navbar() {
 
   let networkLabel;
   switch (selectedNetwork) {
-    case CryptoNetwork.Ethereum:
+    case Network.Ethereum:
       networkLabel = 'Ethereum';
       break;
-    case CryptoNetwork.Avalanche:
+    case Network.Avalanche:
       networkLabel = 'Avalanche';
       break;
-    case CryptoNetwork.OH:
+    case Network.OH:
       networkLabel = 'OH!';
       break;
     default:
@@ -93,7 +93,7 @@ export function Navbar() {
                     <button
                       className="rounded-t bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(CryptoNetwork.Ethereum)}
+                      onClick={() => setSelectedNetwork(Network.Ethereum)}
                     >
                       Ethereum
                     </button>
@@ -102,7 +102,7 @@ export function Navbar() {
                     <button
                       className="bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(CryptoNetwork.Avalanche)}
+                      onClick={() => setSelectedNetwork(Network.Avalanche)}
                     >
                       Avalanche
                     </button>
@@ -111,7 +111,7 @@ export function Navbar() {
                     <button
                       className="rounded-b bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(CryptoNetwork.OH)}
+                      onClick={() => setSelectedNetwork(Network.OH)}
                     >
                       OH!
                     </button>
