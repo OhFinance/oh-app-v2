@@ -4,6 +4,7 @@ import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { ConnectWalletDialog } from '~/components/connectWalletDialog';
 import { HintButton } from '~/components/hintButton';
+import { MarketingBody } from '~/components/marketingBody';
 import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
 import { ChartTimeRange, useChartStore } from '~/stores/useChartStore';
@@ -316,6 +317,7 @@ const Home: NextPage = React.forwardRef(function Home() {
         </div>
       </div>
       {showConnectWalletDialog && <ConnectWalletDialog />}
+      <MarketingBody />
     </main>
   );
 }) as NextPage;
