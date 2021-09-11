@@ -45,7 +45,7 @@ export function ConnectWalletDialog() {
         className="relative top-20 mx-auto p-5 w-10/12 shadow rounded-md bg-black"
       >
         <div className="flex flex-row p-2">
-          <div className="bg-modalPink flex-col w-1/4 rounded-l-md">
+          <div className="bg-modalAccent flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
               <p className="text-md text-pink-700 py-1 px-2 border-2 border-transparent text-center">
                 1. Select Network
@@ -55,7 +55,7 @@ export function ConnectWalletDialog() {
           </div>
           <div className="w-3/4">
             <button
-              className={`py-1 px-2 border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
+              className={`py-1 px-2 border-2 border-transparent bg-modalBG text-white text-md hover:bg-modalBGHover w-1/3`}
               id="eth-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(Network.Ethereum)}
@@ -68,7 +68,7 @@ export function ConnectWalletDialog() {
               ></div>
             </button>
             <button
-              className={`py-1 px-2 border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
+              className={`py-1 px-2 border-2 border-transparent bg-modalBG text-white text-md hover:bg-modalBGHover w-1/3`}
               id="avalanche-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(Network.Avalanche)}
@@ -81,7 +81,7 @@ export function ConnectWalletDialog() {
               ></div>
             </button>
             <button
-              className={`py-1 px-2 border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3 rounded-r-md`}
+              className={`py-1 px-2 border-2 border-transparent bg-modalBG text-white text-md hover:bg-modalBGHover w-1/3 rounded-r-md`}
               id="oh-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(Network.OH)}
@@ -97,7 +97,7 @@ export function ConnectWalletDialog() {
         </div>
 
         <div className="flex flex-row p-2">
-          <div className="bg-modalPink flex-col w-1/4 rounded-l-md">
+          <div className="bg-modalAccent flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
               <p className="text-md text-pink-700 py-1 px-2  border-2 border-transparent text-center">
                 2. Connect Wallet
@@ -105,10 +105,10 @@ export function ConnectWalletDialog() {
               <HintButton hint={connectWalletHint} />
             </div>
           </div>
-          <div className="w-3/4 w-full bg-gray-900 rounded-r-md">
+          <div className="w-3/4 w-full bg-modalBG rounded-r-md">
             <div className="p-10">
               <button
-                className={`border-2 border-transparent rounded-md p-5 text-white text-md bg-modalPink hover:bg-pink-800`}
+                className={`border-2 border-transparent rounded-md p-5 text-white text-md bg-modalAccent hover:bg-modalAccentHover`}
                 onClick={onClickMetaMask}
               >
                 <img

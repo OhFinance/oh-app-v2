@@ -51,7 +51,26 @@ module.exports = {
           DEFAULT: 'rgb(38,0,20)',
           dark: 'rgb(38,0,20)',
         },
-        modalPink: '#1c1019',
+        modalAccent: {
+          light: '#ccebf9',
+          DEFAULT: '#1c1019',
+          dark: '#1c1019',
+        },
+        modalAccentHover: {
+          light: '#9bcae0',
+          DEFAULT: '#2d1a28',
+          dark: '#2d1a28',
+        },
+        modalBG: {
+          light: '#f5c8e4',
+          DEFAULT: '#111113',
+          dark: '#111113',
+        },
+        modalBGHover: {
+          light: '#f1a5d4',
+          DEFAULT: '#222227',
+          dark: '#222227',
+        },
         code: {
           green: '#b5f4a5',
           yellow: '#ffe484',

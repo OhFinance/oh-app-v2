@@ -70,7 +70,7 @@ export function Navbar() {
               <img className="mr-2" alt="LIGHT OFF" src="/img/lightModeOff.png" />
             </div>
             <div className="flex pr-4 pl-8">
-              <div className="bg-modalPink flex-col rounded-l-md w-52">
+              <div className="bg-modalAccent flex-col rounded-l-md w-52">
                 <div className="flex flex-grow justify-center items-center w-48">
                   <p className="text-sm text-pink-700 py-2 px-2 -lg normal-case text-center">
                     Network
