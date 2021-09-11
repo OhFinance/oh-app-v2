@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from '~/pages/__styles__/index.module.css';
+import { textPink } from '~/tempTailwindConfig';
 
 export function MarketingBody() {
   return (
@@ -51,8 +53,9 @@ export function MarketingBody() {
         <div className="-mt-20">
           <p className="text-white text-6xl">OH! Does it for you</p>
           <p className="text-white text-3xl pt-20">
-            Gain exposure to a managed index of DeFi strategies, designed to increase volume
-            exposure and reduce Smart Contract risk.
+            Gain exposure to a{' '}
+            <span className={`${textPink}`}>managed index of DeFi strategies</span> , designed to
+            increase volume exposure and reduce Smart Contract risk.
           </p>
         </div>
       </div>
@@ -69,7 +72,8 @@ export function MarketingBody() {
 
         <p className="text-white text-3xl pt-20">Testimonials</p>
         <p className="text-pink-600 text-5xl pt-20">
-          "Something something amazing so good we are going to the moon!"
+          "Something something amazing so<br className={styles['cta-line-break']}></br> good we are
+          going to the moon!"
         </p>
         <p className="text-pink-600 text-2xl pt-4">-Satoshi Nakamoto</p>
       </div>
