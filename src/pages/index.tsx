@@ -225,11 +225,11 @@ const Home: NextPage = React.forwardRef(function Home() {
                       return null;
                     }
                     return (
-                      <div className="flex w-full h-full p-2 rounded-lg">
+                      <div className="flex w-full h-full rounded-lg">
                         <Chart
                           data={data}
                           isLoading={isLoading}
-                          width={Math.max(width - 20, 906)}
+                          width={Math.max(width, 906)}
                           height={height}
                           onChartTimeChanged={chartTimeChanged}
                         />

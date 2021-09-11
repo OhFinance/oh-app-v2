@@ -8,11 +8,13 @@ export enum CryptoNetwork {
 }
 
 const initialState = {
-  walletConnected: false,
+  walletConnected: true,
   showConnectWalletDialog: false,
   selectedNetwork: CryptoNetwork.Ethereum,
   walletAddress: '0x0000000000000000000000000000000000000000',
   portfolioBalance: 0,
+  portfolioPl: 0, // Amount gained or lost (USDC, can be negative)
+  portfolioPlPercent: 0, // Amount gained or lost (Percent)
   availableOh: 9999,
   availableUsdc: 9999,
   interestEarned: 0,

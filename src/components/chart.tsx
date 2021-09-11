@@ -1,6 +1,7 @@
 import React from 'react';
 import { Area, ComposedChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartTimeRange } from '~/stores/useChartStore';
+import { ChartPnL } from './chartPnL';
 
 export type ChartProps = {
   data: null | unknown[];
@@ -82,16 +83,18 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
           <div className={`pt-3 pl-4 text-pink-500 pointer-events-none`}>Loading...</div>
         )}
       </div>
+      {/* P&L Indicator */}
+      <ChartPnL />
       {/* Chart */}
       {!data ? (
         <div className={`text-center text-pink-500 pt-44`} style={{ width, height }}>
           Loading...
         </div>
       ) : (
-        <div className="w-full flex-row">
+        <div className="mt-6 w-full flex-row">
           <ComposedChart
             width={width - 10}
-            height={height - 50}
+            height={height - 70}
             data={data}
             margin={{ top: 25, right: 0, left: 0, bottom: 0 }}
           >

@@ -34,22 +34,20 @@ export function ConnectWalletDialog() {
         className={`fixed h-12 w-12 absolute top-0 right-0 items-center`}
       >
         <button
-          className={`-lg border-2 border-transparent text-pink-700 text-lg`}
+          className={`border-2 border-transparent text-pink-700 text`}
           onClick={toggleConnectWalletDialog}
         >
-          <p className="text-7xl text-pink-600 -mx-3 -lg border-2 border-transparent text-center">
-            X
-          </p>
+          <p className="text-7xl text-pink-600 -mx-3 border-2 border-transparent text-center">X</p>
         </button>
       </div>
       <div
         // Modal Content
-        className="relative top-20 mx-auto p-5 w-10/12 shadow-lg rounded-md bg-black"
+        className="relative top-20 mx-auto p-5 w-10/12 shadow rounded-md bg-black"
       >
         <div className="flex flex-row p-2">
           <div className="bg-modalPink flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
-              <p className="text-md text-pink-700 py-1 px-2 -lg border-2 border-transparent text-center">
+              <p className="text-md text-pink-700 py-1 px-2 border-2 border-transparent text-center">
                 1. Select Network
               </p>
               <HintButton hint={selectNetworkHint} />
@@ -57,7 +55,7 @@ export function ConnectWalletDialog() {
           </div>
           <div className="w-3/4">
             <button
-              className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
+              className={`py-1 px-2 border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="eth-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(CryptoNetwork.Ethereum)}
@@ -70,7 +68,7 @@ export function ConnectWalletDialog() {
               ></div>
             </button>
             <button
-              className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
+              className={`py-1 px-2 border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3`}
               id="avalanche-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(CryptoNetwork.Avalanche)}
@@ -83,7 +81,7 @@ export function ConnectWalletDialog() {
               ></div>
             </button>
             <button
-              className={`py-1 px-2 -lg border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3 rounded-r-md`}
+              className={`py-1 px-2 border-2 border-transparent bg-gray-900 text-white text-md hover:bg-gray-800 w-1/3 rounded-r-md`}
               id="oh-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(CryptoNetwork.OH)}
@@ -98,10 +96,10 @@ export function ConnectWalletDialog() {
           </div>
         </div>
 
-        <div className="flex flex-row  p-2">
+        <div className="flex flex-row p-2">
           <div className="bg-modalPink flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
-              <p className="text-md text-pink-700 py-1 px-2 -lg border-2 border-transparent text-center">
+              <p className="text-md text-pink-700 py-1 px-2  border-2 border-transparent text-center">
                 2. Connect Wallet
               </p>
               <HintButton hint={connectWalletHint} />
@@ -110,7 +108,7 @@ export function ConnectWalletDialog() {
           <div className="w-3/4 w-full bg-gray-900 rounded-r-md">
             <div className="p-10">
               <button
-                className={` -lg border-2 border-transparent rounded-md p-5 text-white text-md bg-modalPink hover:bg-pink-800`}
+                className={`border-2 border-transparent rounded-md p-5 text-white text-md bg-modalPink hover:bg-pink-800`}
                 onClick={onClickMetaMask}
               >
                 <img

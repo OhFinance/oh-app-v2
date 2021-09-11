@@ -1,15 +1,29 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { useWalletStore } from '~/stores/useWalletStore';
+import { CryptoNetwork, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
 
 const selectNetworkHint = 'This is a hint for selecting your network.';
 
 export function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const { toggleConnectWalletDialog } = useWalletStore();
-  const { setSelectedNetwork } = useWalletStore();
-  const { selectedNetwork } = useWalletStore();
+  const { selectedNetwork, setSelectedNetwork, toggleConnectWalletDialog } = useWalletStore();
+
+  let networkLabel;
+  switch (selectedNetwork) {
+    case CryptoNetwork.Ethereum:
+      networkLabel = 'Ethereum';
+      break;
+    case CryptoNetwork.Avalanche:
+      networkLabel = 'Avalanche';
+      break;
+    case CryptoNetwork.OH:
+      networkLabel = 'OH!';
+      break;
+    default:
+      networkLabel = 'UNKNOWN';
+      break;
+  }
 
   // TODO: Figure out how to display hamburger menu when navbar is open
   return (
@@ -69,9 +83,7 @@ export function Navbar() {
                   className={`py-1 px-4 -lg bg-gray-900 w-40 rounded-r-md text-white text-md hover:bg-gray-800`}
                   id="eth-wallet-button"
                 >
-                  {selectedNetwork == 0 && 'Ethereum'}
-                  {selectedNetwork == 1 && 'Avalanche'}
-                  {selectedNetwork == 2 && 'OH!'}
+                  {networkLabel}
                   <div
                     className={`object-bottom bg-pink-600 rounded-br-md h-2 -my-1 -mx-4 relative`}
                   ></div>
@@ -81,7 +93,7 @@ export function Navbar() {
                     <button
                       className="rounded-t bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(0)}
+                      onClick={() => setSelectedNetwork(CryptoNetwork.Ethereum)}
                     >
                       Ethereum
                     </button>
@@ -90,7 +102,7 @@ export function Navbar() {
                     <button
                       className="bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(1)}
+                      onClick={() => setSelectedNetwork(CryptoNetwork.Avalanche)}
                     >
                       Avalanche
                     </button>
@@ -99,7 +111,7 @@ export function Navbar() {
                     <button
                       className="rounded-b bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(2)}
+                      onClick={() => setSelectedNetwork(CryptoNetwork.OH)}
                     >
                       OH!
                     </button>
