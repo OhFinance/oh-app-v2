@@ -32,9 +32,15 @@ export function Navbar() {
                 Docs
               </a>
             </Link>
-            <div>
-              <span className="mr-2">Dark</span>
-              <div className="relative inline-block w-10 mr-2 align-middle select-none">
+            <div className="flex">
+              <img
+                width={32}
+                height={26}
+                className="mr-2"
+                alt="DARK ON"
+                src="/img/darkModeOn.png"
+              />
+              <div className="relative inline-block w-10 mr-2 mt-1 align-middle select-none">
                 <label
                   htmlFor="blue"
                   className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
@@ -47,18 +53,20 @@ export function Navbar() {
                   />
                 </label>
               </div>
-              <span>Light</span>
+              <img className="mr-2" alt="LIGHT OFF" src="/img/lightModeOff.png" />
             </div>
             <div className="flex pr-4 pl-8">
               <div className="bg-modalPink flex-col rounded-l-md w-52">
                 <div className="flex flex-grow justify-center items-center w-48">
-                  <p className="text-sm text-pink-700 py-2 px-2 -lg text-center">Network</p>
+                  <p className="text-sm text-pink-700 py-2 px-2 -lg normal-case text-center">
+                    Network
+                  </p>
                   <HintButton hint={selectNetworkHint} />
                 </div>
               </div>
               <div className="w-full group">
                 <button
-                  className={`py-1 px-4 -lg bg-gray-900 rounded-r-md text-white text-md hover:bg-gray-800`}
+                  className={`py-1 px-4 -lg bg-gray-900 w-40 rounded-r-md text-white text-md hover:bg-gray-800`}
                   id="eth-wallet-button"
                 >
                   {selectedNetwork == 0 && 'Ethereum'}
