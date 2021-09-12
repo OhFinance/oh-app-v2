@@ -35,14 +35,14 @@ export function Navbar() {
           </a>
         </Link>
         <div className="flex items-center">
-          <nav className="font-sen text-gray-800 dark:text-white uppercase text-lg lg:flex items-center hidden">
+          <nav className="font-sen text-defaultText uppercase text-lg lg:flex items-center hidden">
             <Link href="faq">
-              <a className="py-2 px-6 flex hover:text-pink-500 hover:border-b-2 hover:border-pink-500">
+              <a className="py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                 FAQ
               </a>
             </Link>
             <Link href="docs">
-              <a className="py-2 px-6 flex hover:text-pink-500 hover:border-b-2 hover:border-pink-500">
+              <a className="py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                 Docs
               </a>
             </Link>
@@ -72,7 +72,7 @@ export function Navbar() {
             <div className="flex pr-4 pl-8">
               <div className="bg-modalAccent flex-col rounded-l-md w-52">
                 <div className="flex flex-grow justify-center items-center w-48">
-                  <p className="text-sm text-pink-700 py-2 px-2 -lg normal-case text-center">
+                  <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
                     Network
                   </p>
                   <HintButton hint={selectNetworkHint} />
@@ -80,18 +80,18 @@ export function Navbar() {
               </div>
               <div className="w-full group">
                 <button
-                  className={`py-1 px-4 -lg bg-gray-900 w-40 rounded-r-md text-white text-md hover:bg-gray-800`}
-                  id="eth-wallet-button"
+                  className={`py-1 px-4 -lg bg-navBarBG w-40 rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
+                  id="network-button"
                 >
                   {networkLabel}
                   <div
-                    className={`object-bottom bg-pink-600 rounded-br-md h-2 -my-1 -mx-4 relative`}
+                    className={`object-bottom bg-selectionHighlight rounded-br-md h-2 -my-1 -mx-4 relative`}
                   ></div>
                 </button>
-                <ul className="dropdown-menu absolute hidden group-hover:block text-white pt-1 z-10">
+                <ul className="dropdown-menu absolute hidden group-hover:block text-defaultText pt-1 z-10 w-40">
                   <li className="">
                     <button
-                      className="rounded-t bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      className="rounded-t bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
                       onClick={() => setSelectedNetwork(Network.Ethereum)}
                     >
@@ -100,7 +100,7 @@ export function Navbar() {
                   </li>
                   <li className="">
                     <button
-                      className="bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      className="bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
                       onClick={() => setSelectedNetwork(Network.Avalanche)}
                     >
@@ -109,7 +109,7 @@ export function Navbar() {
                   </li>
                   <li className="">
                     <button
-                      className="rounded-b bg-gray-900 hover:bg-gray-800 py-2 px-4 block whitespace-no-wrap w-full"
+                      className="rounded-b bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
                       onClick={() => setSelectedNetwork(Network.OH)}
                     >
@@ -120,7 +120,7 @@ export function Navbar() {
               </div>
             </div>
             <button
-              className="ml-6 py-1 px-2 rounded-lg bg-pink-500 border-2 border-transparent text-white text-md mr-4 hover:bg-pink-400"
+              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-defaultText text-md mr-4 hover:bg-buttonHighlight"
               onClick={toggleConnectWalletDialog}
             >
               Connect Wallet
@@ -130,9 +130,9 @@ export function Navbar() {
             className="lg:hidden flex flex-col ml-4"
             onClick={() => setNavbarOpen(!navbarOpen)}
           >
-            <span className="w-6 h-1 bg-gray-800 dark:bg-white mb-1"></span>
-            <span className="w-6 h-1 bg-gray-800 dark:bg-white mb-1"></span>
-            <span className="w-6 h-1 bg-gray-800 dark:bg-white mb-1"></span>
+            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
+            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
+            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
           </button>
         </div>
       </div>

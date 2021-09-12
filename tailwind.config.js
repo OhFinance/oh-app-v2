@@ -32,24 +32,24 @@ module.exports = {
         primary: colors.teal,
         gray: colors.trueGray,
         siteBG1: {
-          light: 'rgba(248,249,250,1) 0%',
-          DEFAULT: 'rgba(38,0,20,1) 0%',
-          dark: 'rgba(38,0,20,1) 0%',
+          light: '#f8f9fa',
+          DEFAULT: '#260014',
+          dark: '#260014',
         },
         siteBG2: {
-          light: 'rgba(0,156,226,0.19791666666666663) 64%',
-          DEFAULT: 'rgba(13,0,6,1) 100%)',
-          dark: 'rgba(13,0,6,1) 100%)',
+          light: '#009ce233',
+          DEFAULT: '#0d0006',
+          dark: '#0d0006',
         },
         siteBG3: {
-          light: 'rgba(255,255,255,0.3) 100%',
-          DEFAULT: 'rgba(13,0,6,1) 100%)',
-          dark: 'rgba(13,0,6,1) 100%)',
+          light: '#ffffff4c',
+          DEFAULT: '#0d0006',
+          dark: '#0d0006',
         },
         siteBG4: {
-          light: 'rgb(248,249,250)',
-          DEFAULT: 'rgb(38,0,20)',
-          dark: 'rgb(38,0,20)',
+          light: '#f8f9fa',
+          DEFAULT: '#260014',
+          dark: '#260014',
         },
         modalAccent: {
           light: '#ccebf9',
@@ -110,6 +110,16 @@ module.exports = {
           light: '#ccebf9',
           DEFAULT: '#111113',
           dark: '#111113',
+        },
+        button: {
+          light: '#ec4899',
+          DEFAULT: '#ec4899',
+          dark: '#ec4899',
+        },
+        buttonHighlight: {
+          light: '#f446af',
+          DEFAULT: '#f446af',
+          dark: '#f446af',
         },
         code: {
           green: '#b5f4a5',
