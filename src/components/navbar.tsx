@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { useTheme } from '~/hooks/useTheme';
+import { useThemeStore } from '~/stores/useThemeStore';
 import { Network, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
 
 const selectNetworkHint = 'This is a hint for selecting your network.';
 
 export function Navbar() {
-  const [theme, setTheme] = useTheme();
+  const { theme, setTheme } = useThemeStore();
   const [navbarOpen, setNavbarOpen] = useState(false);
   const { selectedNetwork, setSelectedNetwork, toggleConnectWalletDialog } = useWalletStore();
 

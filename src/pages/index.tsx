@@ -6,9 +6,9 @@ import { ConnectWalletDialog } from '~/components/connectWalletDialog';
 import { HintButton } from '~/components/hintButton';
 import { MarketingBody } from '~/components/marketingBody';
 import { UsdcInput } from '~/components/usdcInput';
-import styles from '~/pages/__styles__/index.module.css';
 import { ChartTimeRange, useChartStore } from '~/stores/useChartStore';
 import { useWalletStore } from '~/stores/useWalletStore';
+import styles from '~/pages/__styles__/index.module.css';
 import {
   h1,
   h2,

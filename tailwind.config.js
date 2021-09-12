@@ -31,26 +31,14 @@ module.exports = {
       colors: {
         primary: colors.teal,
         gray: colors.trueGray,
-        siteBG1: {
-          light: '#f8f9fa',
-          DEFAULT: '#260014',
-          dark: '#260014',
-        },
-        siteBG2: {
-          light: '#009ce233',
-          DEFAULT: '#0d0006',
-          dark: '#0d0006',
-        },
-        siteBG3: {
-          light: '#ffffff4c',
-          DEFAULT: '#0d0006',
-          dark: '#0d0006',
-        },
-        siteBG4: {
-          light: '#f8f9fa',
-          DEFAULT: '#260014',
-          dark: '#260014',
-        },
+        // @DREW: all colors should point to CSS variables that are defined in tailwind.css for each theme
+        // This file should just define custom color names to access in tailwind classes,
+        // the actual color values will live in tailwind.css
+        siteBG1: 'var(--color-bg)',
+        siteBG2: 'var(--color-bgSecondary)',
+        siteBG3: 'var(--color-bgSecondary)',
+        siteBG4: 'var(--color-bg)',
+        // @DREW: The colors below need to be converted to use CSS vars
         modalAccent: {
           light: '#ccebf9',
           DEFAULT: '#1c1019',

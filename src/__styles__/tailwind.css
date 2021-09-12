@@ -1,7 +1,20 @@
+/* https://www.skies.dev/tailwind-themes */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html {
   scroll-behavior: smooth;
+}
+
+/* @DREW: Below is an example of defining CSS variables for colors that change depending on theme */
+.dark {
+  --color-bg: #260014;
+  --color-bgSecondary: #0d0006;
+}
+
+.light {
+  --color-bg: #f8f9fa;
+  --color-bgSecondary: #ffffff4c;
 }

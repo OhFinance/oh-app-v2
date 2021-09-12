@@ -22,7 +22,6 @@ const initialState = {
 
 export const useWalletStore = createStore(
   combine(initialState, (set, get) => ({
-    initialState,
     toggleConnectWalletDialog: () =>
       set({ showConnectWalletDialog: !get().showConnectWalletDialog }),
     setPortfolioBalance: (portfolioBalance: number) => set({ portfolioBalance }),

@@ -11,7 +11,6 @@ const initialState = {
 
 export const useChartStore = createStore(
   combine(initialState, (set, _get) => ({
-    initialState,
     fetchData: async (timeRange: ChartTimeRange) => {
       set({ isLoading: true });
 
