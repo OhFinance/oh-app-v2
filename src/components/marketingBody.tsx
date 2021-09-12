@@ -11,8 +11,8 @@ export function MarketingBody() {
       <div // Tagline
         className="text-center items-center p-44"
       >
-        <p className="text-6xl text-white">Fight back with the future of money</p>
-        <p className="text-3xl text-white pt-16">
+        <p className="text-6xl text-defaultText">Fight back with the future of money</p>
+        <p className="text-3xl text-defaultText pt-16">
           Simply deposit USDC and Oh! Finance aggregates popular DeFi investment strategies and
           automatically compounds your earnings.
         </p>
@@ -51,8 +51,8 @@ export function MarketingBody() {
           src="/img/OhFinanceAssets_OhSection1Image.png"
         />
         <div className="-mt-20">
-          <p className="text-white text-6xl">OH! Does it for you</p>
-          <p className="text-white text-3xl pt-20">
+          <p className="text-defaultText text-6xl">OH! Does it for you</p>
+          <p className="text-defaultText text-3xl pt-20">
             Gain exposure to a{' '}
             <span className={`${textPink}`}>managed index of DeFi strategies</span> , designed to
             increase volume exposure and reduce Smart Contract risk.
@@ -61,27 +61,27 @@ export function MarketingBody() {
       </div>
 
       <div // Strategic Partners
-        className="bg-gray-900 items-center text-center py-20"
+        className="bg-partnersBG items-center text-center py-20"
       >
-        <p className="text-6xl text-white pb-24">Strategic Partners</p>
+        <p className="text-6xl text-defaultText pb-24">Strategic Partners</p>
         <div className="flex justify-center">
           <img className="" alt="Bridge Logo" src="/img/OhFinanceAssets_PartnersLogo1.png" />
           <img className="" alt="Ava Labs Logo" src="/img/OhFinanceAssets_PartnersLogo2.png" />
           <img className="" alt="Avalance Logo" src="/img/OhFinanceAssets_PartnersLogo3.png" />
         </div>
 
-        <p className="text-white text-3xl pt-20">Testimonials</p>
-        <p className="text-pink-600 text-5xl pt-20">
+        <p className="text-defaultText text-3xl pt-20">Testimonials</p>
+        <p className="text-accentText text-5xl pt-20">
           "Something something amazing so<br className={styles['cta-line-break']}></br> good we are
           going to the moon!"
         </p>
-        <p className="text-pink-600 text-2xl pt-4">-Satoshi Nakamoto</p>
+        <p className="text-accentText text-2xl pt-4">-Satoshi Nakamoto</p>
       </div>
 
       <div // Roadmap
         className="items-center text-center py-20"
       >
-        <p className="text-white text-6xl py-20">Roadmap</p>
+        <p className="text-defaultText text-6xl py-20">Roadmap</p>
         <img className="" alt="Roadmap" src="/img/OhFinanceAssets_timeline1.png" />
       </div>
     </div>

@@ -71,6 +71,46 @@ module.exports = {
           DEFAULT: '#222227',
           dark: '#222227',
         },
+        navBarAccent: {
+          light: '#1c1019',
+          DEFAULT: '#1c1019',
+          dark: '#1c1019',
+        },
+        navBarAccentHover: {
+          light: '#f9c2e4',
+          DEFAULT: '#2d1a28',
+          dark: '#2d1a28',
+        },
+        navBarBG: {
+          light: '#f5c8e4',
+          DEFAULT: '#111113',
+          dark: '#111113',
+        },
+        navBarBGHover: {
+          light: '#f1a5d4',
+          DEFAULT: '#222227',
+          dark: '#222227',
+        },
+        selectionHighlight: {
+          light: '#e7018c',
+          DEFAULT: '#e7018c',
+          dark: '#e7018c',
+        },
+        defaultText: {
+          light: '#212121',
+          DEFAULT: '#ffffff',
+          dark: '#ffffff',
+        },
+        accentText: {
+          light: '#e7018c',
+          DEFAULT: '#ec4899',
+          dark: '#ec4899',
+        },
+        partnersBG: {
+          light: '#ccebf9',
+          DEFAULT: '#111113',
+          dark: '#111113',
+        },
         code: {
           green: '#b5f4a5',
           yellow: '#ffe484',

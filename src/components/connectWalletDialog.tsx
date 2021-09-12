@@ -34,10 +34,12 @@ export function ConnectWalletDialog() {
         className={`fixed h-12 w-12 absolute top-0 right-0 items-center`}
       >
         <button
-          className={`border-2 border-transparent text-pink-700 text`}
+          className={`border-2 border-transparent text-accentText text`}
           onClick={toggleConnectWalletDialog}
         >
-          <p className="text-7xl text-pink-600 -mx-3 border-2 border-transparent text-center">X</p>
+          <p className="text-7xl text-accentText -mx-3 border-2 border-transparent text-center">
+            X
+          </p>
         </button>
       </div>
       <div
@@ -47,7 +49,7 @@ export function ConnectWalletDialog() {
         <div className="flex flex-row p-2">
           <div className="bg-modalAccent flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
-              <p className="text-md text-pink-700 py-1 px-2 border-2 border-transparent text-center">
+              <p className="text-md text-accentText py-1 px-2 border-2 border-transparent text-center">
                 1. Select Network
               </p>
               <HintButton hint={selectNetworkHint} />
@@ -62,7 +64,7 @@ export function ConnectWalletDialog() {
             >
               Ethereum
               <div
-                className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
+                className={`object-bottom bg-selectionHighlight h-2 -my-1 -mx-2 z-10 relative ${
                   selectedNetwork === Network.Ethereum ? '' : 'hidden'
                 }`}
               ></div>
@@ -75,7 +77,7 @@ export function ConnectWalletDialog() {
             >
               Avalanche
               <div
-                className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
+                className={`object-bottom bg-selectionHighlight h-2 -my-1 -mx-2 z-10 relative ${
                   selectedNetwork === Network.Avalanche ? '' : 'hidden'
                 }`}
               ></div>
@@ -88,7 +90,7 @@ export function ConnectWalletDialog() {
             >
               OH!
               <div
-                className={`object-bottom bg-pink-600 h-2 -my-1 -mx-2 z-10 relative ${
+                className={`object-bottom bg-selectionHighlight h-2 -my-1 -mx-2 z-10 relative ${
                   selectedNetwork === Network.OH ? '' : 'hidden'
                 }`}
               ></div>
@@ -99,7 +101,7 @@ export function ConnectWalletDialog() {
         <div className="flex flex-row p-2">
           <div className="bg-modalAccent flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
-              <p className="text-md text-pink-700 py-1 px-2  border-2 border-transparent text-center">
+              <p className="text-md text-accentText py-1 px-2  border-2 border-transparent text-center">
                 2. Connect Wallet
               </p>
               <HintButton hint={connectWalletHint} />
