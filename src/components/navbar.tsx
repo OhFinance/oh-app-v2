@@ -1,11 +1,13 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { ThemeContext } from '~/contexts/themeContext';
 import { Network, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
 
 const selectNetworkHint = 'This is a hint for selecting your network.';
 
 export function Navbar() {
+  const { theme, setTheme } = useContext(ThemeContext);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const { selectedNetwork, setSelectedNetwork, toggleConnectWalletDialog } = useWalletStore();
 
@@ -36,12 +38,12 @@ export function Navbar() {
         </Link>
         <div className="flex items-center">
           <nav className="font-sen text-defaultText uppercase text-lg lg:flex items-center hidden">
-            <Link href="faq">
+            <Link href="/faq">
               <a className="py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                 FAQ
               </a>
             </Link>
-            <Link href="docs">
+            <Link href="/docs">
               <a className="py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                 Docs
               </a>
@@ -60,10 +62,13 @@ export function Navbar() {
                   className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
                 >
                   <input
-                    type="checkbox"
-                    name="toggle"
                     id="blue"
+                    name="toggle"
+                    type="checkbox"
+                    checked={theme === 'light'}
                     className="outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                    readOnly
                   />
                 </label>
               </div>
