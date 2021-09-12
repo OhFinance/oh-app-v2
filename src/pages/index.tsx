@@ -40,6 +40,7 @@ function onClickClaimOh() {
 
 const Home: NextPage = React.forwardRef(function Home() {
   const {
+    walletConnected,
     showConnectWalletDialog,
     toggleConnectWalletDialog,
     portfolioBalance,
@@ -50,6 +51,7 @@ const Home: NextPage = React.forwardRef(function Home() {
   const { isLoading, data, fetchData } = useChartStore();
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
   const chartRef = useRef(null as null | HTMLDivElement);
+  const chartContainerRef = useRef(null as null | HTMLDivElement);
 
   function chartTimeChanged(timeRange: ChartTimeRange) {
     setChartTimeRange(timeRange);
@@ -95,7 +97,7 @@ const Home: NextPage = React.forwardRef(function Home() {
         className={`${styles['main-container']} mt-36 mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-black h-auto items-center`}
       >
         <div className={`p-6 flex-col w-full h-full`}>
-          <div className={`flex flex-row justify-between`}>
+          <div className={`w-full h-full flex flex-row`}>
             <div className={`h-auto container flex flex-col justify-between h-auto`}>
               <div className={`h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
                 <div className={`h-full m-2 flex flex-col rounded-lg bg-black`}>
@@ -142,12 +144,17 @@ const Home: NextPage = React.forwardRef(function Home() {
                   </div>
                 </div>
                 <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
-                  <UsdcInput maxValue={availableUsdc} onChange={console.log} />
+                  <UsdcInput
+                    maxValue={availableUsdc}
+                    onChange={console.log}
+                    disabled={!walletConnected}
+                  />
                 </div>
                 <div className={`h-auto m-2 flex flex-col`}>
                   <button
-                    className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                    className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400 disabled:bg-gray-700`}
                     onClick={onClickDeposit}
+                    disabled={!walletConnected}
                   >
                     Deposit
                   </button>
@@ -174,7 +181,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                             <p className={`${h3} mt-4 w-full h-8`}>Withdraw USDC</p>
                             <p className={`${textCashMd}`}>${availableUsdc} Available</p>
                           </div>
-                          <div className="pt-2 ml-1 mt-8 flex flex-col">
+                          <div className="pt-2 ml-7 mt-8 flex flex-col">
                             <HintButton hint={depositUsdcHint} />
                           </div>
                         </div>
@@ -182,12 +189,17 @@ const Home: NextPage = React.forwardRef(function Home() {
                     </div>
                   </div>
                   <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
-                    <UsdcInput maxValue={availableUsdc} onChange={console.log} />
+                    <UsdcInput
+                      maxValue={availableUsdc}
+                      onChange={console.log}
+                      disabled={!walletConnected}
+                    />
                   </div>
                   <div className={`h-auto m-2 flex flex-col`}>
                     <button
-                      className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                      className={`mb-1 w-full h-9 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400 disabled:bg-gray-700`}
                       onClick={onClickWithraw}
+                      disabled={!walletConnected}
                     >
                       Withdraw
                     </button>
@@ -197,8 +209,33 @@ const Home: NextPage = React.forwardRef(function Home() {
             </div>
 
             <div
+              ref={chartContainerRef}
               className={`ml-6 h-full container flex flex-col justify-between rounded-lg h-full`}
             >
+              {!walletConnected && (
+                <CaptureResize captureRef={chartContainerRef}>
+                  {({ width, height }) => (
+                    <div
+                      className={`flex flex-col absolute bg-black bg-opacity-70 z-10 items-center justify-center`}
+                      style={{ width, height }}
+                    >
+                      <img
+                        src={'/img/OhFinanceAssets_IconWallet.png'}
+                        width={52}
+                        height={49}
+                        alt="Conect wallet icon"
+                        className="w-[52px] h-[49px]"
+                      />
+                      <button
+                        className="mt-6 py-2 px-24 rounded-lg bg-button border-2 border-transparent text-defaultText text-md hover:bg-buttonHighlight"
+                        onClick={toggleConnectWalletDialog}
+                      >
+                        Connect Wallet
+                      </button>
+                    </div>
+                  )}
+                </CaptureResize>
+              )}
               <div className={`h-64 flex flex-row rounded-t-lg bg-pink-800 bg-opacity-20`}>
                 <div className={`mt-12 ml-12 w-50 h-full justify-between`}>
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
@@ -220,11 +257,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 className={`${styles['chart-container']} flex flex-col justify-between rounded-b-lg bg-gray-800 bg-opacity-80`}
               >
                 <CaptureResize captureRef={chartRef}>
-                  {(size = { width: 0, height: 0 }) => {
-                    const { width, height } = size;
-                    if (!width || !height) {
-                      return null;
-                    }
+                  {({ width, height }) => {
                     return (
                       <div className="flex w-full h-full rounded-lg">
                         <Chart
@@ -241,7 +274,6 @@ const Home: NextPage = React.forwardRef(function Home() {
               </div>
             </div>
           </div>
-          <div className={`flex flex-row justify-between`}></div>
         </div>
       </div>
       <div
@@ -267,14 +299,15 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
                 <div className="flex flex-col">
                   <button
-                    className={`mt-3 mb-1 w-36 h-12 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400`}
+                    className={`mt-3 mb-1 w-36 h-12 rounded bg-pink-500 border-2 border-transparent text-white text-md hover:bg-pink-400 disabled:bg-gray-700`}
                     onClick={onClickClaimOh}
+                    disabled={!walletConnected}
                   >
                     Claim OH!
                   </button>
                   <p className="text-white">${availableOh} Available</p>
                 </div>
-                <div className="mr-3 mt-8 flex flex-col">
+                <div className="mr-2 mt-8 flex flex-col">
                   <HintButton hint={claimOhHint} />
                 </div>
               </div>

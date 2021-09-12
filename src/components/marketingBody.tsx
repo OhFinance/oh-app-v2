@@ -25,18 +25,24 @@ export function MarketingBody() {
           className="px-6"
           alt="Marketing Graphic 1"
           src="/img/OhFinanceAssets_marketingGraphic1.png"
+          width={412}
+          height={412}
         />
 
         <img
           className="px-6"
           alt="Marketing Graphic 2"
           src="/img/OhFinanceAssets_marketingGraphic2.png"
+          width={412}
+          height={412}
         />
 
         <img
           className="px-6"
           alt="Marketing Graphic 3"
           src="/img/OhFinanceAssets_marketingGraphic3.png"
+          width={412}
+          height={412}
         />
       </div>
 
@@ -65,9 +71,24 @@ export function MarketingBody() {
       >
         <p className="text-6xl text-defaultText pb-24">Strategic Partners</p>
         <div className="flex justify-center">
-          <img className="" alt="Bridge Logo" src="/img/OhFinanceAssets_PartnersLogo1.png" />
-          <img className="" alt="Ava Labs Logo" src="/img/OhFinanceAssets_PartnersLogo2.png" />
-          <img className="" alt="Avalance Logo" src="/img/OhFinanceAssets_PartnersLogo3.png" />
+          <img
+            alt="Bridge Logo"
+            src="/img/OhFinanceAssets_PartnersLogo1.png"
+            width={315}
+            height={121}
+          />
+          <img
+            alt="Ava Labs Logo"
+            src="/img/OhFinanceAssets_PartnersLogo2.png"
+            width={315}
+            height={121}
+          />
+          <img
+            alt="Avalance Logo"
+            src="/img/OhFinanceAssets_PartnersLogo3.png"
+            width={315}
+            height={121}
+          />
         </div>
 
         <p className="text-defaultText text-3xl pt-20">Testimonials</p>
@@ -82,7 +103,7 @@ export function MarketingBody() {
         className="items-center text-center py-20"
       >
         <p className="text-defaultText text-6xl py-20">Roadmap</p>
-        <img className="" alt="Roadmap" src="/img/OhFinanceAssets_timeline1.png" />
+        <img alt="Roadmap" src="/img/OhFinanceAssets_timeline1.png" width={1511} height={590} />
       </div>
     </div>
   );

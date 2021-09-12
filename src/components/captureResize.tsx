@@ -16,5 +16,9 @@ export function CaptureResize(props: Props) {
     }
   }, [captureRef]);
 
+  if (size.width === 0 || size.height === 0) {
+    return null;
+  }
+
   return props.children(size);
 }

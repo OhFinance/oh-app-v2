@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import styles from './__styles__/usdcInput.module.css';
 
-type Props = { maxValue: number; onChange: (value: number) => void };
+type Props = { maxValue: number; onChange: (value: number) => void; disabled?: boolean };
 
 export function UsdcInput(props: Props) {
-  const { maxValue, onChange } = props;
+  const { maxValue, onChange, disabled } = props;
   const [value, setValue] = useState('');
 
   return (
@@ -13,6 +13,7 @@ export function UsdcInput(props: Props) {
         <button
           onClick={() => setValue(maxValue.toString())}
           className={`w-auto text-xl text-pink-800 pl-2 pr-2 underline`}
+          disabled={disabled}
         >
           MAX
         </button>
@@ -31,6 +32,7 @@ export function UsdcInput(props: Props) {
               onChange(value);
             }
           }}
+          disabled={disabled}
         ></input>
         <p className={`w-auto text-xl text-pink-800 p-1 pl-2 pr-2`}>USDC</p>
       </div>

@@ -8,15 +8,15 @@ export enum Network {
 }
 
 const initialState = {
-  walletConnected: true,
+  walletConnected: false,
   showConnectWalletDialog: false,
   selectedNetwork: Network.Ethereum,
   walletAddress: '0x0000000000000000000000000000000000000000',
   portfolioBalance: 0,
   portfolioPl: 0, // Amount gained or lost (USDC, can be negative)
   portfolioPlPercent: 0, // Amount gained or lost (Percent)
-  availableOh: 9999,
-  availableUsdc: 9999,
+  availableOh: 0,
+  availableUsdc: 0,
   interestEarned: 0,
 };
 

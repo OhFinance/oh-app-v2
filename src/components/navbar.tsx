@@ -72,7 +72,13 @@ export function Navbar() {
                   />
                 </label>
               </div>
-              <img className="mr-2" alt="LIGHT OFF" src="/img/lightModeOff.png" />
+              <img
+                className="mr-2"
+                alt="LIGHT OFF"
+                src="/img/lightModeOff.png"
+                width={35}
+                height={35}
+              />
             </div>
             <div className="flex pr-4 pl-8">
               <div className="bg-modalAccent flex-col rounded-l-md w-52">
@@ -94,7 +100,7 @@ export function Navbar() {
                   ></div>
                 </button>
                 <ul className="dropdown-menu absolute hidden group-hover:block text-defaultText pt-1 z-10 w-40">
-                  <li className="">
+                  <li>
                     <button
                       className="rounded-t bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
@@ -103,7 +109,7 @@ export function Navbar() {
                       Ethereum
                     </button>
                   </li>
-                  <li className="">
+                  <li>
                     <button
                       className="bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
@@ -112,7 +118,7 @@ export function Navbar() {
                       Avalanche
                     </button>
                   </li>
-                  <li className="">
+                  <li>
                     <button
                       className="rounded-b bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
                       // TODO: Oh! Finance will fill in network selection logic here
