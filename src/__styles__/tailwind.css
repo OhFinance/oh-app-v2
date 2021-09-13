@@ -10,11 +10,43 @@ html {
 
 /* @DREW: Below is an example of defining CSS variables for colors that change depending on theme */
 .dark {
-  --color-bg: #260014;
-  --color-bgSecondary: #0d0006;
+  --color-bg-gradient-top: #260014;
+  --color-bg-gradient-middle: #0d0006;
+  --color-bg-gradient-bottom: #0d0006;
+  --color-bg-back: #0d0006;
+  --color-modal-accent: #1c1019;
+  --color-modal-accent-hover: #2d1a28;
+  --color-modal-bg: #111113;
+  --color-modal-bg-hover: #222227;
+  --color-nav-bar-accent: #1c1019;
+  --color-nav-bar-accent-hover: #2d1a28;
+  --color-nav-bar-bg: #111113;
+  --color-nav-bar-bg-hover: #222227;
+  --color-selection-highlight: #e7018c;
+  --color-default-text: #ffffff;
+  --color-accent-text: #ec4899;
+  --color-partners-bg: #111113;
+  --color-button: #ec4899;
+  --color-button-highlight: #f446af;
 }
 
 .light {
-  --color-bg: #f8f9fa;
-  --color-bgSecondary: #ffffff4c;
+  --color-bg-gradient-top: #f8f9fa;
+  --color-bg-gradient-middle: #009ce233;
+  --color-bg-gradient-bottom: #ffffff4c;
+  --color-bg-back: #f8f9fa;
+  --color-modal-accent: #ccebf9;
+  --color-modal-accent-hover: #9bcae0;
+  --color-modal-bg: #f5c8e4;
+  --color-modal-bg-hover: #f1a5d4;
+  --color-nav-bar-accent: #1c1019;
+  --color-nav-bar-accent-hover: #f9c2e4;
+  --color-nav-bar-bg: #f5c8e4;
+  --color-nav-bar-bg-hover: #f1a5d4;
+  --color-selection-highlight: #e7018c;
+  --color-default-text: #212121;
+  --color-accent-text: #e7018c;
+  --color-partners-bg: #ccebf9;
+  --color-button: #ec4899;
+  --color-button-highlight: #f446af;
 }
