@@ -8,7 +8,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* @DREW: Below is an example of defining CSS variables for colors that change depending on theme */
 .dark {
   --color-bg-gradient-top: #260014;
   --color-bg-gradient-middle: #0d0006;

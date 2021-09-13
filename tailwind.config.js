@@ -31,7 +31,7 @@ module.exports = {
       colors: {
         primary: colors.teal,
         gray: colors.trueGray,
-        // @DREW: all colors should point to CSS variables that are defined in tailwind.css for each theme
+        // all colors should point to CSS variables that are defined in tailwind.css for each theme
         // This file should just define custom color names to access in tailwind classes,
         // the actual color values will live in tailwind.css
         siteBG1: 'var(--color-bg-gradient-top)',
