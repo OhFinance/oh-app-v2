@@ -13,3 +13,42 @@
   min-width: 1280px;
   max-width: 1280px;
 }
+
+.first-container {
+  @apply flex-col;
+}
+
+.second-container {
+  @apply flex-row;
+}
+
+.third-container {
+  @apply flex-col;
+}
+
+.fourth-container {
+  @apply flex-col;
+}
+
+@media (max-width: 1279px) {
+  .main-container {
+    min-width: 340px;
+    max-width: 100%;
+  }
+
+  .first-container {
+    @apply flex-row;
+  }
+
+  .second-container {
+    @apply flex-col;
+  }
+
+  .third-container {
+    @apply flex-col;
+  }
+
+  .fourth-container {
+    @apply flex-row;
+  }
+}

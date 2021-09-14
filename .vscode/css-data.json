@@ -1,0 +1,7 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    { "name": "@tailwind", "description": "Import tailwind class set" },
+    { "name": "@apply", "description": "Apply tailwind class" }
+  ]
+}

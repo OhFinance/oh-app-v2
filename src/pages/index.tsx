@@ -6,9 +6,9 @@ import { ConnectWalletDialog } from '~/components/connectWalletDialog';
 import { HintButton } from '~/components/hintButton';
 import { MarketingBody } from '~/components/marketingBody';
 import { UsdcInput } from '~/components/usdcInput';
+import styles from '~/pages/__styles__/index.module.css';
 import { ChartTimeRange, useChartStore } from '~/stores/useChartStore';
 import { useWalletStore } from '~/stores/useWalletStore';
-import styles from '~/pages/__styles__/index.module.css';
 import {
   h1,
   h2,
@@ -96,11 +96,13 @@ const Home: NextPage = React.forwardRef(function Home() {
       <div
         className={`${styles['main-container']} mt-36 mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-black h-auto items-center`}
       >
-        <div className={`p-6 flex-col w-full h-full`}>
-          <div className={`w-full h-full flex flex-row`}>
+        <div className={`${styles['first-container']} p-6 w-full h-full`}>
+          <div className={`${styles['second-container']} w-full h-full flex`}>
             <div className={`h-auto container flex flex-col justify-between h-auto`}>
               <div className={`h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
-                <div className={`h-full m-2 flex flex-col rounded-lg bg-black`}>
+                <div
+                  className={`${styles['third-container']}  h-full m-2 flex rounded-lg bg-black`}
+                >
                   <div
                     className={`w-full h-full flex flex-col rounded-lg bg-pink-800 bg-opacity-25`}
                   >
@@ -210,7 +212,7 @@ const Home: NextPage = React.forwardRef(function Home() {
 
             <div
               ref={chartContainerRef}
-              className={`ml-6 h-full container flex flex-col justify-between rounded-lg h-full`}
+              className={`${styles['chart-container']} ml-6 h-full container flex flex-col justify-between rounded-lg h-full`}
             >
               {!walletConnected && (
                 <CaptureResize captureRef={chartContainerRef}>

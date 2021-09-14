@@ -19,5 +19,6 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "css.customData": ["./.vscode/css-data.json"]
 }
