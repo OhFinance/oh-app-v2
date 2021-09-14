@@ -26,7 +26,16 @@ html {
   --color-accent-text: #ec4899;
   --color-partners-bg: #111113;
   --color-button: #ec4899;
+  --color-button-bg: #000000;
+  --color-button-disabled: #f380c5;
   --color-button-highlight: #f446af;
+  --color-footer-bg: #111113;
+  --color-console-bg-outer: #000000;
+  --color-console-bg-inner: #3e3e3e;
+  --color-console-border-inner: #00000000;
+  --color-console-border-accent: #00000000;
+  --color-console-accent: #140810;
+  --color-input-bg: #140810;
 }
 
 .light {
@@ -47,5 +56,14 @@ html {
   --color-accent-text: #e7018c;
   --color-partners-bg: #ccebf9;
   --color-button: #ec4899;
+  --color-button-bg: #ccebf9;
+  --color-button-disabled: #f380c5;
   --color-button-highlight: #f446af;
+  --color-footer-bg: #ccebf9;
+  --color-console-bg-outer: #ffffff;
+  --color-console-bg-inner: #ffffff;
+  --color-console-border-inner: #000000;
+  --color-console-border-accent: #e7018c;
+  --color-console-accent: #ffffff;
+  --color-input-bg: #fef2f9;
 }

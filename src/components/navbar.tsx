@@ -131,7 +131,7 @@ export function Navbar() {
               </div>
             </div>
             <button
-              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-defaultText text-md mr-4 hover:bg-buttonHighlight"
+              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md mr-4 hover:bg-buttonHighlight"
               onClick={toggleConnectWalletDialog}
             >
               Connect Wallet
