@@ -33,7 +33,7 @@ export function Navbar() {
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/">
           <a>
-            <img src="img/oh_logo.png" width={98} height={60} alt="OH! Logo" />
+            <img src={`img/oh_logo_${theme}.png`} width={98} height={60} alt="OH! Logo" />
           </a>
         </Link>
         <div className="flex items-center">
