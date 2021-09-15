@@ -141,9 +141,9 @@ export function Navbar() {
             className="lg:hidden flex flex-col ml-4"
             onClick={() => setNavbarOpen(!navbarOpen)}
           >
-            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
-            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
-            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
+            <span className="w-6 h-1 bg-navBarHamburger mb-1"></span>
+            <span className="w-6 h-1 bg-navBarHamburger mb-1"></span>
+            <span className="w-6 h-1 bg-navBarHamburger mb-1"></span>
           </button>
         </div>
       </div>

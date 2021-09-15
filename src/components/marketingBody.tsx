@@ -1,8 +1,11 @@
 import React from 'react';
 import styles from '~/pages/__styles__/index.module.css';
+import { useThemeStore } from '~/stores/useThemeStore';
 import { textPink } from '~/tempTailwindConfig';
 
 export function MarketingBody() {
+  const { theme, setTheme } = useThemeStore();
+
   return (
     <div
       // Parent Container
@@ -73,19 +76,19 @@ export function MarketingBody() {
         <div className="flex justify-center">
           <img
             alt="Bridge Logo"
-            src="/img/OhFinanceAssets_PartnersLogo1.png"
+            src={`/img/OhFinanceAssets_PartnersLogo1_${theme}.png`}
             width={315}
             height={121}
           />
           <img
             alt="Ava Labs Logo"
-            src="/img/OhFinanceAssets_PartnersLogo2.png"
+            src={`/img/OhFinanceAssets_PartnersLogo2_${theme}.png`}
             width={315}
             height={121}
           />
           <img
             alt="Avalance Logo"
-            src="/img/OhFinanceAssets_PartnersLogo3.png"
+            src={`/img/OhFinanceAssets_PartnersLogo3_${theme}.png`}
             width={315}
             height={121}
           />
@@ -103,7 +106,12 @@ export function MarketingBody() {
         className="items-center text-center py-20"
       >
         <p className="text-defaultText text-6xl py-20">Roadmap</p>
-        <img alt="Roadmap" src="/img/OhFinanceAssets_timeline1.png" width={1511} height={590} />
+        <img
+          alt="Roadmap"
+          src={`/img/OhFinanceAssets_timeline1_${theme}.png`}
+          width={1511}
+          height={590}
+        />
       </div>
     </div>
   );
