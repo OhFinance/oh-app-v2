@@ -12,13 +12,13 @@ export function UsdcInput(props: Props) {
       <div className="w-full bg-pink-800 bg-opacity-25 rounded-lg w-full flex flex-row">
         <button
           onClick={() => setValue(maxValue.toString())}
-          className={`w-auto text-xl text-pink-800 pl-2 pr-2 underline`}
+          className={`w-16 text-xl text-pink-800 pl-2 pr-2 underline`}
           disabled={disabled}
         >
           MAX
         </button>
         <input
-          className={`w-36 h-9 ml-1 text-xl text-pink-800 ${styles['usdc-input']}`}
+          className={`w-full h-9 ml-1 text-xl text-pink-800 ${styles['usdc-input']}`}
           value={value}
           onChange={(event) => {
             if (event.target.value === '') {
@@ -34,7 +34,7 @@ export function UsdcInput(props: Props) {
           }}
           disabled={disabled}
         ></input>
-        <p className={`w-auto text-xl text-pink-800 p-1 pl-2 pr-2`}>USDC</p>
+        <p className={`w-24 text-xl text-pink-800 p-1 pl-2 mr-2`}>USDC</p>
       </div>
     </>
   );

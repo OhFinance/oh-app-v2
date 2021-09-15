@@ -98,11 +98,13 @@ const Home: NextPage = React.forwardRef(function Home() {
       >
         <div className={`${styles['first-container']} p-6 w-full h-full`}>
           <div className={`${styles['second-container']} w-full h-full flex`}>
-            <div className={`h-auto container flex flex-col justify-between h-auto`}>
-              <div className={`h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
-                <div
-                  className={`${styles['third-container']}  h-full m-2 flex rounded-lg bg-black`}
-                >
+            <div
+              className={`${styles['account-actions-container']} h-auto container flex flex-col justify-between h-auto`}
+            >
+              <div
+                className={`${styles['account-action-container']} h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}
+              >
+                <div className={`${styles['third-container']} h-full m-2 flex rounded-lg bg-black`}>
                   <div
                     className={`w-full h-full flex flex-col rounded-lg bg-pink-800 bg-opacity-25`}
                   >
@@ -162,7 +164,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                   </button>
                 </div>
               </div>
-              <div className={`h-64 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}>
+              <div
+                className={`${styles['account-action-container']} h-64 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}
+              >
                 <div className={`w-full h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
                   <div className={`h-full m-2 flex flex-col rounded-lg bg-black`}>
                     <div
@@ -212,7 +216,7 @@ const Home: NextPage = React.forwardRef(function Home() {
 
             <div
               ref={chartContainerRef}
-              className={`${styles['chart-container']} ml-6 h-full container flex flex-col justify-between rounded-lg h-full`}
+              className={`${styles['portfolio-container']} h-full container flex flex-col justify-between rounded-lg h-full`}
             >
               {!walletConnected && (
                 <CaptureResize captureRef={chartContainerRef}>
@@ -265,7 +269,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                         <Chart
                           data={data}
                           isLoading={isLoading}
-                          width={Math.max(width, 906)}
+                          width={Math.min(width, 906)}
                           height={height}
                           onChartTimeChanged={chartTimeChanged}
                         />
