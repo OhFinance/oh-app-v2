@@ -81,7 +81,7 @@ export function Navbar() {
               />
             </div>
             <div className="flex pr-4 pl-8">
-              <div className="bg-modalAccent flex-col rounded-l-md w-52">
+              <div className="bg-navBarAccent flex-col rounded-l-md w-52">
                 <div className="flex flex-grow justify-center items-center w-48">
                   <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
                     Network
@@ -131,7 +131,7 @@ export function Navbar() {
               </div>
             </div>
             <button
-              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-defaultText text-md mr-4 hover:bg-buttonHighlight"
+              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md mr-4 hover:bg-buttonHighlight"
               onClick={toggleConnectWalletDialog}
             >
               Connect Wallet
