@@ -21,6 +21,7 @@ html {
   --color-nav-bar-accent-hover: #2d1a28;
   --color-nav-bar-bg: #111113;
   --color-nav-bar-bg-hover: #222227;
+  --color-nav-menu-bg: #222227;
   --color-selection-highlight: #e7018c;
   --color-default-text: #ffffff;
   --color-accent-text: #ec4899;
@@ -42,6 +43,7 @@ html {
   --color-nav-bar-accent-hover: #f9c2e4;
   --color-nav-bar-bg: #f5c8e4;
   --color-nav-bar-bg-hover: #f1a5d4;
+  --color-nav-menu-bg: #ffffff;
   --color-selection-highlight: #e7018c;
   --color-default-text: #212121;
   --color-accent-text: #e7018c;

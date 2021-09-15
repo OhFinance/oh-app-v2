@@ -9,6 +9,7 @@ const selectNetworkHint = 'This is a hint for selecting your network.';
 export function Navbar() {
   const { theme, setTheme } = useThemeStore();
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const [selectNetworkOpen, setSelectNetworkOpen] = useState(false);
   const { selectedNetwork, setSelectedNetwork, toggleConnectWalletDialog } = useWalletStore();
 
   let networkLabel;
@@ -27,7 +28,6 @@ export function Navbar() {
       break;
   }
 
-  // TODO: Figure out how to display hamburger menu when navbar is open
   return (
     <header className="h-24 sm:h-32 flex items-center z-30 w-full">
       <div className="container mx-auto px-6 flex items-center justify-between">
@@ -141,11 +141,142 @@ export function Navbar() {
             className="lg:hidden flex flex-col ml-4"
             onClick={() => setNavbarOpen(!navbarOpen)}
           >
-            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
-            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
-            <span className="w-6 h-1 bg-navBarBG mb-1"></span>
+            <span className="w-8 h-1 bg-navBarBG mb-1"></span>
+            <span className="w-8 h-1 bg-navBarBG mb-1"></span>
+            <span className="w-8 h-1 bg-navBarBG mb-1"></span>
           </button>
         </div>
+
+        {
+          // nav menu
+          navbarOpen && (
+            <div className="w-3/4 h-full z-20 fixed top-0 right-0 bg-navMenuBG filter drop-shadow-xl">
+              <div className="flex justify-between">
+                <button
+                  className="flex flex-col ml-4 mt-4"
+                  onClick={() => setNavbarOpen(!navbarOpen)}
+                >
+                  <span className="w-8 h-1 bg-navBarBG mb-1"></span>
+                  <span className="w-8 h-1 bg-navBarBG mb-1"></span>
+                  <span className="w-8 h-1 bg-navBarBG mb-1"></span>
+                </button>
+
+                <div className="flex h-7 mt-4">
+                  <img
+                    width={22}
+                    height={22}
+                    className="mr-2 mt-1"
+                    alt="DARK ON"
+                    src="/img/darkModeOn.png"
+                  />
+                  <div className="relative inline-block w-10 mr-2 mt-1 align-middle select-none">
+                    <label
+                      htmlFor="blue"
+                      className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                    >
+                      <input
+                        id="blue"
+                        name="toggle"
+                        type="checkbox"
+                        checked={theme === 'light'}
+                        className="outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                        readOnly
+                      />
+                    </label>
+                  </div>
+                  <img
+                    className="mr-2 mt-1"
+                    alt="LIGHT OFF"
+                    src="/img/lightModeOff.png"
+                    width={22}
+                    height={22}
+                  />
+                </div>
+              </div>
+
+              <button
+                className="ml-4 mt-4 py-1 px-2 mr-4 w-11/12 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight"
+                onClick={toggleConnectWalletDialog}
+              >
+                Connect Wallet
+              </button>
+
+              <div className="flex pl-2 mt-4">
+                <div className="bg-navBarAccent flex-col rounded-l-md w-52">
+                  <div className="flex flex-grow justify-center items-center w-48">
+                    <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
+                      Network
+                    </p>
+                    <HintButton hint={selectNetworkHint} />
+                  </div>
+                </div>
+                <div className="w-full group">
+                  <button
+                    className={`py-2 px-4 -lg bg-navBarBG w-40 border-b-4 border-t-0 border-l-0 border-r-0 border-selectionHighlight rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
+                    id="network-button"
+                    onClick={() => setSelectNetworkOpen(!selectNetworkOpen)}
+                  >
+                    {networkLabel}
+                  </button>
+                  {selectNetworkOpen && (
+                    <ul className="dropdown-menu absolute block text-defaultText pt-1 z-10 w-40">
+                      <li>
+                        <button
+                          className="rounded-t bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
+                          // TODO: Oh! Finance will fill in network selection logic here
+                          onClick={() => {
+                            setSelectedNetwork(Network.Ethereum);
+                            setSelectNetworkOpen(!selectNetworkOpen);
+                          }}
+                        >
+                          Ethereum
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
+                          // TODO: Oh! Finance will fill in network selection logic here
+                          onClick={() => {
+                            setSelectedNetwork(Network.Avalanche);
+                            setSelectNetworkOpen(!selectNetworkOpen);
+                          }}
+                        >
+                          Avalanche
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="rounded-b bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
+                          // TODO: Oh! Finance will fill in network selection logic here
+                          onClick={() => {
+                            setSelectedNetwork(Network.OH);
+                            setSelectNetworkOpen(!selectNetworkOpen);
+                          }}
+                        >
+                          OH!
+                        </button>
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              </div>
+
+              <div className="right-0 absolute text-right pr-5 text-defaultText">
+                <Link href="/faq">
+                  <a className="w-4 py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
+                    FAQ
+                  </a>
+                </Link>
+                <Link href="/docs">
+                  <a className="w-4 py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
+                    Docs
+                  </a>
+                </Link>
+              </div>
+            </div>
+          )
+        }
       </div>
     </header>
   );
