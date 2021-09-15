@@ -262,14 +262,14 @@ export function Navbar() {
                 </div>
               </div>
 
-              <div className="right-0 absolute text-right pr-5 text-defaultText">
+              <div className="text-right pr-5 text-defaultText">
                 <Link href="/faq">
-                  <a className="w-4 py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
+                  <a className="w-4 py-6 pt-12 px-6 font-bold text-xl flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                     FAQ
                   </a>
                 </Link>
                 <Link href="/docs">
-                  <a className="w-4 py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
+                  <a className="w-4 py-6 px-6 font-bold text-xl flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                     Docs
                   </a>
                 </Link>
