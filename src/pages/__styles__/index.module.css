@@ -4,6 +4,13 @@
   }
 }
 
+/* Portfolio container contains the chart */
+.portfolio-container {
+  width: 912px;
+  height: 420px;
+  @apply ml-6;
+}
+
 .chart-container {
   width: 912px;
   height: 420px;
@@ -30,6 +37,10 @@
   @apply flex-col;
 }
 
+.account-actions-container {
+  max-width: 340px;
+}
+
 @media (max-width: 1279px) {
   .main-container {
     min-width: 340px;
@@ -50,5 +61,27 @@
 
   .fourth-container {
     @apply flex-row;
+  }
+
+  .account-actions-container {
+    align-self: center;
+  }
+
+  .account-action-container {
+    @apply mb-4;
+  }
+
+  .portfolio-container {
+    align-self: center;
+    min-width: 340px;
+    width: min(100%, 912px);
+    height: 420px;
+    @apply ml-0;
+  }
+
+  .chart-container {
+    min-width: 340px;
+    width: min(100%, 912px);
+    height: 420px;
   }
 }

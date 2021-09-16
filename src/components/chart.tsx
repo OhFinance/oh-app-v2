@@ -1,5 +1,5 @@
 import React from 'react';
-import { Area, ComposedChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, ComposedChart, Line, Tooltip, XAxis } from 'recharts';
 import { ChartTimeRange } from '~/stores/useChartStore';
 import { ChartPnL } from './chartPnL';
 
@@ -25,7 +25,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
   }
 
   const buttonStyle =
-    'w-12 h-8 mt-2 ml-4 text-white bg-pink-800 bg-opacity-25 hover:bg-opacity-100 disabled:bg-gray-700 rounded-full';
+    'w-12 h-8 mt-2 ml-4 text-white bg-button hover:bg-buttonHighlight disabled:bg-buttonDisabled rounded-full';
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -80,14 +80,14 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
           ALL
         </button>
         {data && isLoading && (
-          <div className={`pt-3 pl-4 text-pink-500 pointer-events-none`}>Loading...</div>
+          <div className={`pt-3 pl-4 text-accentText pointer-events-none`}>Loading...</div>
         )}
       </div>
       {/* P&L Indicator */}
       <ChartPnL />
       {/* Chart */}
       {!data ? (
-        <div className={`text-center text-pink-500 pt-44`} style={{ width, height }}>
+        <div className={`text-center text-accentText pt-44`} style={{ width, height }}>
           Loading...
         </div>
       ) : (
@@ -105,7 +105,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
               </linearGradient>
             </defs>
             <XAxis dataKey="time" tickFormatter={convertDate} />
-            <YAxis tickFormatter={convertValue} />
+            {/* <YAxis tickFormatter={convertValue} /> */}
             <Tooltip />
             {/* <CartesianGrid vertical={false} stroke="#DDD" /> */}
             <Line

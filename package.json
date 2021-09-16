@@ -6,12 +6,12 @@
   "author": "Oh! Finance <hello@oh.finance>",
   "private": true,
   "engines": {
-    "node": "14.17.5",
-    "npm": "7.21.1"
+    "node": "14.17.6",
+    "npm": "7.23.0"
   },
   "volta": {
-    "node": "14.17.5",
-    "npm": "7.21.1"
+    "node": "14.17.6",
+    "npm": "7.23.0"
   },
   "scripts": {
     "start": "next start",
