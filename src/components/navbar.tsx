@@ -33,7 +33,7 @@ export function Navbar() {
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/">
           <a>
-            <img src="img/oh_logo.png" width={98} height={60} alt="OH! Logo" />
+            <img src={`img/oh_logo_${theme}.png`} width={98} height={60} alt="OH! Logo" />
           </a>
         </Link>
         <div className="flex items-center">
@@ -131,7 +131,7 @@ export function Navbar() {
               </div>
             </div>
             <button
-              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-defaultText text-md mr-4 hover:bg-buttonHighlight"
+              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md mr-4 hover:bg-buttonHighlight"
               onClick={toggleConnectWalletDialog}
             >
               Connect Wallet
@@ -141,9 +141,9 @@ export function Navbar() {
             className="lg:hidden flex flex-col ml-4"
             onClick={() => setNavbarOpen(!navbarOpen)}
           >
-            <span className="w-8 h-1 bg-navBarBG mb-1"></span>
-            <span className="w-8 h-1 bg-navBarBG mb-1"></span>
-            <span className="w-8 h-1 bg-navBarBG mb-1"></span>
+            <span className="w-6 h-1 bg-navBarHamburger mb-1"></span>
+            <span className="w-6 h-1 bg-navBarHamburger mb-1"></span>
+            <span className="w-6 h-1 bg-navBarHamburger mb-1"></span>
           </button>
         </div>
 

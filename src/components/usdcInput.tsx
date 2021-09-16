@@ -9,7 +9,7 @@ export function UsdcInput(props: Props) {
 
   return (
     <>
-      <div className="w-full bg-pink-800 bg-opacity-25 rounded-lg w-full flex flex-row">
+      <div className="w-full bg-inputBG rounded-lg w-full flex flex-row">
         <button
           onClick={() => setValue(maxValue.toString())}
           className={`w-16 text-xl text-pink-800 pl-2 pr-2 underline`}
