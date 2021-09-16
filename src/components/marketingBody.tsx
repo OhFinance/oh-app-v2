@@ -50,7 +50,7 @@ export function MarketingBody() {
       </div>
 
       <div // Marketing Graphics mobile
-        className="lg:hidden py-16"
+        className="lg:hidden py-16 flex flex-col items-center"
       >
         <img
           className="py-6"
@@ -118,10 +118,10 @@ export function MarketingBody() {
       </div>
 
       <div // Strategic Partners
-        className="bg-partnersBG items-center text-center py-20"
+        className="bg-partnersBG text-center py-20"
       >
         <p className="text-6xl text-defaultText pb-24">Strategic Partners</p>
-        <div className="flex flex-col lg:flex-row justify-center">
+        <div className="flex flex-col lg:flex-row justify-center items-center">
           <img
             alt="Bridge Logo"
             src={`/img/OhFinanceAssets_PartnersLogo1_${theme}.png`}
@@ -166,14 +166,15 @@ export function MarketingBody() {
       </div>
 
       <div // Roadmap mobile
-        className="block lg:hidden items-center text-center py-20"
+        className="block lg:hidden flex flex-col items-center text-center py-20"
       >
         <p className="text-defaultText text-6xl py-20">Roadmap</p>
         <img
           alt="Roadmap"
           src={`/img/OhFinanceAssets_timeline2_${theme}.png`}
-          width={1511}
-          height={590}
+          className="ml-8"
+          width={590}
+          height={1511}
         />
       </div>
     </div>
