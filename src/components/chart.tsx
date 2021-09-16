@@ -1,5 +1,5 @@
 import React from 'react';
-import { Area, ComposedChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, ComposedChart, Line, Tooltip, XAxis } from 'recharts';
 import { ChartTimeRange } from '~/stores/useChartStore';
 import { ChartPnL } from './chartPnL';
 
@@ -105,7 +105,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
               </linearGradient>
             </defs>
             <XAxis dataKey="time" tickFormatter={convertDate} />
-            <YAxis tickFormatter={convertValue} />
+            {/* <YAxis tickFormatter={convertValue} /> */}
             <Tooltip />
             {/* <CartesianGrid vertical={false} stroke="#DDD" /> */}
             <Line
