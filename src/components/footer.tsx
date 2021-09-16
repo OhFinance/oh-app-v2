@@ -6,9 +6,9 @@ export function Footer() {
     <>
       <footer className="pt-4 pb-8 xl:pt-8 bg-gray-900">
         <div className="max-w-screen-lg xl:max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8 text-gray-400 dark:text-gray-300">
-          <ul className="text-lg font-light pb-8 flex flex-wrap justify-center space-x-0">
+          <ul className="text-lg font-light pb-8 flex flex-col lg:flex-row justify-center space-x-0 pl-8 lg:pl-0">
             <li className="w-1/2 md:w-1/3 lg:w-1/3">
-              <div className="text-center">
+              <div className="text-left lg:text-center">
                 <h2 className="text-gray-500 dark:text-pink-500 text-2xl mb-4">Resources</h2>
                 <ul>
                   <li className="mb-4 hover:text-gray-800 dark:hover:text-pink-500 transition-colors duration-200">
@@ -25,8 +25,10 @@ export function Footer() {
               </div>
             </li>
             <li className="w-1/2 md:w-1/3 lg:w-1/3">
-              <div className="text-center">
-                <h2 className="text-gray-500 dark:text-pink-500 text-2xl mb-4">Contacts</h2>
+              <div className="text-left lg:text-center">
+                <h2 className="text-gray-500 dark:text-pink-500 text-2xl pt-8 lg:pt-0 mb-4">
+                  Contacts
+                </h2>
                 <ul>
                   <li className="mb-4 hover:text-gray-800 dark:hover:text-pink-500 transition-colors duration-200">
                     <Link href="/">
@@ -47,8 +49,10 @@ export function Footer() {
               </div>
             </li>
             <li className="w-1/2 md:w-1/3 lg:w-1/3">
-              <div className="text-center">
-                <h2 className="text-gray-500 dark:text-pink-500 text-2xl mb-4">Community</h2>
+              <div className="text-left lg:text-center">
+                <h2 className="text-gray-500 dark:text-pink-500 text-2xl pt-8 lg:pt-0 mb-4">
+                  Community
+                </h2>
                 <ul>
                   <li className="mb-4 hover:text-gray-800 dark:hover:text-pink-500 transition-colors duration-200">
                     <Link href="/">

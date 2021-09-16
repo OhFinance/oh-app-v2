@@ -46,6 +46,7 @@ module.exports = {
         navBarAccentHover: 'var(--color-nav-bar-accent-hover)',
         navBarBG: 'var(--color-nav-bar-bg)',
         navBarBGHover: 'var(--color-nav-bar-bg-hover)',
+        navMenuBG: 'var(--color-nav-menu-bg)',
         selectionHighlight: 'var(--color-selection-highlight)',
         defaultText: 'var(--color-default-text)',
         accentText: 'var(--color-accent-text)',
