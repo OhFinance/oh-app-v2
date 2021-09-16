@@ -121,48 +121,25 @@ export function MarketingBody() {
         className="bg-partnersBG items-center text-center py-20"
       >
         <p className="text-6xl text-defaultText pb-24">Strategic Partners</p>
-        <div className="hidden lg:flex justify-center">
+        <div className="flex flex-col lg:flex-row justify-center">
           <img
             alt="Bridge Logo"
             src={`/img/OhFinanceAssets_PartnersLogo1_${theme}.png`}
+            className="py-12 lg:py-0"
             width={315}
             height={121}
           />
           <img
             alt="Ava Labs Logo"
             src={`/img/OhFinanceAssets_PartnersLogo2_${theme}.png`}
+            className="py-12 lg:py-0"
             width={315}
             height={121}
           />
           <img
             alt="Avalance Logo"
             src={`/img/OhFinanceAssets_PartnersLogo3_${theme}.png`}
-            width={315}
-            height={121}
-          />
-        </div>
-
-        <div // Strategic Partners mobile
-          className="flex-col lg:hidden"
-        >
-          <img
-            alt="Bridge Logo"
-            src="/img/OhFinanceAssets_PartnersLogo1.png"
-            className="py-12"
-            width={315}
-            height={121}
-          />
-          <img
-            alt="Ava Labs Logo"
-            src="/img/OhFinanceAssets_PartnersLogo2.png"
-            className="py-12"
-            width={315}
-            height={121}
-          />
-          <img
-            alt="Avalance Logo"
-            src="/img/OhFinanceAssets_PartnersLogo3.png"
-            className="py-12"
+            className="py-12 lg:py-0"
             width={315}
             height={121}
           />
@@ -177,12 +154,24 @@ export function MarketingBody() {
       </div>
 
       <div // Roadmap
-        className="items-center text-center py-20"
+        className="hidden lg:block items-center text-center py-20"
       >
         <p className="text-defaultText text-6xl py-20">Roadmap</p>
         <img
           alt="Roadmap"
           src={`/img/OhFinanceAssets_timeline1_${theme}.png`}
+          width={1511}
+          height={590}
+        />
+      </div>
+
+      <div // Roadmap mobile
+        className="block lg:hidden items-center text-center py-20"
+      >
+        <p className="text-defaultText text-6xl py-20">Roadmap</p>
+        <img
+          alt="Roadmap"
+          src={`/img/OhFinanceAssets_timeline2_${theme}.png`}
           width={1511}
           height={590}
         />
