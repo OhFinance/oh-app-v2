@@ -54,7 +54,7 @@ export function Navbar() {
                 width={32}
                 height={26}
                 className="mr-2"
-                alt="DARK ON"
+                alt="DARK THEME"
                 src={`/img/darkMode_${theme}.png`}
               />
               <div className="relative inline-block w-10 mr-2 mt-1 align-middle select-none">
@@ -75,7 +75,7 @@ export function Navbar() {
               </div>
               <img
                 className="mr-2"
-                alt="LIGHT MODE"
+                alt="LIGHT THEME"
                 src={`/img/lightMode_${theme}.png`}
                 width={35}
                 height={35}
@@ -167,8 +167,8 @@ export function Navbar() {
                     width={22}
                     height={22}
                     className="mr-2 mt-1"
-                    alt="DARK ON"
-                    src="/img/darkModeOn.png"
+                    alt="DARK THEME"
+                    src={`/img/darkMode_${theme}.png`}
                   />
                   <div className="relative inline-block w-10 mr-2 mt-1 align-middle select-none">
                     <label
@@ -188,8 +188,8 @@ export function Navbar() {
                   </div>
                   <img
                     className="mr-2 mt-1"
-                    alt="LIGHT OFF"
-                    src="/img/lightModeOff.png"
+                    alt="LIGHT THEME"
+                    src={`/img/lightMode_${theme}.png`}
                     width={22}
                     height={22}
                   />
