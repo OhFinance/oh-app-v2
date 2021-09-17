@@ -29,7 +29,7 @@ html {
   --color-partners-bg: #111113;
   --color-button: #ec4899;
   --color-button-bg: #000000;
-  --color-button-disabled: #f380c5;
+  --color-button-disabled: gray;
   --color-button-highlight: #f446af;
   --color-footer-bg: #111113;
   --color-console-bg-outer: #000000;
@@ -61,7 +61,7 @@ html {
   --color-partners-bg: #ccebf9;
   --color-button: #ec4899;
   --color-button-bg: #ccebf9;
-  --color-button-disabled: #f380c5;
+  --color-button-disabled: gray;
   --color-button-highlight: #f446af;
   --color-footer-bg: #ccebf9;
   --color-console-bg-outer: #ffffff;

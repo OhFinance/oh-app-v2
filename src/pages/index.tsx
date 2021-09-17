@@ -26,11 +26,13 @@ const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
 function onClickDeposit() {
   //TODO: Oh! Finance will fill in Deposit logic here
   console.log('clicked Deposit');
+  useWalletStore.getState().depositUdsc();
 }
 
 function onClickWithraw() {
   //TODO: Oh! Finance will fill in Withdraw logic here
   console.log('clicked Withdraw');
+  useWalletStore.getState().widthdrawUsdc();
 }
 
 function onClickClaimOh() {
@@ -47,6 +49,10 @@ const Home: NextPage = React.forwardRef(function Home() {
     interestEarned,
     availableOh,
     availableUsdc,
+    toBeDeposited,
+    toBeWithdrawn,
+    setToBeDeposited,
+    setToBeWithdrawn,
   } = useWalletStore();
   const { isLoading, data, fetchData } = useChartStore();
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
@@ -151,16 +157,17 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
                 <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
                   <UsdcInput
+                    value={toBeDeposited}
                     maxValue={availableUsdc}
-                    onChange={console.log}
-                    disabled={!walletConnected}
+                    onChange={setToBeDeposited}
+                    disabled={!walletConnected || availableUsdc <= 0}
                   />
                 </div>
                 <div className={`h-auto m-2 flex flex-col`}>
                   <button
                     className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
                     onClick={onClickDeposit}
-                    disabled={!walletConnected}
+                    disabled={!walletConnected || availableUsdc <= 0 || toBeDeposited <= 0}
                   >
                     Deposit
                   </button>
@@ -198,16 +205,17 @@ const Home: NextPage = React.forwardRef(function Home() {
                   </div>
                   <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
                     <UsdcInput
+                      value={toBeWithdrawn}
                       maxValue={availableUsdc}
-                      onChange={console.log}
-                      disabled={!walletConnected}
+                      onChange={setToBeWithdrawn}
+                      disabled={!walletConnected || availableUsdc <= 0}
                     />
                   </div>
                   <div className={`h-auto m-2 flex flex-col`}>
                     <button
                       className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
                       onClick={onClickWithraw}
-                      disabled={!walletConnected}
+                      disabled={!walletConnected || availableUsdc <= 0 || toBeWithdrawn <= 0}
                     >
                       Withdraw
                     </button>
@@ -315,7 +323,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <button
                     className={`mt-3 mb-1 w-36 h-12 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
                     onClick={onClickClaimOh}
-                    disabled={!walletConnected}
+                    disabled={!walletConnected || !availableOh}
                   >
                     Claim OH!
                   </button>

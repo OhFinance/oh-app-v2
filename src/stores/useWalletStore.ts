@@ -15,8 +15,10 @@ const initialState = {
   portfolioBalance: 0,
   portfolioPl: 0, // Amount gained or lost (USDC, can be negative)
   portfolioPlPercent: 0, // Amount gained or lost (Percent)
-  availableOh: 0,
-  availableUsdc: 0,
+  availableOh: 100,
+  availableUsdc: 100,
+  toBeDeposited: 0,
+  toBeWithdrawn: 0,
   interestEarned: 0,
 };
 
@@ -28,9 +30,15 @@ export const useWalletStore = createStore(
     setPortfolioBalance: (portfolioBalance: number) => set({ portfolioBalance }),
     setAvailableOh: (availableOh: number) => set({ availableOh }),
     setAvailableUsdc: (availableUsdc: number) => set({ availableUsdc }),
+    setToBeDeposited: (toBeDeposited: number) => set({ toBeDeposited }),
+    setToBeWithdrawn: (toBeWithdrawn: number) => set({ toBeWithdrawn }),
     setInterestEarned: (interestEarned: number) => set({ interestEarned }),
     setSelectedNetwork: (selectedNetwork: Network) => set({ selectedNetwork }),
     setWalletConnected: (walletConnected: boolean) => set({ walletConnected }),
     setWalletAddress: (walletAddress: string) => set({ walletAddress }),
+    depositUdsc: () =>
+      set({ availableUsdc: get().availableUsdc + get().toBeDeposited, toBeDeposited: 0 }),
+    widthdrawUsdc: () =>
+      set({ availableUsdc: get().availableUsdc - get().toBeWithdrawn, toBeWithdrawn: 0 }),
   }))
 );
