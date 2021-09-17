@@ -242,7 +242,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <CaptureResize captureRef={chartContainerRef}>
                   {({ width, height }) => (
                     <div
-                      className={`flex flex-col absolute bg-black bg-opacity-70 z-10 items-center justify-center`}
+                      className={`flex flex-col absolute bg-gradient-to-b from-consoleOverlayT to-consoleOverlayB z-10 items-center justify-center`}
                       style={{ width, height }}
                     >
                       <img
