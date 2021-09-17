@@ -154,14 +154,15 @@ export function MarketingBody() {
       </div>
 
       <div // Roadmap
-        className="hidden lg:block items-center text-center py-20"
+        className="flex-col w-full hidden lg:flex py-20"
       >
-        <p className="text-defaultText text-6xl py-20">Roadmap</p>
+        <p className="text-center text-defaultText text-6xl py-20">Roadmap</p>
         <img
           alt="Roadmap"
           src={`/img/OhFinanceAssets_timeline1_${theme}.png`}
           width={1511}
           height={590}
+          className={`flex justify-center place-self-center`}
         />
       </div>
 

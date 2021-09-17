@@ -5,13 +5,13 @@ type Props = { maxValue: number; onChange: (value: number) => void; disabled?: b
 
 export function UsdcInput(props: Props) {
   const { maxValue, onChange, disabled } = props;
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(0);
 
   return (
     <>
       <div className="w-full bg-inputBG rounded-lg w-full flex flex-row">
         <button
-          onClick={() => setValue(maxValue.toString())}
+          onClick={() => setValue(maxValue)}
           className={`w-16 text-xl text-pink-800 pl-2 pr-2 underline`}
           disabled={disabled}
         >
@@ -22,13 +22,13 @@ export function UsdcInput(props: Props) {
           value={value}
           onChange={(event) => {
             if (event.target.value === '') {
-              setValue('');
+              setValue(0);
               onChange(0);
               return;
             }
             const value = parseInt(event.target.value);
             if (!isNaN(value)) {
-              setValue(String(Math.min(value, maxValue)));
+              setValue(Math.min(value, maxValue));
               onChange(value);
             }
           }}

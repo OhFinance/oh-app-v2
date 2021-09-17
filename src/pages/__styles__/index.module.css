@@ -37,8 +37,36 @@
   @apply flex-col;
 }
 
+.total-portfolio {
+  @apply flex-row;
+  @apply h-64;
+}
+.total-balance {
+  @apply flex-col;
+}
+.total-interest {
+  @apply flex-col;
+}
+
 .account-actions-container {
   max-width: 340px;
+}
+
+.stats-claim {
+  @apply flex-row;
+}
+.stats-claim-bg {
+  @apply w-1/4;
+  @apply p-3;
+  @apply items-center;
+}
+.stats-oh {
+  @apply flex-row;
+  @apply h-24;
+}
+.stats-oh-bg {
+  @apply p-3;
+  @apply ml-3;
 }
 
 @media (max-width: 1279px) {
@@ -83,5 +111,35 @@
     min-width: 340px;
     width: min(100%, 912px);
     height: 420px;
+  }
+
+  .stats-claim {
+    width: 340px;
+    @apply flex-col;
+  }
+  .stats-claim-bg {
+    @apply w-auto;
+    @apply mb-4;
+  }
+  .stats-oh {
+    @apply flex-col;
+    @apply h-auto;
+  }
+  .stats-oh-bg {
+    @apply ml-0;
+  }
+}
+
+@media (max-width: 689px) {
+  .total-portfolio {
+    @apply flex-col;
+    @apply h-auto;
+  }
+  .total-balance {
+    @apply flex-col;
+  }
+  .total-interest {
+    @apply flex-col;
+    @apply pb-6;
   }
 }

@@ -245,16 +245,20 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </CaptureResize>
               )}
               <div
-                className={`h-64 flex flex-row rounded-t-lg border-2 border-b-0 border-consoleBorderInner bg-inputBG`}
+                className={`flex ${styles['total-portfolio']} rounded-t-lg border-2 border-b-0 border-consoleBorderInner bg-inputBG`}
               >
-                <div className={`mt-12 ml-12 w-50 h-full justify-between`}>
+                <div
+                  className={`${styles['total-balance']} mt-12 ml-12 w-50 h-full justify-between`}
+                >
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
                   <p className={`mt-2 ${textCashLg}`}>${portfolioBalance}</p>
                   <p className={`${textPink} mt-10`}>
                     ${`${portfolioBalance} OUSDC (Deposited USDC)`}
                   </p>
                 </div>
-                <div className={`ml-32 mt-12 w-50 h-full flex flex-col`}>
+                <div
+                  className={`${styles['total-interest']} mt-12 ml-12 w-50 h-full justify-between`}
+                >
                   <h1 className={`${h1}`}>Total Interest Earned</h1>
                   <p className={`mt-2 ${textCashLg}`}>${interestEarned}</p>
                   <p className={`${textPink} mt-10`}>
@@ -287,10 +291,10 @@ const Home: NextPage = React.forwardRef(function Home() {
         </div>
       </div>
       <div
-        className={`${styles['main-container']} mt-4 mx-auto flex flex-row justify-between shadow-lg rounded-lg h-auto items-center`}
+        className={`${styles['main-container']} ${styles['stats-claim']} mt-4 mx-auto flex justify-between shadow-lg rounded-lg h-auto items-center`}
       >
         <div
-          className={`p-3 w-1/4 flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
+          className={`${styles['stats-claim-bg']} flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
         >
           <div className={`flex-col w-auto`}>
             <div className={`flex flex-row justify-between`}>
@@ -325,12 +329,12 @@ const Home: NextPage = React.forwardRef(function Home() {
           </div>
         </div>
         <div
-          className={`ml-3 p-3 w-full flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
+          className={`${styles['stats-oh-bg']} w-full flex ${styles['stats-claim']} justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
         >
           <div className={`flex-col w-full`}>
-            <div className={`w-full flex flex-row justify-between`}>
+            <div className={`w-full flex ${styles['stats-oh']} justify-between`}>
               <div
-                className={`h-24 container flex flex-row justify-between rounded-lg border-2 border-consoleBorderInner bg-consoleBGInner`}
+                className={`container flex ${styles['stats-oh']} justify-between rounded-lg border-2 border-consoleBorderInner bg-consoleBGInner`}
               >
                 <div className={`mt-3 ml-4 w-5/6 flex flex-col`}>
                   <h2 className={`${h2}`}>
