@@ -71,17 +71,17 @@ const Home: NextPage = React.forwardRef(function Home() {
             <h1
               className={`text-5xl md:text-6xl font-bold mx-auto text-defaultText text-center py-2`}
             >
-              <span className={`${textPink}`}>Earn More</span> with your{' '}
-              <span className={`${textPink}`}>DeFi</span> dollar
+              <span className={`text-accentText`}>Earn More</span> with your{' '}
+              <span className={`text-accentText`}>DeFi</span> dollar
             </h1>
           </div>
           <p
             className={`pt-20 text-3xl max-w-3xl justify-center text-defaultText text-center py-2`}
           >
-            Start by earning up to <span className={`${textPink}`}>10-21%</span> APY on USDC
+            Start by earning up to <span className={`text-accentText`}>10-21%</span> APY on USDC
             <br className={styles['cta-line-break']}></br> + a bonus{' '}
-            <span className={`${textPink}`}>10-30%*</span> OH! reward in just{' '}
-            <span className={`${textPink}`}>two clicks!</span>
+            <span className={`text-accentText`}>10-30%*</span> OH! reward in just{' '}
+            <span className={`text-accentText`}>two clicks!</span>
           </p>
           <div className={`mt-10 flex flex-col shadow-lg rounded-lg p-10 w-96 bg-buttonBG`}>
             <button
