@@ -69,38 +69,42 @@ const Home: NextPage = React.forwardRef(function Home() {
 
   return (
     <main className={`relative overflow-hidden`}>
-      <div className={`flex items-center h-auto`}>
-        <div
-          className={`container mx-auto px-6 flex flex-col justify-between items-center relative py-4`}
-        >
-          <div className={`flex flex-col`}>
-            <h1
-              className={`text-5xl md:text-6xl font-bold mx-auto text-defaultText text-center py-2`}
-            >
-              <span className={`text-accentText`}>Earn More</span> with your{' '}
-              <span className={`text-accentText`}>DeFi</span> dollar
-            </h1>
-          </div>
-          <p
-            className={`pt-20 text-3xl max-w-3xl justify-center text-defaultText text-center py-2`}
+      {!walletConnected && (
+        <div className={`flex items-center h-auto`}>
+          <div
+            className={`container mx-auto px-6 flex flex-col justify-between items-center relative py-4`}
           >
-            Start by earning up to <span className={`text-accentText`}>10-21%</span> APY on USDC
-            <br className={styles['cta-line-break']}></br> + a bonus{' '}
-            <span className={`text-accentText`}>10-30%*</span> OH! reward in just{' '}
-            <span className={`text-accentText`}>two clicks!</span>
-          </p>
-          <div className={`mt-10 flex flex-col shadow-lg rounded-lg p-10 w-96 bg-buttonBG`}>
-            <button
-              className={`py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight`}
-              onClick={toggleConnectWalletDialog}
+            <div className={`flex flex-col`}>
+              <h1
+                className={`text-5xl md:text-6xl font-bold mx-auto text-defaultText text-center py-2`}
+              >
+                <span className={`text-accentText`}>Earn More</span> with your{' '}
+                <span className={`text-accentText`}>DeFi</span> dollar
+              </h1>
+            </div>
+            <p
+              className={`pt-20 text-3xl max-w-3xl justify-center text-defaultText text-center py-2`}
             >
-              Connect Wallet to get started
-            </button>
+              Start by earning up to <span className={`text-accentText`}>10-21%</span> APY on USDC
+              <br className={styles['cta-line-break']}></br> + a bonus{' '}
+              <span className={`text-accentText`}>10-30%*</span> OH! reward in just{' '}
+              <span className={`text-accentText`}>two clicks!</span>
+            </p>
+            <div className={`mt-10 flex flex-col shadow-lg rounded-lg p-10 w-96 bg-buttonBG`}>
+              <button
+                className={`py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight`}
+                onClick={toggleConnectWalletDialog}
+              >
+                Connect Wallet to get started
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div
-        className={`${styles['main-container']} mt-36 mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
+        className={`${styles['main-container']} ${
+          walletConnected ? 'mt-12' : 'mt-36'
+        } mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
       >
         <div className={`${styles['first-container']} p-6 w-full h-full`}>
           <div className={`${styles['second-container']} w-full h-full flex`}>
