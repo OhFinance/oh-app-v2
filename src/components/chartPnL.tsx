@@ -7,7 +7,7 @@ export function ChartPnL() {
   return (
     <div className="w-auto h-10 flex flex-row">
       {!walletConnected ? (
-        <p className={`ml-5 mt-2 absolute text-lg text-pink-500`}>
+        <p className={`ml-5 mt-4 absolute text-lg text-pink-500`}>
           Connect wallet to see your data
         </p>
       ) : portfolioPl !== 0 ? (

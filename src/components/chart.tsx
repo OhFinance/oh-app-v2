@@ -30,7 +30,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
   return (
     <div className="w-full h-full flex flex-col">
       {/* Button pills */}
-      <div className="w-full h-10 flex flex-row">
+      <div className="w-full h-10 flex flex-row pt-2">
         <button
           data-time="hourly"
           onClick={buttonClicked}
