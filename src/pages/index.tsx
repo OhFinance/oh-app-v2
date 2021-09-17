@@ -112,7 +112,7 @@ const Home: NextPage = React.forwardRef(function Home() {
               className={`${styles['account-actions-container']} h-auto container flex flex-col justify-between h-auto`}
             >
               <div
-                className={`${styles['account-action-container']} h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}
+                className={`${styles['account-action-container']} h-auto flex flex-col rounded-lg bg-consoleBGInner border-2 border-consoleBorderInner`}
               >
                 <div className={`${styles['third-container']} h-full m-2 flex rounded-lg bg-black`}>
                   <div
@@ -131,7 +131,10 @@ const Home: NextPage = React.forwardRef(function Home() {
                         </div>
                         <div className="ml-1 flex flex-col">
                           <p className={`${h3} mt-4 w-full h-8`}>Deposit USDC</p>
-                          <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                          {walletConnected && (
+                            <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                          )}
+                          {!walletConnected && <p className={`${textCashMd}`}>Earn APR</p>}
                         </div>
                         <div className="ml-8 mt-8 flex">
                           <HintButton hint={depositUsdcHint} />
@@ -169,7 +172,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
                 <div className={`h-auto m-2 flex flex-col`}>
                   <button
-                    className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
+                    className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickDeposit}
                     disabled={!walletConnected || availableUsdc <= 0 || toBeDeposited <= 0}
                   >
@@ -178,9 +181,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
               </div>
               <div
-                className={`${styles['account-action-container']} h-64 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}
+                className={`${styles['account-action-container']} h-64 flex flex-row rounded-lg bg-consoleBGInner border-2 border-consoleBorderInner`}
               >
-                <div className={`w-full h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
+                <div className={`w-full h-auto flex flex-col rounded-lg`}>
                   <div className={`h-full m-2 flex flex-col rounded-lg bg-black`}>
                     <div
                       className={`w-full h-full flex flex-col rounded-lg border-2 border-consoleBorderAccent bg-consoleAccent`}
@@ -198,7 +201,10 @@ const Home: NextPage = React.forwardRef(function Home() {
                           </div>
                           <div className="ml-1 flex flex-col">
                             <p className={`${h3} mt-4 w-full h-8`}>Withdraw USDC</p>
-                            <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                            {walletConnected && (
+                              <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                            )}
+                            {!walletConnected && <p className={`${textCashMd}`}>No lock-ups</p>}
                           </div>
                           <div className="pt-2 ml-4 mt-8 flex flex-col">
                             <HintButton hint={depositUsdcHint} />
@@ -217,7 +223,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   </div>
                   <div className={`h-auto m-2 flex flex-col`}>
                     <button
-                      className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
+                      className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                       onClick={onClickWithraw}
                       disabled={!walletConnected || availableUsdc <= 0 || toBeWithdrawn <= 0}
                     >
@@ -325,13 +331,14 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
                 <div className="flex flex-col">
                   <button
-                    className={`mt-3 mb-1 w-36 h-12 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
+                    className={`mt-3 mb-1 w-36 h-12 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickClaimOh}
                     disabled={!walletConnected || !availableOh}
                   >
                     Claim OH!
                   </button>
-                  <p className="text-defaultText">${availableOh} Available</p>
+                  {walletConnected && <p className="text-accentText">${availableOh} Available</p>}
+                  {!walletConnected && <p className="text-accentText">Rewards</p>}
                 </div>
                 <div className="mr-2 mt-8 flex flex-col">
                   <HintButton hint={claimOhHint} />
@@ -352,7 +359,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <h2 className={`${h2}`}>
                     Oh! Token Stats <span className={textCashXs}>/ 24hr</span>
                   </h2>
-                  <div className="mt-2 w-11/12 border-2 border-solid border-selectionHighlight">
+                  <div className="mt-2 w-11/12 border-2 border-solid border-selectionHighlight pl-2">
                     <p className={`${textCashMd}`}>${interestEarned}</p>
                   </div>
                 </div>
