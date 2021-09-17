@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useThemeStore } from '~/stores/useThemeStore';
 import { Network, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
+import { WalletDisplay } from './walletDisplay';
 
 const selectNetworkHint = 'This is a hint for selecting your network.';
 
@@ -131,10 +132,10 @@ export function Navbar() {
               </div>
             </div>
             <button
-              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md mr-4 hover:bg-buttonHighlight"
+              className="ml-6 py-1 px-2 rounded-lg text-md mr-4 lg:w-64"
               onClick={toggleConnectWalletDialog}
             >
-              Connect Wallet
+              <WalletDisplay />
             </button>
           </nav>
           <button
@@ -196,10 +197,10 @@ export function Navbar() {
               </div>
 
               <button
-                className="ml-4 mt-4 py-1 px-2 mr-4 w-11/12 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight"
+                className="ml-4 mt-4 py-1 px-2 mr-4 w-11/12 rounded-lg border-2 border-transparent text-white text-md"
                 onClick={toggleConnectWalletDialog}
               >
-                Connect Wallet
+                <WalletDisplay />
               </button>
 
               <div className="flex pl-2 mt-4 w-9/10">
