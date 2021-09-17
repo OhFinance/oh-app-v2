@@ -8,7 +8,7 @@ const connectWalletHint = 'This is a hint for connecting your wallet.';
 function onClickMetaMask() {
   // TODO: Oh! Finance will fill in MetaMask connection logic here
   console.log('clicked MetaMask');
-  useWalletStore.getState().toggleWalletConnected();
+  useWalletStore.getState().connectWallet();
 }
 
 export function ConnectWalletDialog() {
