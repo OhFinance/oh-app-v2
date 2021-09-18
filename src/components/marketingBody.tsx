@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '~/pages/__styles__/index.module.css';
 import { useThemeStore } from '~/stores/useThemeStore';
 import { useWalletStore } from '~/stores/useWalletStore';
@@ -8,6 +8,12 @@ export function MarketingBody() {
   const { theme } = useThemeStore();
   const { walletConnected } = useWalletStore();
   const [marketingHidden, setMarketingHidden] = useState(walletConnected);
+
+  useEffect(() => {
+    if (walletConnected) {
+      setMarketingHidden(true);
+    }
+  }, [walletConnected, setMarketingHidden]);
 
   return (
     <div
