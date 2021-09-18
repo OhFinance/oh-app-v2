@@ -19,6 +19,7 @@ import {
   textCashXs,
   textPink,
 } from '~/tempTailwindConfig';
+import { limitDecimals } from '~/utilities/textUtilities';
 
 const depositUsdcHint = 'This is a description of depositing USDC tokens.';
 const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
@@ -134,7 +135,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                         <div className="ml-1 flex flex-col">
                           <p className={`${h3} mt-4 w-full h-8`}>Deposit USDC</p>
                           {walletConnected && (
-                            <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                            <p className={`${textCashMd}`}>
+                              ${limitDecimals(availableUsdc)} Available
+                            </p>
                           )}
                           {!walletConnected && <p className={`${textCashMd}`}>Earn APR</p>}
                         </div>
@@ -207,7 +210,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                           <div className="ml-1 flex flex-col">
                             <p className={`${h3} mt-4 w-full h-8`}>Withdraw USDC</p>
                             {walletConnected && (
-                              <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                              <p className={`${textCashMd}`}>
+                                ${limitDecimals(availableUsdc)} Available
+                              </p>
                             )}
                             {!walletConnected && <p className={`${textCashMd}`}>No lock-ups</p>}
                           </div>
@@ -280,7 +285,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   className={`${styles['total-balance']} mt-12 ml-12 w-50 h-full justify-between`}
                 >
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
-                  <p className={`mt-2 ${textCashLg}`}>${portfolioBalance}</p>
+                  <p className={`mt-2 ${textCashLg}`}>${limitDecimals(portfolioBalance)}</p>
                   <p className={`${textPink} mt-10`}>
                     ${`${portfolioBalance} OUSDC (Deposited USDC)`}
                   </p>
@@ -289,7 +294,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   className={`${styles['total-interest']} mt-12 ml-12 w-50 h-full justify-between`}
                 >
                   <h1 className={`${h1}`}>Total Interest Earned</h1>
-                  <p className={`mt-2 ${textCashLg}`}>${interestEarned}</p>
+                  <p className={`mt-2 ${textCashLg}`}>${limitDecimals(interestEarned)}</p>
                   <p className={`${textPink} mt-10`}>
                     ${`${portfolioBalance} OUSDC (Deposited USDC)`}
                   </p>
@@ -348,7 +353,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                   >
                     Claim OH!
                   </button>
-                  {walletConnected && <p className="text-accentText">${availableOh} Available</p>}
+                  {walletConnected && (
+                    <p className="text-accentText">${limitDecimals(availableOh)} Available</p>
+                  )}
                   {!walletConnected && <p className="text-accentText">Rewards</p>}
                 </div>
                 <div className="mr-2 mt-8 flex flex-col">
@@ -371,22 +378,22 @@ const Home: NextPage = React.forwardRef(function Home() {
                     Oh! Token Stats <span className={textCashXs}>/ 24hr</span>
                   </h2>
                   <div className="mt-2 w-11/12 border-2 border-solid border-selectionHighlight pl-2">
-                    <p className={`${textCashMd}`}>${interestEarned}</p>
+                    <p className={`${textCashMd}`}>${limitDecimals(interestEarned)}</p>
                   </div>
                 </div>
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
                   <h2 className={`${h3}`}>Circulating Supply</h2>
-                  <p className={`mt-2 ${textCashMd}`}>${interestEarned}</p>
+                  <p className={`mt-2 ${textCashMd}`}>${limitDecimals(interestEarned)}</p>
                 </div>
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
                   <h2 className={`${h3}`}>Market Cap</h2>
-                  <p className={`mt-2 ${textCashMd}`}>${interestEarned}</p>
+                  <p className={`mt-2 ${textCashMd}`}>${limitDecimals(interestEarned)}</p>
                 </div>
               </div>
               <div className={`ml-6 mt-3`}>
                 <div className="w-64 min-w-32">
                   <h2 className={`${h2}`}>Total Value Locked</h2>
-                  <p className={`mt-2 ${textCash}`}>${interestEarned}</p>
+                  <p className={`mt-2 ${textCash}`}>${limitDecimals(interestEarned)}</p>
                 </div>
               </div>
             </div>
