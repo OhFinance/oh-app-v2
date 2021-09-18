@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useThemeStore } from '~/stores/useThemeStore';
 import { Network, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
+import { WalletDisplay } from './walletDisplay';
 
 const selectNetworkHint = 'This is a hint for selecting your network.';
 
@@ -53,8 +54,8 @@ export function Navbar() {
                 width={32}
                 height={26}
                 className="mr-2"
-                alt="DARK ON"
-                src="/img/darkModeOn.png"
+                alt="DARK THEME"
+                src={`/img/darkMode_${theme}.png`}
               />
               <div className="relative inline-block w-10 mr-2 mt-1 align-middle select-none">
                 <label
@@ -74,8 +75,8 @@ export function Navbar() {
               </div>
               <img
                 className="mr-2"
-                alt="LIGHT OFF"
-                src="/img/lightModeOff.png"
+                alt="LIGHT THEME"
+                src={`/img/lightMode_${theme}.png`}
                 width={35}
                 height={35}
               />
@@ -131,10 +132,10 @@ export function Navbar() {
               </div>
             </div>
             <button
-              className="ml-6 py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md mr-4 hover:bg-buttonHighlight"
+              className="ml-6 py-1 px-2 rounded-lg text-md mr-4 lg:w-64"
               onClick={toggleConnectWalletDialog}
             >
-              Connect Wallet
+              <WalletDisplay />
             </button>
           </nav>
           <button
@@ -166,8 +167,8 @@ export function Navbar() {
                     width={22}
                     height={22}
                     className="mr-2 mt-1"
-                    alt="DARK ON"
-                    src="/img/darkModeOn.png"
+                    alt="DARK THEME"
+                    src={`/img/darkMode_${theme}.png`}
                   />
                   <div className="relative inline-block w-10 mr-2 mt-1 align-middle select-none">
                     <label
@@ -187,8 +188,8 @@ export function Navbar() {
                   </div>
                   <img
                     className="mr-2 mt-1"
-                    alt="LIGHT OFF"
-                    src="/img/lightModeOff.png"
+                    alt="LIGHT THEME"
+                    src={`/img/lightMode_${theme}.png`}
                     width={22}
                     height={22}
                   />
@@ -196,10 +197,10 @@ export function Navbar() {
               </div>
 
               <button
-                className="ml-4 mt-4 py-1 px-2 mr-4 w-11/12 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight"
+                className="ml-4 mt-4 py-1 px-2 mr-4 w-11/12 rounded-lg border-2 border-transparent text-white text-md"
                 onClick={toggleConnectWalletDialog}
               >
-                Connect Wallet
+                <WalletDisplay />
               </button>
 
               <div className="flex pl-2 mt-4 w-9/10">

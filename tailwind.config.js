@@ -62,6 +62,8 @@ module.exports = {
         consoleBorderInner: 'var(--color-console-border-inner)',
         consoleBorderAccent: 'var(--color-console-border-accent)',
         consoleAccent: 'var(--color-console-accent)',
+        consoleOverlayT: 'var(--color-console-overlay-t)',
+        consoleOverlayB: 'var(--color-console-overlay-b)',
         inputBG: 'var(--color-input-bg)',
         code: {
           green: '#b5f4a5',

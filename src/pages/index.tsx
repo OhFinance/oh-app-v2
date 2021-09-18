@@ -69,38 +69,42 @@ const Home: NextPage = React.forwardRef(function Home() {
 
   return (
     <main className={`relative overflow-hidden`}>
-      <div className={`flex items-center h-auto`}>
-        <div
-          className={`container mx-auto px-6 flex flex-col justify-between items-center relative py-4`}
-        >
-          <div className={`flex flex-col`}>
-            <h1
-              className={`text-5xl md:text-6xl font-bold mx-auto text-defaultText text-center py-2`}
-            >
-              <span className={`text-accentText`}>Earn More</span> with your{' '}
-              <span className={`text-accentText`}>DeFi</span> dollar
-            </h1>
-          </div>
-          <p
-            className={`pt-20 text-3xl max-w-3xl justify-center text-defaultText text-center py-2`}
+      {!walletConnected && (
+        <div className={`flex items-center h-auto`}>
+          <div
+            className={`container mx-auto px-6 flex flex-col justify-between items-center relative py-4`}
           >
-            Start by earning up to <span className={`text-accentText`}>10-21%</span> APY on USDC
-            <br className={styles['cta-line-break']}></br> + a bonus{' '}
-            <span className={`text-accentText`}>10-30%*</span> OH! reward in just{' '}
-            <span className={`text-accentText`}>two clicks!</span>
-          </p>
-          <div className={`mt-10 flex flex-col shadow-lg rounded-lg p-10 w-96 bg-buttonBG`}>
-            <button
-              className={`py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight`}
-              onClick={toggleConnectWalletDialog}
+            <div className={`flex flex-col`}>
+              <h1
+                className={`text-5xl md:text-6xl font-bold mx-auto text-defaultText text-center py-2`}
+              >
+                <span className={`text-accentText`}>Earn More</span> with your{' '}
+                <span className={`text-accentText`}>DeFi</span> dollar
+              </h1>
+            </div>
+            <p
+              className={`pt-20 text-3xl max-w-3xl justify-center text-defaultText text-center py-2`}
             >
-              Connect Wallet to get started
-            </button>
+              Start by earning up to <span className={`text-accentText`}>10-21%</span> APY on USDC
+              <br className={styles['cta-line-break']}></br> + a bonus{' '}
+              <span className={`text-accentText`}>10-30%*</span> OH! reward in just{' '}
+              <span className={`text-accentText`}>two clicks!</span>
+            </p>
+            <div className={`mt-10 flex flex-col shadow-lg rounded-lg p-10 w-96 bg-buttonBG`}>
+              <button
+                className={`py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight`}
+                onClick={toggleConnectWalletDialog}
+              >
+                Connect Wallet to get started
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div
-        className={`${styles['main-container']} mt-36 mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
+        className={`${styles['main-container']} ${
+          walletConnected ? 'mt-12' : 'mt-36'
+        } mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
       >
         <div className={`${styles['first-container']} p-6 w-full h-full`}>
           <div className={`${styles['second-container']} w-full h-full flex`}>
@@ -108,7 +112,7 @@ const Home: NextPage = React.forwardRef(function Home() {
               className={`${styles['account-actions-container']} h-auto container flex flex-col justify-between h-auto`}
             >
               <div
-                className={`${styles['account-action-container']} h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}
+                className={`${styles['account-action-container']} h-auto flex flex-col rounded-lg bg-consoleBGInner border-2 border-consoleBorderInner`}
               >
                 <div className={`${styles['third-container']} h-full m-2 flex rounded-lg bg-black`}>
                   <div
@@ -127,7 +131,10 @@ const Home: NextPage = React.forwardRef(function Home() {
                         </div>
                         <div className="ml-1 flex flex-col">
                           <p className={`${h3} mt-4 w-full h-8`}>Deposit USDC</p>
-                          <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                          {walletConnected && (
+                            <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                          )}
+                          {!walletConnected && <p className={`${textCashMd}`}>Earn APR</p>}
                         </div>
                         <div className="ml-8 mt-8 flex">
                           <HintButton hint={depositUsdcHint} />
@@ -165,7 +172,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
                 <div className={`h-auto m-2 flex flex-col`}>
                   <button
-                    className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
+                    className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickDeposit}
                     disabled={!walletConnected || availableUsdc <= 0 || toBeDeposited <= 0}
                   >
@@ -174,9 +181,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
               </div>
               <div
-                className={`${styles['account-action-container']} h-64 flex flex-row rounded-lg bg-gray-800 bg-opacity-75`}
+                className={`${styles['account-action-container']} h-64 flex flex-row rounded-lg bg-consoleBGInner border-2 border-consoleBorderInner`}
               >
-                <div className={`w-full h-auto flex flex-col rounded-lg bg-gray-800 bg-opacity-75`}>
+                <div className={`w-full h-auto flex flex-col rounded-lg`}>
                   <div className={`h-full m-2 flex flex-col rounded-lg bg-black`}>
                     <div
                       className={`w-full h-full flex flex-col rounded-lg border-2 border-consoleBorderAccent bg-consoleAccent`}
@@ -194,7 +201,10 @@ const Home: NextPage = React.forwardRef(function Home() {
                           </div>
                           <div className="ml-1 flex flex-col">
                             <p className={`${h3} mt-4 w-full h-8`}>Withdraw USDC</p>
-                            <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                            {walletConnected && (
+                              <p className={`${textCashMd}`}>${availableUsdc} Available</p>
+                            )}
+                            {!walletConnected && <p className={`${textCashMd}`}>No lock-ups</p>}
                           </div>
                           <div className="pt-2 ml-4 mt-8 flex flex-col">
                             <HintButton hint={depositUsdcHint} />
@@ -213,7 +223,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   </div>
                   <div className={`h-auto m-2 flex flex-col`}>
                     <button
-                      className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
+                      className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                       onClick={onClickWithraw}
                       disabled={!walletConnected || availableUsdc <= 0 || toBeWithdrawn <= 0}
                     >
@@ -232,7 +242,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <CaptureResize captureRef={chartContainerRef}>
                   {({ width, height }) => (
                     <div
-                      className={`flex flex-col absolute bg-black bg-opacity-70 z-10 items-center justify-center`}
+                      className={`flex flex-col absolute bg-gradient-to-b from-consoleOverlayT to-consoleOverlayB z-10 items-center justify-center`}
                       style={{ width, height }}
                     >
                       <img
@@ -321,13 +331,14 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
                 <div className="flex flex-col">
                   <button
-                    className={`mt-3 mb-1 w-36 h-12 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:bg-buttonDisabled`}
+                    className={`mt-3 mb-1 w-36 h-12 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickClaimOh}
                     disabled={!walletConnected || !availableOh}
                   >
                     Claim OH!
                   </button>
-                  <p className="text-defaultText">${availableOh} Available</p>
+                  {walletConnected && <p className="text-accentText">${availableOh} Available</p>}
+                  {!walletConnected && <p className="text-accentText">Rewards</p>}
                 </div>
                 <div className="mr-2 mt-8 flex flex-col">
                   <HintButton hint={claimOhHint} />
@@ -348,7 +359,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <h2 className={`${h2}`}>
                     Oh! Token Stats <span className={textCashXs}>/ 24hr</span>
                   </h2>
-                  <div className="mt-2 w-11/12 border-2 border-solid border-selectionHighlight">
+                  <div className="mt-2 w-11/12 border-2 border-solid border-selectionHighlight pl-2">
                     <p className={`${textCashMd}`}>${interestEarned}</p>
                   </div>
                 </div>

@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useWalletStore } from '~/stores/useWalletStore';
+import { CaptureResize } from './captureResize';
 import styles from './__styles__/usdcInput.module.css';
 
 type Props = {
@@ -12,6 +14,8 @@ export function UsdcInput(props: Props) {
   const { value, maxValue, onChange, disabled } = props;
   const [lastValue, setLastValue] = useState(value);
   const [proxyValue, setProxyValue] = useState(value ? value.toString() : '');
+  const { walletConnected } = useWalletStore();
+  const inputRef = useRef(null as null | HTMLDivElement);
 
   useEffect(() => {
     if (value !== lastValue) {
@@ -22,7 +26,17 @@ export function UsdcInput(props: Props) {
 
   return (
     <>
-      <div className="w-full bg-inputBG rounded-lg w-full flex flex-row">
+      <div ref={inputRef} className="w-full bg-inputBG rounded-lg w-full flex flex-row">
+        {!walletConnected && (
+          <CaptureResize captureRef={inputRef}>
+            {({ width, height }) => (
+              <div
+                className={`flex flex-col absolute bg-black bg-opacity-50 z-10 items-center justify-center`}
+                style={{ width, height }}
+              ></div>
+            )}
+          </CaptureResize>
+        )}
         <button
           onClick={() => onChange(maxValue)}
           className={`w-16 text-xl text-pink-800 pl-2 pr-2 underline`}
