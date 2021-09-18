@@ -287,7 +287,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
                   <p className={`mt-2 ${textCashLg}`}>${limitDecimals(portfolioBalance)}</p>
                   <p className={`${textPink} mt-10`}>
-                    ${`${portfolioBalance} OUSDC (Deposited USDC)`}
+                    ${`${limitDecimals(portfolioBalance)} OUSDC (Deposited USDC)`}
                   </p>
                 </div>
                 <div
@@ -296,7 +296,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <h1 className={`${h1}`}>Total Interest Earned</h1>
                   <p className={`mt-2 ${textCashLg}`}>${limitDecimals(interestEarned)}</p>
                   <p className={`${textPink} mt-10`}>
-                    ${`${portfolioBalance} OUSDC (Deposited USDC)`}
+                    ${`${limitDecimals(portfolioBalance)} OUSDC (Deposited USDC)`}
                   </p>
                 </div>
               </div>
