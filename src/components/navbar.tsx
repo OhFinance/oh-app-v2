@@ -202,25 +202,25 @@ export function Navbar() {
                 Connect Wallet
               </button>
 
-              <div className="flex pl-2 mt-4">
-                <div className="bg-navBarAccent flex-col rounded-l-md w-52">
-                  <div className="flex flex-grow justify-center items-center w-48">
+              <div className="flex pl-2 mt-4 w-9/10">
+                <div className="bg-navBarAccent flex-col rounded-l-md w-1/2">
+                  <div className="flex flex-grow justify-center items-center">
                     <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
                       Network
                     </p>
                     <HintButton hint={selectNetworkHint} />
                   </div>
                 </div>
-                <div className="w-full group">
+                <div className="w-1/2 group">
                   <button
-                    className={`py-2 px-4 -lg bg-navBarBG w-40 border-b-4 border-t-0 border-l-0 border-r-0 border-selectionHighlight rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
+                    className={`py-2 px-4 w-11/12 -lg bg-navBarBG border-b-4 border-t-0 border-l-0 border-r-0 border-selectionHighlight rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
                     id="network-button"
                     onClick={() => setSelectNetworkOpen(!selectNetworkOpen)}
                   >
                     {networkLabel}
                   </button>
                   {selectNetworkOpen && (
-                    <ul className="dropdown-menu absolute block text-defaultText pt-1 z-10 w-40">
+                    <ul className="dropdown-menu absolute block text-defaultText pt-1 z-10 w-1/2 pr-4">
                       <li>
                         <button
                           className="rounded-t bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"

@@ -50,7 +50,7 @@ export function ConnectWalletDialog() {
         <div className="flex flex-row p-2">
           <div className="bg-modalAccent flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
-              <p className="text-md text-accentText py-1 px-2 border-2 border-transparent text-center">
+              <p className="text-sm lg:text-md text-accentText py-1 px-2 text-center">
                 1. Select Network
               </p>
               <HintButton hint={selectNetworkHint} />
@@ -58,43 +58,38 @@ export function ConnectWalletDialog() {
           </div>
           <div className="w-3/4 h-24 lg:h-full">
             <button
-              className={`py-1 px-2 border-2 border-transparent bg-modalBG h-full text-white text-md hover:bg-modalBGHover w-1/3`}
+              className={`py-1 px-2 border-b-4 border-t-0 border-l-0 border-r-0 ${
+                selectedNetwork === Network.Ethereum
+                  ? 'border-selectionHighlight'
+                  : 'border-transparent'
+              } bg-modalBG h-full text-white text-sm lg:text-md hover:bg-modalBGHover w-1/3`}
               id="eth-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(Network.Ethereum)}
             >
               Ethereum
-              <div
-                className={`object-bottom bg-selectionHighlight h-2 -my-1 -mx-2 z-10 relative ${
-                  selectedNetwork === Network.Ethereum ? '' : 'hidden'
-                }`}
-              ></div>
             </button>
             <button
-              className={`py-1 px-2 border-2 border-transparent bg-modalBG h-full text-white text-md hover:bg-modalBGHover w-1/3`}
+              className={`py-1 px-2 border-b-4 border-t-0 border-l-0 border-r-0 ${
+                selectedNetwork === Network.Avalanche
+                  ? 'border-selectionHighlight'
+                  : 'border-transparent'
+              } bg-modalBG h-full text-white text-sm lg:text-md hover:bg-modalBGHover w-1/3`}
               id="avalanche-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(Network.Avalanche)}
             >
               Avalanche
-              <div
-                className={`object-bottom bg-selectionHighlight h-2 -my-1 -mx-2 z-10 relative ${
-                  selectedNetwork === Network.Avalanche ? '' : 'hidden'
-                }`}
-              ></div>
             </button>
             <button
-              className={`py-1 px-2 border-2 border-transparent bg-modalBG h-full text-white text-md hover:bg-modalBGHover w-1/3 rounded-r-md`}
+              className={`py-1 px-2 border-b-4 border-t-0 border-l-0 border-r-0 ${
+                selectedNetwork === Network.OH ? 'border-selectionHighlight' : 'border-transparent'
+              } bg-modalBG h-full text-white text-sm lg:text-md hover:bg-modalBGHover w-1/3 rounded-r-md`}
               id="oh-wallet-button"
               // TODO: Oh! Finance will fill in network selection logic here
               onClick={() => setSelectedNetwork(Network.OH)}
             >
               OH!
-              <div
-                className={`object-bottom bg-selectionHighlight h-2 -my-1 -mx-2 z-10 relative ${
-                  selectedNetwork === Network.OH ? '' : 'hidden'
-                }`}
-              ></div>
             </button>
           </div>
         </div>
@@ -102,7 +97,7 @@ export function ConnectWalletDialog() {
         <div className="flex flex-row p-2">
           <div className="bg-modalAccent flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
-              <p className="text-md text-accentText py-1 px-2  border-2 border-transparent text-center">
+              <p className="text-sm lg:text-md text-accentText py-1 px-2  border-2 border-transparent text-center">
                 2. Connect Wallet
               </p>
               <HintButton hint={connectWalletHint} />
