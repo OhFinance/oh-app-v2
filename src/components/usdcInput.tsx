@@ -7,11 +7,13 @@ type Props = {
   value: number;
   maxValue: number;
   onChange: (value: number) => void;
+  onValidate?: (isValid: boolean) => void;
   disabled?: boolean;
+  type?: 'number' | 'text';
 };
 
 export function UsdcInput(props: Props) {
-  const { value, maxValue, onChange, disabled } = props;
+  const { value, maxValue, onChange, onValidate, disabled } = props;
   const [lastValue, setLastValue] = useState(value);
   const [proxyValue, setProxyValue] = useState(value ? value.toString() : '');
   const { walletConnected } = useWalletStore();
@@ -22,7 +24,10 @@ export function UsdcInput(props: Props) {
       setLastValue(value);
       setProxyValue(value ? value.toString() : '');
     }
-  }, [value, lastValue, setLastValue, setProxyValue]);
+    const isDecimal = proxyValue.indexOf('.') !== -1;
+    const isCompleteDecimal = isDecimal ? proxyValue.split('.')[1]?.length > 0 : false;
+    onValidate?.(value === Number(proxyValue) && (!isDecimal || isCompleteDecimal));
+  }, [value, lastValue, proxyValue, onValidate, setLastValue, setProxyValue]);
 
   return (
     <>
@@ -54,14 +59,17 @@ export function UsdcInput(props: Props) {
               return;
             }
             const value = parseFloat(event.target.value);
-            const isCompleteDecimal = event.target.value.split('.')[1];
-            if (!isNaN(value) && isCompleteDecimal?.length > 0) {
+            const isDecimal = event.target.value.indexOf('.') !== -1;
+            const isCompleteDecimal = isDecimal
+              ? event.target.value.split('.')[1]?.length > 0
+              : false;
+            if (!isNaN(value) && (!isDecimal || isCompleteDecimal)) {
               const finalValue = Math.min(value, maxValue);
-              onChange(finalValue);
               setProxyValue(finalValue.toString());
+              onChange(finalValue);
               return;
             }
-            setProxyValue(event.target.value);
+            setProxyValue(event.target.value.replace(/[^\d.-]/g, ''));
           }}
           disabled={disabled}
           type="text"

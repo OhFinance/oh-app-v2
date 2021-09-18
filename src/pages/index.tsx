@@ -56,6 +56,8 @@ const Home: NextPage = React.forwardRef(function Home() {
   } = useWalletStore();
   const { isLoading, data, fetchData } = useChartStore();
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
+  const [depositValid, setDepositValid] = useState(false);
+  const [withdrawValid, setWithdrawValid] = useState(false);
   const chartRef = useRef(null as null | HTMLDivElement);
   const chartContainerRef = useRef(null as null | HTMLDivElement);
 
@@ -167,6 +169,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                     value={toBeDeposited}
                     maxValue={availableUsdc}
                     onChange={setToBeDeposited}
+                    onValidate={(isValid) => setDepositValid(isValid)}
                     disabled={!walletConnected || availableUsdc <= 0}
                   />
                 </div>
@@ -174,7 +177,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <button
                     className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickDeposit}
-                    disabled={!walletConnected || availableUsdc <= 0 || toBeDeposited <= 0}
+                    disabled={
+                      !walletConnected || !depositValid || availableUsdc <= 0 || toBeDeposited <= 0
+                    }
                   >
                     Deposit
                   </button>
@@ -218,6 +223,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                       value={toBeWithdrawn}
                       maxValue={availableUsdc}
                       onChange={setToBeWithdrawn}
+                      onValidate={(isValid) => setWithdrawValid(isValid)}
                       disabled={!walletConnected || availableUsdc <= 0}
                     />
                   </div>
@@ -225,7 +231,12 @@ const Home: NextPage = React.forwardRef(function Home() {
                     <button
                       className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                       onClick={onClickWithraw}
-                      disabled={!walletConnected || availableUsdc <= 0 || toBeWithdrawn <= 0}
+                      disabled={
+                        !walletConnected ||
+                        !withdrawValid ||
+                        availableUsdc <= 0 ||
+                        toBeWithdrawn <= 0
+                      }
                     >
                       Withdraw
                     </button>

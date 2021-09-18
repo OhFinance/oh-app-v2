@@ -16,7 +16,7 @@ const initialState = {
   portfolioPl: 0, // Amount gained or lost (USDC, can be negative)
   portfolioPlPercent: 0, // Amount gained or lost (Percent)
   availableOh: 0,
-  availableUsdc: 0,
+  availableUsdc: 100,
   toBeDeposited: 0,
   toBeWithdrawn: 0,
   interestEarned: 0,
