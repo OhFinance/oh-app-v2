@@ -22,7 +22,7 @@ function convertValue(value: number) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-consoleBGInner border-2 border-selectionHighlight text-accentText rounded-md ">
+      <div className="bg-consoleBGInner border-2 border-selectionHighlight text-accentText rounded-md p-2">
         <p className="label">{payload[0].value}</p>
         <p className="intro">{convertDate(label)}</p>
       </div>
@@ -106,7 +106,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
       ) : (
         <div className="mt-6 w-full flex-row">
           <ComposedChart
-            width={width - 10}
+            width={width}
             height={height - 70}
             data={data}
             margin={{ top: 25, right: 0, left: 0, bottom: 0 }}
