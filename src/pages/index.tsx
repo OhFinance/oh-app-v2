@@ -106,7 +106,7 @@ const Home: NextPage = React.forwardRef(function Home() {
       )}
       <div
         className={`${styles['main-container']} ${
-          walletConnected ? 'mt-12' : 'mt-36'
+          walletConnected ? 'mt-2' : 'mt-36'
         } mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
       >
         <div className={`${styles['first-container']} p-6 w-full h-full`}>
