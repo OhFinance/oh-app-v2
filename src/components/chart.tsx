@@ -19,6 +19,19 @@ function convertValue(value: number) {
   return `${Math.floor(value / 10e2)}M`;
 }
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-consoleBGInner border-2 border-selectionHighlight text-accentText rounded-md p-2">
+        <p className="label">{payload[0].value}</p>
+        <p className="intro">{convertDate(label)}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 export function Chart({ data, isLoading, width, height, onChartTimeChanged }: ChartProps) {
   function buttonClicked(event: React.MouseEvent<HTMLButtonElement>) {
     onChartTimeChanged(event.currentTarget.dataset.time as ChartTimeRange);
@@ -93,7 +106,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
       ) : (
         <div className="mt-6 w-full flex-row">
           <ComposedChart
-            width={width - 10}
+            width={width}
             height={height - 70}
             data={data}
             margin={{ top: 25, right: 0, left: 0, bottom: 0 }}
@@ -106,7 +119,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
             </defs>
             <XAxis dataKey="time" tickFormatter={convertDate} />
             {/* <YAxis tickFormatter={convertValue} /> */}
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             {/* <CartesianGrid vertical={false} stroke="#DDD" /> */}
             <Line
               type="monotone"

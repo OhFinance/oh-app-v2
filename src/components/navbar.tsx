@@ -39,12 +39,12 @@ export function Navbar() {
         </Link>
         <div className="flex items-center">
           <nav className="font-sen text-defaultText uppercase text-lg lg:flex items-center hidden">
-            <Link href="/faq">
+            <Link href="https://docs.oh.finance/getting-started/faq">
               <a className="py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                 FAQ
               </a>
             </Link>
-            <Link href="/docs">
+            <Link href="https://docs.oh.finance/">
               <a className="py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                 Docs
               </a>
@@ -264,12 +264,12 @@ export function Navbar() {
               </div>
 
               <div className="text-right pr-5 text-defaultText">
-                <Link href="/faq">
+                <Link href="https://docs.oh.finance/getting-started/faq">
                   <a className="w-4 py-6 pt-12 px-6 font-bold text-xl flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                     FAQ
                   </a>
                 </Link>
-                <Link href="/docs">
+                <Link href="https://docs.oh.finance/">
                   <a className="w-4 py-6 px-6 font-bold text-xl flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                     Docs
                   </a>
