@@ -15,12 +15,12 @@ export function Footer() {
                 <h2 className="text-accentText text-2xl mb-4">Resources</h2>
                 <ul>
                   <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <Link href="/faq">
+                    <Link href="https://docs.oh.finance/getting-started/faq">
                       <a>FAQ</a>
                     </Link>
                   </li>
                   <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <Link href="/docs">
+                    <Link href="https://docs.oh.finance">
                       <a>Docs</a>
                     </Link>
                   </li>
