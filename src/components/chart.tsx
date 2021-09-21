@@ -19,12 +19,20 @@ function convertValue(value: number) {
   return `${Math.floor(value / 10e2)}M`;
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: { value: string }[];
+  label?: number;
+}) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-consoleBGInner border-2 border-selectionHighlight text-accentText rounded-md p-2">
         <p className="label">{payload[0].value}</p>
-        <p className="intro">{convertDate(label)}</p>
+        <p className="intro">{convertDate(label ?? 0)}</p>
       </div>
     );
   }
