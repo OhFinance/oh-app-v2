@@ -22,6 +22,13 @@ export function HintButton({ hint }: Props) {
     ],
   });
 
+  function show() {
+    setShowTooltip(true);
+  }
+  function hide() {
+    setShowTooltip(false);
+  }
+
   return (
     <>
       <div className="flex flex-wrap w-auto">
@@ -30,8 +37,10 @@ export function HintButton({ hint }: Props) {
           type="button"
           className={`rounded-full text-xl font-bold h-6 w-6 flex items-center justify-center bg-pink-800 bg-opacity-50 hover:bg-pink-400`}
           aria-label={hint}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
+          onMouseEnter={show}
+          onMouseLeave={hide}
+          onFocus={show}
+          onBlur={hide}
         >
           ?
         </button>
