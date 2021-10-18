@@ -1,59 +1,55 @@
-import { createPopper } from '@popperjs/core';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import { usePopper } from 'react-popper';
+import styleModule from './__styles__/hintButton.module.css';
 
 type Props = { hint?: string };
 
 export function HintButton({ hint }: Props) {
-  const [showTooltip, setShowTooltip] = React.useState(false);
-  const [createTooltip, setCreateTooltip] = React.useState(false);
-  const btnRef: React.RefObject<HTMLButtonElement> = React.createRef();
-  const tooltipRef: React.RefObject<HTMLDivElement> = React.createRef();
-
-  useEffect(() => {
-    if (!createTooltip || !btnRef.current || !tooltipRef.current) {
-      return;
-    }
-    createPopper(btnRef.current, tooltipRef.current, {
-      placement: 'auto',
-      modifiers: [
-        {
-          name: 'offset',
-          options: {
-            offset: [0, 10],
-          },
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [referenceElement, setReferenceElement] = useState(null);
+  const [popperElement, setPopperElement] = useState(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: 'auto',
+    modifiers: [
+      { name: 'arrow', options: { element: arrowElement } },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 10],
         },
-      ],
-    });
-    setShowTooltip(true);
-  }, [createTooltip, btnRef, tooltipRef]);
+      },
+    ],
+  });
 
   return (
     <>
       <div className="flex flex-wrap w-auto">
         <button
-          ref={btnRef}
+          ref={setReferenceElement as any}
           type="button"
           className={`rounded-full text-xl font-bold h-6 w-6 flex items-center justify-center bg-pink-800 bg-opacity-50 hover:bg-pink-400`}
           aria-label={hint}
-          onMouseEnter={() => setCreateTooltip(true)}
-          onMouseLeave={() => {
-            setShowTooltip(false);
-            setCreateTooltip(false);
-          }}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
         >
           ?
         </button>
+      </div>
+      {showTooltip && (
         <div
-          ref={tooltipRef}
-          className={`${
-            showTooltip ? '' : 'hidden'
-          } bg-pink-600 border-0 block z-50 font-normal leading-normal text-sm max-w-xs text-left no-underline break-words rounded-lg`}
+          id={styleModule.tooltip}
+          ref={setPopperElement as any}
+          className="bg-pink-600 border-0 block z-50 font-normal leading-normal text-sm max-w-xs text-left no-underline break-words rounded-lg"
+          style={styles.popper}
+          {...attributes.popper}
         >
           <div>
             <div className="text-white p-3">{hint}</div>
           </div>
+          <div id={styleModule.arrow} ref={setArrowElement as any} style={styles.arrow} />
         </div>
-      </div>
+      )}
     </>
   );
 }
