@@ -25,7 +25,7 @@ export function CaptureResize(props: Props) {
     return () => {
       window.removeEventListener('resize', calcSize);
     };
-  }, [captureRef, captureRef?.current]);
+  }, [captureRef]);
 
   if (size.width === 0 || size.height === 0) {
     return null;

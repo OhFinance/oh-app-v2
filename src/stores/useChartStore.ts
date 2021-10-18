@@ -46,7 +46,7 @@ export const useChartStore = createStore(
       axios
         .get(url)
         .then((res) => {
-          set({ isLoading: false, data: res.data['Data'] });
+          set({ isLoading: false, data: (res.data as any)['Data'] });
         })
         .catch((error) => {
           console.log(error);

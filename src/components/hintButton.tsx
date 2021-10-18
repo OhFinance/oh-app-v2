@@ -25,7 +25,7 @@ export function HintButton({ hint }: Props) {
       ],
     });
     setShowTooltip(true);
-  }, [showTooltip, btnRef, btnRef.current, tooltipRef, tooltipRef.current]);
+  }, [createTooltip, btnRef, tooltipRef]);
 
   return (
     <>
