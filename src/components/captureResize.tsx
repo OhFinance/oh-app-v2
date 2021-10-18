@@ -9,22 +9,23 @@ export function CaptureResize(props: Props) {
   const { captureRef } = props;
   const [size, setSize] = useState({ width: 0, height: 0 });
 
-  function calcSize() {
-    const boundingRect = captureRef?.current?.getBoundingClientRect() ?? { width: 0, height: 0 };
-    if (boundingRect.width !== 0 && boundingRect.height !== 0) {
-      setSize(boundingRect);
-    }
-  }
-
   useEffect(() => {
+    function calcSize() {
+      const boundingRect = captureRef?.current?.getBoundingClientRect() ?? { width: 0, height: 0 };
+      if (boundingRect.width !== 0 && boundingRect.height !== 0) {
+        setSize(boundingRect);
+      }
+    }
+
     calcSize();
+
     if (captureRef?.current) {
       window.addEventListener('resize', calcSize);
     }
     return () => {
       window.removeEventListener('resize', calcSize);
     };
-  }, [captureRef]);
+  }, [captureRef, captureRef?.current]);
 
   if (size.width === 0 || size.height === 0) {
     return null;
