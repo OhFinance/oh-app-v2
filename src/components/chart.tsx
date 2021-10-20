@@ -116,7 +116,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
           <ComposedChart
             width={width}
             height={height - 70}
-            data={data}
+            data={data as object[]}
             margin={{ top: 25, right: 0, left: 0, bottom: 0 }}
           >
             <defs>

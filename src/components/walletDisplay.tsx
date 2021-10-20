@@ -27,7 +27,13 @@ export function WalletDisplay() {
         <div
           className={`py-1 px-2 rounded-lg bg-transparent border-2 border-selectionHighlight text-defaultText font-bold text-md flex`}
         >
-          <img width={24} height={24} className="mr-2 filter drop-shadow-lg" src="/img/dot.png" />
+          <img
+            width={24}
+            height={24}
+            className="mr-2 filter drop-shadow-lg"
+            src="/img/dot.png"
+            alt="Wallet Icon"
+          />
           <p className="overflow-ellipsis overflow-hidden">{walletAddress}</p>
         </div>
       )}

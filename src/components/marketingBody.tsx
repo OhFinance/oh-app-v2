@@ -175,8 +175,8 @@ export function MarketingBody() {
 
             <p className="text-defaultText text-3xl pt-20">Testimonials</p>
             <p className="text-accentText text-5xl pt-20">
-              "Something something amazing so<br className={styles['cta-line-break']}></br> good we
-              are going to the moon!"
+              &quot;Something something amazing so<br className={styles['cta-line-break']}></br>{' '}
+              good we are going to the moon!&quot;
             </p>
             <p className="text-accentText text-2xl pt-4">-Satoshi Nakamoto</p>
           </div>
