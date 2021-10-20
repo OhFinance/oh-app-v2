@@ -47,7 +47,7 @@ export function ConnectWalletDialog() {
         // Modal Content
         className="relative top-20 mx-auto p-5 w-11/12 shadow rounded-md bg-black"
       >
-        <div className="flex flex-row p-2">
+        <div className="flex flex-row p-2  lg:h-16">
           <div className="bg-modalAccent flex-col w-1/4 rounded-l-md">
             <div className="flex justify-center items-center h-full">
               <p className="text-sm lg:text-md text-accentText py-1 px-2 text-center">
