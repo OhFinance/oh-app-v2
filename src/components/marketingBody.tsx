@@ -51,25 +51,25 @@ export function MarketingBody() {
             <img
               className="px-6"
               alt="Marketing Graphic 1"
-              src="/img/OhFinanceAssets_marketingGraphic1.png"
-              width={412}
-              height={412}
+              src="/img/simple.png"
+              width={200}
+              height={200}
             />
 
             <img
               className="px-6"
               alt="Marketing Graphic 2"
-              src="/img/OhFinanceAssets_marketingGraphic2.png"
-              width={412}
-              height={412}
+              src="/img/trustless.png"
+              width={200}
+              height={200}
             />
 
             <img
               className="px-6"
               alt="Marketing Graphic 3"
-              src="/img/OhFinanceAssets_marketingGraphic3.png"
-              width={412}
-              height={412}
+              src="/img/non-custodial.png"
+              width={200}
+              height={200}
             />
           </div>
 
