@@ -38,7 +38,9 @@ export function MarketingBody() {
           <div // Tagline
             className="text-center items-center pt-12 lg:p-32"
           >
-            <p className="text-6xl text-defaultText">Fight back with the future of money</p>
+            <p className="text-6xl text-defaultText">
+              DeFi Made <span className={`text-accentText`}>Easier</span>
+            </p>
             <p className="text-3xl text-defaultText pt-16">
               Simply deposit USDC and Oh! Finance aggregates popular DeFi investment strategies and
               automatically compounds your earnings.
@@ -112,7 +114,9 @@ export function MarketingBody() {
               src="/img/OhFinanceAssets_OhSection1Image.png"
             />
             <div className="-mt-20">
-              <p className="text-defaultText text-6xl">OH! Does it for you</p>
+              <p className="text-defaultText text-6xl">
+                DeFi Done <span className={`text-accentText`}>Better</span>
+              </p>
               <p className="text-defaultText text-3xl pt-20">
                 Gain exposure to a{' '}
                 <span className={`${textPink}`}>managed index of DeFi strategies</span> , designed
