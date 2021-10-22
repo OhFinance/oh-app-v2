@@ -67,7 +67,7 @@ export function Navbar() {
                     name="toggle"
                     type="checkbox"
                     checked={theme === 'light'}
-                    className="outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full checked:bg-white bg-selectionHighlight border-4 appearance-none cursor-pointer"
+                    className="outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full checked:bg-white bg-selectionHighlight border-0 appearance-none cursor-pointer"
                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                     readOnly
                   />
