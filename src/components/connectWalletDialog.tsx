@@ -2,7 +2,7 @@ import React from 'react';
 import { Network, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
 
-const selectNetworkHint = 'This is a hint for selecting your network.';
+const selectNetworkHint = 'Select which network you want to connect to.';
 const connectWalletHint = 'This is a hint for connecting your wallet.';
 
 function onClickMetaMask() {
