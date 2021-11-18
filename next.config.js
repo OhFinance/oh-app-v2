@@ -19,6 +19,10 @@ module.exports = withPlugins([
         disableStaticImages: true,
       },
       experimental: { esmExternals: true },
+
+      env: {
+        INFURA_KEY: '4bf032f2d38a4ed6bb975b80d6340847',
+      },
     },
   ],
 ]);
