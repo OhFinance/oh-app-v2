@@ -31,7 +31,7 @@ export function HintButton({ hint }: Props) {
 
   return (
     <>
-      <div className="flex flex-wrap w-auto">
+      <div className="flex flex-wrap w-auto justify-end">
         <button
           ref={setReferenceElement as any}
           type="button"

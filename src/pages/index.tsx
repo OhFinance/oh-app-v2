@@ -197,7 +197,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                       className={`w-full h-full flex flex-col rounded-lg border-2 border-consoleBorderAccent bg-consoleAccent`}
                     >
                       <div className={`w-full h-full flex flex-row`}>
-                        <div className={`w-full flex flex-row justify-start`}>
+                        <div className={`w-full flex flex-row`}>
                           <div className="flex flex-col">
                             <img
                               className="ml-1 mt-2"
@@ -216,7 +216,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                             )}
                             {!walletConnected && <p className={`${textCashMd}`}>No lock-ups</p>}
                           </div>
-                          <div className="pt-2 ml-4 mt-8 flex flex-col">
+                          <div className="pt-2 mt-8 w-9">
                             <HintButton hint={depositUsdcHint} />
                           </div>
                         </div>
@@ -356,7 +356,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                   {walletConnected && (
                     <p className="text-accentText">${limitDecimals(availableOh)} Available</p>
                   )}
-                  {!walletConnected && <p className="text-accentText">Rewards</p>}
+                  {!walletConnected && <p className="text-accentText">Coming Soon</p>}
                 </div>
                 <div className="mr-2 mt-8 flex flex-col">
                   <HintButton hint={claimOhHint} />
