@@ -8,21 +8,14 @@ import { MarketingBody } from '~/components/marketingBody';
 import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
 import { ChartTimeRange, useChartStore } from '~/stores/useChartStore';
+import { usePriceStore } from '~/stores/usePriceStore';
 import { useWalletStore } from '~/stores/useWalletStore';
-import {
-  h1,
-  h2,
-  h3,
-  textCash,
-  textCashLg,
-  textCashMd,
-  textCashXs,
-  textPink,
-} from '~/tempTailwindConfig';
+import { h1, h2, h3, textCash, textCashLg, textCashMd, textPink } from '~/tempTailwindConfig';
 import { limitDecimals } from '~/utilities/textUtilities';
 
-const depositUsdcHint = 'This is a description of depositing USDC tokens.';
-const claimOhHint = 'This is a description of claiming Oh! Token rewards.';
+const depositUsdcHint = 'Deposit USDC tokens to start earning.';
+const withdrawUsdcHint = 'Withdraw your USDC tokens any time.';
+const claimOhHint = "You'll soon be able to claim OH! Tokens.";
 
 function onClickDeposit() {
   //TODO: Oh! Finance will fill in Deposit logic here
@@ -55,7 +48,8 @@ const Home: NextPage = React.forwardRef(function Home() {
     setToBeDeposited,
     setToBeWithdrawn,
   } = useWalletStore();
-  const { isLoading, data, fetchData } = useChartStore();
+  const { isLoading: isLoadingChart, data, fetchData: fetchChart } = useChartStore();
+  const { isLoading: isLoadingPrice, price, fetchData: fetchPrice } = usePriceStore();
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
   const [depositValid, setDepositValid] = useState(false);
   const [withdrawValid, setWithdrawValid] = useState(false);
@@ -67,8 +61,9 @@ const Home: NextPage = React.forwardRef(function Home() {
   }
 
   useEffect(() => {
-    fetchData(chartTimeRange);
-  }, [fetchData, chartTimeRange]);
+    fetchPrice();
+    fetchChart(chartTimeRange);
+  }, [fetchPrice, fetchChart, chartTimeRange]);
 
   return (
     <main className={`relative overflow-hidden`}>
@@ -217,7 +212,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                             {!walletConnected && <p className={`${textCashMd}`}>No lock-ups</p>}
                           </div>
                           <div className="pt-2 mt-8 w-9">
-                            <HintButton hint={depositUsdcHint} />
+                            <HintButton hint={withdrawUsdcHint} />
                           </div>
                         </div>
                       </div>
@@ -310,7 +305,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                       <div className="flex w-full h-full rounded-lg">
                         <Chart
                           data={data}
-                          isLoading={isLoading}
+                          isLoading={isLoadingChart}
                           width={Math.min(width, 906)}
                           height={height}
                           onChartTimeChanged={chartTimeChanged}
@@ -374,26 +369,26 @@ const Home: NextPage = React.forwardRef(function Home() {
                 className={`container flex ${styles['stats-oh']} justify-between rounded-lg border-2 border-consoleBorderInner bg-consoleBGInner`}
               >
                 <div className={`mt-3 ml-4 w-5/6 flex flex-col`}>
-                  <h2 className={`${h2}`}>
-                    Oh! Token Stats <span className={textCashXs}>/ 24hr</span>
-                  </h2>
+                  <h2 className={`${h2}`}>Oh! Token Price</h2>
                   <div className="mt-2 w-11/12 border-2 border-solid border-selectionHighlight pl-2">
-                    <p className={`${textCashMd}`}>${limitDecimals(interestEarned)}</p>
+                    <p className={`${textCashMd}`}>
+                      ${isLoadingPrice ? ' ---' : limitDecimals(price)}
+                    </p>
                   </div>
                 </div>
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
                   <h2 className={`${h3}`}>Circulating Supply</h2>
-                  <p className={`mt-2 ${textCashMd}`}>${limitDecimals(interestEarned)}</p>
+                  <p className={`mt-2 ${textCashMd}`}>$ ---</p>
                 </div>
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
                   <h2 className={`${h3}`}>Market Cap</h2>
-                  <p className={`mt-2 ${textCashMd}`}>${limitDecimals(interestEarned)}</p>
+                  <p className={`mt-2 ${textCashMd}`}>$ ---</p>
                 </div>
               </div>
               <div className={`ml-6 mt-3`}>
                 <div className="w-64 min-w-32">
                   <h2 className={`${h2}`}>Total Value Locked</h2>
-                  <p className={`mt-2 ${textCash}`}>${limitDecimals(interestEarned)}</p>
+                  <p className={`mt-2 ${textCash}`}>$ ---</p>
                 </div>
               </div>
             </div>
