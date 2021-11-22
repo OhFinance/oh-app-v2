@@ -15,9 +15,11 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
+      "*": ["src/legacy/*"], // the legacy folder should eventually be removed and cleaned up
       "~/*": ["src/*"],
       "@/*": ["public/*"]
-    }
+    },
+    "incremental": true
   },
   "include": ["next-env.d.ts", "types.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "temp", "src/backup"]

@@ -3,10 +3,51 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-/**
- * @type {import('next/dist/next-server/server/config').NextConfig}
- **/
+const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000');
+
 module.exports = withPlugins([
+  [
+    {
+      webpack(config) {
+        config.module.rules.push({
+          test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+          type: 'asset',
+          parser: {
+            dataUrlCondition: {
+              maxSize: imageInlineSizeLimit,
+            },
+          },
+        });
+        config.module.rules.push({
+          test: /\.svg$/,
+          use: [
+            {
+              loader: require.resolve('@svgr/webpack'),
+              options: {
+                prettier: false,
+                svgo: false,
+                svgoConfig: {
+                  plugins: [{ removeViewBox: false }],
+                },
+                titleProp: true,
+                ref: true,
+              },
+            },
+            {
+              loader: require.resolve('file-loader'),
+              options: {
+                name: 'static/media/[name].[hash].[ext]',
+              },
+            },
+          ],
+          issuer: {
+            and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
+          },
+        });
+        return config;
+      },
+    },
+  ],
   [withBundleAnalyzer],
   [
     {
