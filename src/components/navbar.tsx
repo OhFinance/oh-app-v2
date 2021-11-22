@@ -39,7 +39,7 @@ export function Navbar() {
         </Link>
         <div className="flex items-center">
           <nav className="font-sen text-defaultText uppercase text-lg lg:flex items-center hidden">
-            <Link href="https://docs.oh.finance/getting-started/faq">
+            <Link href="https://docs.oh.finance/general/faq">
               <a className="py-2 px-6 flex hover:text-accentText hover:border-b-2 hover:border-selectionHighlight">
                 FAQ
               </a>

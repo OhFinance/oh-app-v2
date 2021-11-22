@@ -15,7 +15,7 @@ export function Footer() {
                 <h2 className="text-accentText text-2xl mb-4">Resources</h2>
                 <ul>
                   <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <Link href="https://docs.oh.finance/getting-started/faq">
+                    <Link href="https://docs.oh.finance/general/faq">
                       <a>FAQ</a>
                     </Link>
                   </li>
@@ -29,21 +29,16 @@ export function Footer() {
             </li>
             <li className="w-1/2 md:w-1/3 lg:w-1/3">
               <div className="text-left lg:text-center">
-                <h2 className="text-accentText text-2xl mb-4 pt-8 lg:pt-0">Contacts</h2>
+                <h2 className="text-accentText text-2xl mb-4 pt-8 lg:pt-0">More Info</h2>
                 <ul>
                   <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <Link href="/">
-                      <a>Privacy Policy</a>
+                    <Link href="https://docs.oh.finance/general/security">
+                      <a>Security</a>
                     </Link>
                   </li>
                   <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <Link href="/">
-                      <a>Risks</a>
-                    </Link>
-                  </li>
-                  <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <Link href="/">
-                      <a>Terms of use</a>
+                    <Link href="https://docs.oh.finance/general/benefits-and-risks">
+                      <a>Benefits & Risks</a>
                     </Link>
                   </li>
                 </ul>
@@ -54,7 +49,7 @@ export function Footer() {
                 <h2 className="text-accentText text-2xl mb-4 pt-8 lg:pt-0">Community</h2>
                 <ul className="flex flex-row lg:flex-col items-center">
                   <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <a href="https://www.twitter.com">
+                    <a href="https://twitter.com/OhFinanceDefi">
                       <img
                         width={32}
                         height={26}
@@ -65,18 +60,7 @@ export function Footer() {
                     </a>
                   </li>
                   <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <a href="https://www.facebook.com">
-                      <img
-                        width={20}
-                        height={37}
-                        className="ml-2 mr-2"
-                        alt="Facebook"
-                        src={`/img/SocialFacebookIcon_${theme}.png`}
-                      />
-                    </a>
-                  </li>
-                  <li className="mb-4 hover:text-accentText transition-colors duration-200">
-                    <a href="https://www.medium.com">
+                    <a href="https://ohfinance.medium.com">
                       <img
                         width={32}
                         height={26}
