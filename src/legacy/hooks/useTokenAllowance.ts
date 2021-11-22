@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import { useERC20Contract } from './useContract';
-import { useSingleCallResult } from 'state/multicall/hooks';
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
+import { useSingleCallResult } from 'state/multicall/hooks';
+import { useERC20Contract } from './useContract';
 
 export const useTokenAllowance = (tokenAddress?: string, owner?: string, spender?: string) => {
   const contract = useERC20Contract(tokenAddress);

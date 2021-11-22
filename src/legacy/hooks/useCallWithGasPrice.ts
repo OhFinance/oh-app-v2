@@ -1,5 +1,5 @@
 import ethers, { CallOverrides, Contract } from 'ethers';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { useCallback } from 'react';
 import { useGasPrice } from 'state/user/hooks';
 

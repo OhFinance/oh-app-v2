@@ -1,5 +1,5 @@
 import { Toast, ToastType } from 'components/Toast/types';
-import { kebabCase } from 'lodash';
+import kebabCase from 'lodash/kebabCase';
 import { useCallback, useState } from 'react';
 import { IToastContext, ToastContext } from './ToastContext';
 

@@ -1,4 +1,5 @@
 const withPlugins = require('next-compose-plugins');
+const { DuplicatesPlugin } = require('inspectpack/plugin');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -8,7 +9,8 @@ const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10
 module.exports = withPlugins([
   [
     {
-      webpack(config) {
+      webpack(config, options) {
+        // The following rules allow webpack to bundle images (copied from Create React App)
         config.module.rules.push({
           test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
           type: 'asset',
@@ -44,6 +46,7 @@ module.exports = withPlugins([
             and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
           },
         });
+        config.plugins.push(new DuplicatesPlugin());
         return config;
       },
     },
@@ -58,11 +61,6 @@ module.exports = withPlugins([
       // https://stackoverflow.com/a/68016564
       images: {
         disableStaticImages: true,
-      },
-      experimental: { esmExternals: true },
-
-      env: {
-        INFURA_KEY: '4bf032f2d38a4ed6bb975b80d6340847',
       },
     },
   ],

@@ -1,6 +1,6 @@
-import { useERC20Contract } from './useContract';
-import { useSingleCallResult } from '../state/multicall/hooks';
 import BigNumber from 'bignumber.js';
+import { useSingleCallResult } from '../state/multicall/hooks';
+import { useERC20Contract } from './useContract';
 
 // returns undefined if input token is undefined, or fails to get token contract,
 // or contract total supply cannot be fetched
