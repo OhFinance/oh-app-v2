@@ -1,4 +1,8 @@
-import React from 'react';
+import { connectors } from 'config/constants/connectors';
+import { ConnectorNames } from 'config/constants/types';
+import { CONNECTOR_STORAGE_KEY, WALLET_STORAGE_KEY } from 'config/constants/values';
+import useAuth from 'hooks/useAuth';
+import React, { useCallback } from 'react';
 import { Network, useWalletStore } from '~/stores/useWalletStore';
 import { HintButton } from './hintButton';
 
@@ -15,6 +19,25 @@ export function ConnectWalletDialog() {
   const { toggleConnectWalletDialog } = useWalletStore();
   const { setSelectedNetwork } = useWalletStore();
   const { selectedNetwork } = useWalletStore();
+
+  // WIP: Testing Metamask connector
+  const { icon, title, connectorId } = connectors[0];
+
+  const { login } = useAuth();
+
+  const onLogin = useCallback(() => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+    // Since iOS does not support Trust Wallet we fall back to WalletConnect
+    if (title === 'Trust Wallet' && isIOS) {
+      login(ConnectorNames.WalletConnect);
+    } else {
+      login(connectorId);
+    }
+
+    localStorage.setItem(WALLET_STORAGE_KEY, title);
+    localStorage.setItem(CONNECTOR_STORAGE_KEY, connectorId);
+  }, [connectorId, login, title]);
 
   return (
     <div
@@ -107,7 +130,7 @@ export function ConnectWalletDialog() {
             <div className="p-10">
               <button
                 className={`border-2 border-transparent rounded-md p-5 m-4 text-white text-md bg-modalAccent hover:bg-modalAccentHover`}
-                onClick={onClickMetaMask}
+                onClick={onLogin}
               >
                 <img
                   width={72}

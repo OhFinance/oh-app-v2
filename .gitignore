@@ -12,8 +12,9 @@ node_modules
 /.next/
 /out/
 
-# production
+# build artifacts
 /build
+*.tsbuildinfo
 
 # misc
 .DS_Store

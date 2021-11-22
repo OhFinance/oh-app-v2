@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" fill-rule="evenodd">
+    <circle cx="16.112" cy="16.186" r="16" style="fill: rgb(135, 107, 246);"/>
+    <g fill="#FFF" fill-rule="nonzero">
+      <g>
+        <path fill-opacity=".602" d="M 16.61 4.186 L 16.61 13.056 L 24.107 16.406 Z"/>
+        <path d="M 16.61 4.186 L 9.112 16.406 L 16.61 13.056 Z"/>
+        <path fill-opacity=".602" d="M 16.61 22.154 L 16.61 28.181 L 24.112 17.802 Z"/>
+        <path d="M 16.61 28.181 L 16.61 22.153 L 9.112 17.802 Z"/>
+        <path fill-opacity=".2" d="M 16.61 20.759 L 24.107 16.406 L 16.61 13.058 Z"/>
+      </g>
+      <path fill-opacity=".602" d="M 9.112 16.406 L 16.61 20.759 L 16.61 13.058 Z"/>
+    </g>
+  </g>
+</svg>

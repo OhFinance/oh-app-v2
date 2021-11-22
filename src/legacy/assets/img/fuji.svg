@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 254 254" style="enable-background:new 0 0 254 254;" xmlns="http://www.w3.org/2000/svg">
+  <style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#E84142;}
+	.st1{fill:#FFFFFF;}
+</style>
+  <g>
+    <circle class="st0" cx="127" cy="127" r="127" style="fill: rgb(192, 192, 192);"/>
+    <path class="st1" d="M 171.8 130.3 C 176.2 122.7 183.3 122.7 187.7 130.3 L 215.1 178.4 C 219.5 186 215.9 192.2 207.1 192.2 L 151.9 192.2 C 143.2 192.2 139.6 186 143.9 178.4 L 171.8 130.3 Z M 118.8 37.7 C 123.2 30.1 130.2 30.1 134.6 37.7 L 140.7 48.7 L 155.1 74 C 158.6 81.2 158.6 89.7 155.1 96.9 L 106.8 180.6 C 102.4 187.4 95.1 191.7 87 192.2 L 46.9 192.2 C 38.1 192.2 34.5 186.1 38.9 178.4 L 118.8 37.7 Z"/>
+  </g>
+</svg>
