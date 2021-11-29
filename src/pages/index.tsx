@@ -10,10 +10,13 @@ import { MarketingBody } from '~/components/marketingBody';
 import { UsdcInput } from '~/components/usdcInput';
 import styles from '~/pages/__styles__/index.module.css';
 import { ChartTimeRange, useChartStore } from '~/stores/useChartStore';
+import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
+import { useMarketCapStore } from '~/stores/useMarketCapStore';
 import { usePriceStore } from '~/stores/usePriceStore';
+import { useTVLStore } from '~/stores/useTVLStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import { h1, h2, h3, textCash, textCashLg, textCashMd, textPink } from '~/tempTailwindConfig';
-import { limitDecimals } from '~/utilities/textUtilities';
+import { formatCurrency, limitDecimals } from '~/utilities/textUtilities';
 
 const depositUsdcHint = 'Deposit USDC tokens to start earning.';
 const withdrawUsdcHint = 'Withdraw your USDC tokens any time.';
@@ -57,6 +60,20 @@ const Home: NextPage = React.forwardRef(function Home() {
   const { isLoading: isLoadingChart, data, fetchData: fetchChart } = useChartStore();
   const { isLoading: isLoadingPrice, price, fetchData: fetchPrice } = usePriceStore();
 
+  const {
+    isLoading: isLoadingMarketCap,
+    marketCap,
+    fetchData: fetchmarketCap,
+  } = useMarketCapStore();
+
+  const {
+    isLoading: isLoadingSupply,
+    supply,
+    fetchData: fetchSupply,
+  } = useCirculatingSupplyStore();
+
+  const { isLoading: isLoadingTVL, tvl, fetchData: fetchTVL } = useTVLStore();
+
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
   const [depositValid, setDepositValid] = useState(false);
   const [withdrawValid, setWithdrawValid] = useState(false);
@@ -70,6 +87,18 @@ const Home: NextPage = React.forwardRef(function Home() {
   useEffect(() => {
     fetchPrice();
   }, [fetchPrice]);
+
+  useEffect(() => {
+    fetchmarketCap();
+  }, [fetchmarketCap]);
+
+  useEffect(() => {
+    fetchSupply();
+  }, [fetchSupply]);
+
+  useEffect(() => {
+    fetchTVL();
+  }, [fetchTVL]);
 
   useEffect(() => {
     fetchChart(chartTimeRange);
@@ -388,17 +417,23 @@ const Home: NextPage = React.forwardRef(function Home() {
                 </div>
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
                   <h2 className={`${h3}`}>Circulating Supply</h2>
-                  <p className={`mt-2 ${textCashMd}`}>$ ---</p>
+                  <p className={`mt-2 ${textCashMd}`}>
+                    ${isLoadingSupply ? ' ---' : formatCurrency(supply, 0)}
+                  </p>
                 </div>
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
                   <h2 className={`${h3}`}>Market Cap</h2>
-                  <p className={`mt-2 ${textCashMd}`}>$ ---</p>
+                  <p className={`mt-2 ${textCashMd}`}>
+                    ${isLoadingMarketCap ? ' ---' : formatCurrency(marketCap, 0)}
+                  </p>
                 </div>
               </div>
               <div className={`ml-6 mt-3`}>
                 <div className="w-64 min-w-32">
                   <h2 className={`${h2}`}>Total Value Locked</h2>
-                  <p className={`mt-2 ${textCash}`}>$ ---</p>
+                  <p className={`mt-2 ${textCash}`}>
+                    ${isLoadingTVL ? ' ---' : formatCurrency(tvl, 0)}
+                  </p>
                 </div>
               </div>
             </div>
