@@ -29,22 +29,22 @@ export const ToastProvider: React.FC = ({ children }) => {
   );
 
   const toastError = (title: Toast['title'], description?: Toast['description']) => {
-    console.error({ title, description, type: ToastType.ERROR });
+    console.error('toastError', { title, description, type: ToastType.ERROR });
     return toast({ title, description, type: ToastType.ERROR });
   };
 
   const toastInfo = (title: Toast['title'], description?: Toast['description']) => {
-    console.info({ title, description, type: ToastType.INFO });
+    console.info('toastInfo', { title, description, type: ToastType.INFO });
     return toast({ title, description, type: ToastType.INFO });
   };
 
   const toastSuccess = (title: Toast['title'], description?: Toast['description']) => {
-    console.log({ title, description, type: ToastType.SUCCESS });
+    console.log('toastSuccess', { title, description, type: ToastType.SUCCESS });
     return toast({ title, description, type: ToastType.SUCCESS });
   };
 
   const toastWarning = (title: Toast['title'], description?: Toast['description']) => {
-    console.warn({ title, description, type: ToastType.WARNING });
+    console.warn('toastWarning', { title, description, type: ToastType.WARNING });
     return toast({ title, description, type: ToastType.WARNING });
   };
 

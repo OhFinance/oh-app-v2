@@ -53,8 +53,10 @@ const Home: NextPage = React.forwardRef(function Home() {
     setToBeDeposited,
     setToBeWithdrawn,
   } = useWalletStore();
+
   const { isLoading: isLoadingChart, data, fetchData: fetchChart } = useChartStore();
   const { isLoading: isLoadingPrice, price, fetchData: fetchPrice } = usePriceStore();
+
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
   const [depositValid, setDepositValid] = useState(false);
   const [withdrawValid, setWithdrawValid] = useState(false);
@@ -67,8 +69,11 @@ const Home: NextPage = React.forwardRef(function Home() {
 
   useEffect(() => {
     fetchPrice();
+  }, [fetchPrice]);
+
+  useEffect(() => {
     fetchChart(chartTimeRange);
-  }, [fetchPrice, fetchChart, chartTimeRange]);
+  }, [fetchChart, chartTimeRange]);
 
   return (
     <main className={`relative overflow-hidden`}>
