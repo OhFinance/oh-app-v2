@@ -1,3 +1,5 @@
+import { useEagerConnect } from 'hooks/useEagerConnect';
+import { useWeb3StoreConnector } from 'hooks/useWeb3StoreConnector';
 import type { NextPage } from 'next';
 import React, { useEffect, useRef, useState } from 'react';
 import { CaptureResize } from '~/components/captureResize';
@@ -35,6 +37,9 @@ function onClickClaimOh() {
 }
 
 const Home: NextPage = React.forwardRef(function Home() {
+  useEagerConnect();
+  useWeb3StoreConnector();
+
   const {
     walletConnected,
     showConnectWalletDialog,

@@ -1,22 +1,19 @@
-import { Network } from './types';
-
+import Avalanche from 'assets/img/avax.svg';
 import Ethereum from 'assets/img/eth.svg';
+import Fuji from 'assets/img/fuji.svg';
 import Kovan from 'assets/img/kovan.svg';
 import Rinkeby from 'assets/img/rinkeby.svg';
-import Avalanche from 'assets/img/avax.svg';
-import Fuji from 'assets/img/fuji.svg';
 import { isLocalhost } from 'utils/misc';
+import { Network } from './types';
 
 export const SupportedNetworks = [1, 43114];
-
 export const SupportedTestNetworks = [4, 42];
 
 // only include testnets in live version until release
-export const supportedChainIds = SupportedNetworks;
-// [
-//   ...SupportedTestNetworks,
-//   ...(isLocalhost() ? SupportedNetworks : []),
-// ];
+export const supportedChainIds = [
+  ...SupportedNetworks,
+  ...(isLocalhost() ? SupportedTestNetworks : []),
+];
 
 // Avalanche Info: https://docs.avax.network/build/tutorials/platform/launch-your-ethereum-dapp
 export const Networks: { [chainId: number]: Network } = {
