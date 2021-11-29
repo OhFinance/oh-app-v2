@@ -26,7 +26,7 @@ export const useWalletStore = createStore(
   combine(initialState, (set, get) => ({
     connectWallet: () => set({ walletConnected: true, showConnectWalletDialog: false }),
     toggleConnectWalletDialog: () =>
-      set({ showConnectWalletDialog: !get().showConnectWalletDialog }),
+      set({ showConnectWalletDialog: !get().walletConnected && !get().showConnectWalletDialog }),
     setPortfolioBalance: (portfolioBalance: number) => set({ portfolioBalance }),
     setAvailableOh: (availableOh: number) => set({ availableOh }),
     setAvailableUsdc: (availableUsdc: number) => set({ availableUsdc }),
@@ -34,8 +34,15 @@ export const useWalletStore = createStore(
     setToBeWithdrawn: (toBeWithdrawn: number) => set({ toBeWithdrawn }),
     setInterestEarned: (interestEarned: number) => set({ interestEarned }),
     setSelectedNetwork: (selectedNetwork: Network) => set({ selectedNetwork }),
-    setWalletConnected: (walletConnected: boolean) => set({ walletConnected }),
-    setWalletAddress: (walletAddress: string) => set({ walletAddress }),
+    setWalletConnected: (
+      walletConnected: boolean,
+      walletAddress = '0x0000000000000000000000000000000000000000'
+    ) =>
+      set({
+        walletConnected,
+        walletAddress,
+        showConnectWalletDialog: walletConnected ? false : get().showConnectWalletDialog,
+      }),
     depositUdsc: () =>
       set({ availableUsdc: get().availableUsdc + get().toBeDeposited, toBeDeposited: 0 }),
     widthdrawUsdc: () =>

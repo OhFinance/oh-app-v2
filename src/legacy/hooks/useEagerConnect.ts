@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import useAuth from 'hooks/useAuth';
-import { CONNECTOR_STORAGE_KEY } from 'config/constants/values';
 import { ConnectorNames } from 'config/constants/types';
+import { CONNECTOR_STORAGE_KEY } from 'config/constants/values';
+import useAuth from 'hooks/useAuth';
+import { useEffect } from 'react';
 
-const useEagerConnect = () => {
+export const useEagerConnect = () => {
   const { login } = useAuth();
 
   useEffect(() => {
@@ -12,7 +12,7 @@ const useEagerConnect = () => {
     if (connectorId) {
       login(connectorId);
     }
-  }, [login]);
+    // Only run this hook once, even if login ref changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 };
-
-export default useEagerConnect;
