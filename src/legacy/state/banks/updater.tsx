@@ -1,5 +1,5 @@
 import axios from 'axios';
-import banks from 'config/constants/banks';
+import { banks } from 'config/constants/banks';
 import { supportedChainIds } from 'config/constants/networks';
 import { MAXIMUM_RETRIES } from 'config/constants/values';
 import { useEffect, useState } from 'react';
