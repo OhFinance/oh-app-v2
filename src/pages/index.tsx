@@ -17,7 +17,11 @@ import { useTVLStore } from '~/stores/useTVLStore';
 import { useUsdcStore } from '~/stores/useUsdcStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import { h1, h2, h3, textCash, textCashLg, textCashMd, textPink } from '~/tempTailwindConfig';
-import { formatCurrency, limitDecimals } from '~/utilities/numberUtilities';
+import {
+  formatCurrency,
+  limitDecimals,
+  limitDecimalsWithCommas,
+} from '~/utilities/numberUtilities';
 
 const depositUsdcHint = 'Deposit USDC tokens to start earning.';
 const withdrawUsdcHint = 'Withdraw your USDC tokens any time.';
@@ -403,7 +407,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
                   <h2 className={`${h3}`}>Circulating Supply</h2>
                   <p className={`mt-2 ${textCashMd}`}>
-                    ${isLoadingSupply ? ' ---' : formatCurrency(supply, 0)}
+                    {isLoadingSupply ? ' ---' : limitDecimalsWithCommas(supply, 0)}
                   </p>
                 </div>
                 <div className={`mt-3 ml-6 w-2/3 h-full flex flex-col`}>
