@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useUsdcStore } from '~/stores/useUsdcStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import { useWeb3 } from './useWeb3';
 
@@ -7,5 +8,8 @@ export const useWeb3StoreConnector = () => {
 
   useEffect(() => {
     useWalletStore.getState().setWalletConnected(active, account || undefined);
-  }, [active, account]);
+    if (active && account && chainId != null && library != null) {
+      useUsdcStore.getState().initialize({ chainId, library, account });
+    }
+  }, [active, account, chainId, library]);
 };

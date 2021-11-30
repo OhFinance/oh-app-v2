@@ -14,9 +14,10 @@ import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
 import { usePriceStore } from '~/stores/usePriceStore';
 import { useTVLStore } from '~/stores/useTVLStore';
+import { useUsdcStore } from '~/stores/useUsdcStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import { h1, h2, h3, textCash, textCashLg, textCashMd, textPink } from '~/tempTailwindConfig';
-import { formatCurrency, limitDecimals } from '~/utilities/textUtilities';
+import { formatCurrency, limitDecimals } from '~/utilities/numberUtilities';
 
 const depositUsdcHint = 'Deposit USDC tokens to start earning.';
 const withdrawUsdcHint = 'Withdraw your USDC tokens any time.';
@@ -46,32 +47,28 @@ const Home: NextPage = React.forwardRef(function Home() {
   const {
     walletConnected,
     showConnectWalletDialog,
-    toggleConnectWalletDialog,
     portfolioBalance,
     interestEarned,
     availableOh,
-    availableUsdc,
     toBeDeposited,
     toBeWithdrawn,
     setToBeDeposited,
     setToBeWithdrawn,
+    toggleConnectWalletDialog,
   } = useWalletStore();
-
   const { isLoading: isLoadingChart, data, fetchData: fetchChart } = useChartStore();
   const { isLoading: isLoadingPrice, price, fetchData: fetchPrice } = usePriceStore();
-
+  const { isLoading: isLoadingUsdc, usdcBalance } = useUsdcStore();
   const {
     isLoading: isLoadingMarketCap,
     marketCap,
-    fetchData: fetchmarketCap,
+    fetchData: fetchMarketCap,
   } = useMarketCapStore();
-
   const {
     isLoading: isLoadingSupply,
     supply,
     fetchData: fetchSupply,
   } = useCirculatingSupplyStore();
-
   const { isLoading: isLoadingTVL, tvl, fetchData: fetchTVL } = useTVLStore();
 
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
@@ -80,26 +77,15 @@ const Home: NextPage = React.forwardRef(function Home() {
   const chartRef = useRef(null as null | HTMLDivElement);
   const chartContainerRef = useRef(null as null | HTMLDivElement);
 
-  function chartTimeChanged(timeRange: ChartTimeRange) {
-    setChartTimeRange(timeRange);
-  }
-
+  // This effect will run only once when this component is mounted
   useEffect(() => {
     fetchPrice();
-  }, [fetchPrice]);
-
-  useEffect(() => {
-    fetchmarketCap();
-  }, [fetchmarketCap]);
-
-  useEffect(() => {
+    fetchMarketCap();
     fetchSupply();
-  }, [fetchSupply]);
-
-  useEffect(() => {
     fetchTVL();
-  }, [fetchTVL]);
+  }, [fetchPrice, fetchMarketCap, fetchSupply, fetchTVL]);
 
+  // This effect will run when the component is mounted, and any time the chartTimeRange changes
   useEffect(() => {
     fetchChart(chartTimeRange);
   }, [fetchChart, chartTimeRange]);
@@ -170,7 +156,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                           <p className={`${h3} mt-4 w-full h-8`}>Deposit USDC</p>
                           {walletConnected && (
                             <p className={`${textCashMd}`}>
-                              ${limitDecimals(availableUsdc)} Available
+                              ${isLoadingUsdc ? ' ---' : limitDecimals(usdcBalance)} Available
                             </p>
                           )}
                           {!walletConnected && <p className={`${textCashMd}`}>Earn APR</p>}
@@ -204,10 +190,10 @@ const Home: NextPage = React.forwardRef(function Home() {
                 <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
                   <UsdcInput
                     value={toBeDeposited}
-                    maxValue={availableUsdc}
+                    maxValue={usdcBalance}
                     onChange={setToBeDeposited}
                     onValidate={(isValid) => setDepositValid(isValid)}
-                    disabled={!walletConnected || availableUsdc <= 0}
+                    disabled={!walletConnected || usdcBalance <= 0}
                   />
                 </div>
                 <div className={`h-auto m-2 flex flex-col`}>
@@ -215,7 +201,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                     className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickDeposit}
                     disabled={
-                      !walletConnected || !depositValid || availableUsdc <= 0 || toBeDeposited <= 0
+                      !walletConnected || !depositValid || usdcBalance <= 0 || toBeDeposited <= 0
                     }
                   >
                     Deposit
@@ -245,7 +231,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                             <p className={`${h3} mt-4 w-full h-8`}>Withdraw USDC</p>
                             {walletConnected && (
                               <p className={`${textCashMd}`}>
-                                ${limitDecimals(availableUsdc)} Available
+                                ${isLoadingUsdc ? ' ---' : limitDecimals(usdcBalance)} Available
                               </p>
                             )}
                             {!walletConnected && <p className={`${textCashMd}`}>No lock-ups</p>}
@@ -260,10 +246,10 @@ const Home: NextPage = React.forwardRef(function Home() {
                   <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
                     <UsdcInput
                       value={toBeWithdrawn}
-                      maxValue={availableUsdc}
+                      maxValue={usdcBalance}
                       onChange={setToBeWithdrawn}
                       onValidate={(isValid) => setWithdrawValid(isValid)}
-                      disabled={!walletConnected || availableUsdc <= 0}
+                      disabled={!walletConnected || usdcBalance <= 0}
                     />
                   </div>
                   <div className={`h-auto m-2 flex flex-col`}>
@@ -271,10 +257,7 @@ const Home: NextPage = React.forwardRef(function Home() {
                       className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                       onClick={onClickWithraw}
                       disabled={
-                        !walletConnected ||
-                        !withdrawValid ||
-                        availableUsdc <= 0 ||
-                        toBeWithdrawn <= 0
+                        !walletConnected || !withdrawValid || usdcBalance <= 0 || toBeWithdrawn <= 0
                       }
                     >
                       Withdraw
@@ -347,7 +330,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                           isLoading={isLoadingChart}
                           width={Math.min(width, 906)}
                           height={height}
-                          onChartTimeChanged={chartTimeChanged}
+                          onChartTimeChanged={(timeRange: ChartTimeRange) =>
+                            setChartTimeRange(timeRange)
+                          }
                         />
                       </div>
                     );
