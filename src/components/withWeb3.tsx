@@ -26,6 +26,7 @@ import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
 import { usePriceStore } from '~/stores/usePriceStore';
+import { useTVLStore } from '~/stores/useTVLStore';
 import { useUsdcStore } from '~/stores/useUsdcStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import { limitDecimals, limitDecimalsWithCommas } from '~/utilities/numberUtilities';
@@ -63,6 +64,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   const { isLoading: isLoadingMarketCap, marketCap } = useMarketCapStore();
   const { isLoading: isLoadingSupply, supply } = useCirculatingSupplyStore();
   const { isLoading: isLoadingChart, data, setTimeRange } = useChartStore();
+  const { isLoading: isLoadingTVL, tvl: totalValueLocked } = useTVLStore();
 
   if (!bank) {
     throw new Error('Missing bank');
@@ -369,7 +371,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                 <div className="w-64 min-w-32">
                   <h2 className={`${h2}`}>Total Value Locked</h2>
                   <p className={`mt-2 ${textCash}`}>
-                    ${tvl == null ? ' ---' : limitDecimalsWithCommas(Number(tvl), 0)}
+                    ${isLoadingTVL ? ' ---' : limitDecimalsWithCommas(totalValueLocked, 0)}
                   </p>
                 </div>
               </div>
