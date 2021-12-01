@@ -1,15 +1,12 @@
-import axios from 'axios';
-import { banks } from 'config/constants/banks';
-import { supportedChainIds } from 'config/constants/networks';
-import { MAXIMUM_RETRIES } from 'config/constants/values';
+import BigNumber from 'bignumber.js';
 import { useAddress } from 'hooks/useAddress';
 import { useBankData } from 'hooks/useBankData';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { useWeb3 } from 'hooks/useWeb3';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { SetBankAPY } from 'state/banks/actions';
-import { useBankAPYData, useBankAPYManager } from 'state/banks/hooks';
-import { getFullDisplayBalance } from 'utils/formatBalances';
+import React, { useMemo, useRef, useState } from 'react';
+import { useBankAPYData } from 'state/banks/hooks';
+import { Updaters } from 'Updaters';
+import { getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalances';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { HintButton } from '~/components/hintButton';
@@ -29,7 +26,6 @@ import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
 import { usePriceStore } from '~/stores/usePriceStore';
-import { useTVLStore } from '~/stores/useTVLStore';
 import { useUsdcStore } from '~/stores/useUsdcStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import { limitDecimals, limitDecimalsWithCommas } from '~/utilities/numberUtilities';
@@ -66,7 +62,6 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   const { isLoading: isLoadingPrice, price } = usePriceStore();
   const { isLoading: isLoadingMarketCap, marketCap } = useMarketCapStore();
   const { isLoading: isLoadingSupply, supply } = useCirculatingSupplyStore();
-  const { isLoading: isLoadingTVL, tvl } = useTVLStore();
   const { isLoading: isLoadingChart, data, setTimeRange } = useChartStore();
 
   if (!bank) {
@@ -77,53 +72,14 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   const address = useAddress(bank.address ?? {});
   const { balance, fetchStatus } = useTokenBalance(address);
   const { virtualBalance, virtualPrice, getShareValue } = useBankData(address);
-  const [retries, setRetries] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [setBankAPYData] = useBankAPYManager();
-
-  useEffect(() => {
-    const fetchAPY = async () => {
-      try {
-        const allBanks = supportedChainIds.map((chainId) => banks[chainId]).flat();
-        console.log('allBanks:', allBanks);
-        console.log('banks:', banks);
-        const values = await Promise.all(
-          allBanks.map((bank) =>
-            axios.get(
-              `https://api.oh.finance/apy?chain=${bank.chainId}&addr=${
-                (bank.address as any)[bank.chainId]
-              }`
-            )
-          )
-        );
-
-        let bankAPYs: SetBankAPY[] = [];
-        values.forEach((value, i) => {
-          const bank = allBanks[i];
-          console.log('pushing APY: to bank', value.data.apys, bank);
-          bankAPYs.push({
-            chainId: bank.chainId,
-            address: (bank.address as any)[bank.chainId],
-            apys: value.data.apys,
-          });
-        });
-        setBankAPYData(bankAPYs);
-        setLoading(false);
-      } catch (e) {
-        console.error(e);
-        setRetries(retries + 1);
-      }
-    };
-
-    if (loading && retries < MAXIMUM_RETRIES) {
-      fetchAPY();
-    }
-  }, [loading, retries, setBankAPYData]);
 
   const apys = useBankAPYData(chainId ?? -1, (bank?.address as any)?.[chainId ?? -1] ?? '');
 
-  const tvl2 = useMemo(() => {
-    return virtualBalance && getFullDisplayBalance(virtualBalance, bank?.decimals);
+  const tvl = useMemo(() => {
+    return (
+      virtualBalance &&
+      limitDecimalsWithCommas(getBalanceNumber(new BigNumber(virtualBalance ?? 0), bank?.decimals))
+    );
   }, [virtualBalance, bank]);
 
   const sharePrice = useMemo(() => {
@@ -145,7 +101,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   console.log('chainId', chainId);
   console.log('bank', bank);
   console.log('address', address);
-  console.log('tvl2', tvl2);
+  console.log('tvl', tvl);
   console.log('sharePrice', sharePrice);
   console.log('balanceAmount', balanceAmount);
   console.log('balance', balance);
@@ -305,10 +261,8 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                   className={`${styles['total-balance']} mt-12 ml-12 w-50 h-full justify-between`}
                 >
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
-                  <p className={`mt-2 ${textCashLg}`}>${virtualBalance}</p>
-                  <p className={`${textPink} mt-10`}>
-                    ${`${virtualBalance} OUSDC (Deposited USDC)`}
-                  </p>
+                  <p className={`mt-2 ${textCashLg}`}>${tvl}</p>
+                  <p className={`${textPink} mt-10`}>${`${tvl} OUSDC (Deposited USDC)`}</p>
                 </div>
                 <div
                   className={`${styles['total-interest']} mt-12 ml-12 w-50 h-full justify-between`}
@@ -415,7 +369,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                 <div className="w-64 min-w-32">
                   <h2 className={`${h2}`}>Total Value Locked</h2>
                   <p className={`mt-2 ${textCash}`}>
-                    ${isLoadingTVL ? ' ---' : limitDecimalsWithCommas(tvl, 0)}
+                    ${tvl == null ? ' ---' : limitDecimalsWithCommas(Number(tvl), 0)}
                   </p>
                 </div>
               </div>
@@ -423,6 +377,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
           </div>
         </div>
       </div>
+      <Updaters />
     </>
   );
 });
