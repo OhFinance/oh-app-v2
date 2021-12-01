@@ -3,7 +3,7 @@ import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import BigNumber from 'bignumber.js';
 import ERC20Abi from 'config/abi/IERC20.json';
 import { banks } from 'config/constants/banks';
-import { Address } from 'config/constants/types';
+import { Address, Bank } from 'config/constants/types';
 import { getContract } from 'utils/contractHelper';
 import { isLocalhost } from 'utils/misc';
 import createStore from 'zustand';
@@ -11,6 +11,7 @@ import { combine } from 'zustand/middleware';
 
 const initialState = {
   usdcBalance: 0,
+  bank: null as Bank | null,
   isLoading: true,
   address: '0x000000',
 };
@@ -27,7 +28,6 @@ export const useUsdcStore = createStore(
       try {
         const bank = banks[chainId];
         const address = bank.underlying.address![chainId as keyof Address];
-        const addressString = address as string;
         const contract = getContract(library, ERC20Abi, address, account);
 
         if (contract == null) {
@@ -39,7 +39,7 @@ export const useUsdcStore = createStore(
           .dividedBy(Math.pow(10, bank.underlying.decimals ?? 6))
           .toNumber();
 
-        set({ isLoading: false, usdcBalance: usdcBalance, address: addressString });
+        set({ isLoading: false, usdcBalance: usdcBalance, bank });
       } catch (error) {
         console.error('Failed to initialize usdc store', error);
         set(initialState);

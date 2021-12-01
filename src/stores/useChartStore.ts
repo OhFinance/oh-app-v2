@@ -10,8 +10,8 @@ const initialState = {
 };
 
 export const useChartStore = createStore(
-  combine(initialState, (set, _get) => ({
-    fetchData: async (timeRange: ChartTimeRange) => {
+  combine(initialState, (set, get) => ({
+    fetchData: async (timeRange: ChartTimeRange = 'all') => {
       set({ isLoading: true });
 
       let url;
@@ -52,6 +52,10 @@ export const useChartStore = createStore(
           console.log(error);
           set({ isLoading: false });
         });
+    },
+    setTimeRange(timeRange: ChartTimeRange) {
+      // We cannot use `this` here because we pass this action function as a reference
+      useChartStore.getState().fetchData(timeRange);
     },
   }))
 );

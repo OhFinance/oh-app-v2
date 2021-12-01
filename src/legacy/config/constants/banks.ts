@@ -52,7 +52,7 @@ export const banks: { [chainId: number]: Bank } = {
     decimals: 6,
     chainId: 43114,
     address: {
-      43114: tokens.usdce.address?.[43114],
+      43114: '0x8B1Be96dc17875ee01cC1984e389507Bb227CaAB',
     },
     description: 'Avalanche C-Chain Optimized Lending and Yield Farming',
     alt: 'oh-usdc.e',
