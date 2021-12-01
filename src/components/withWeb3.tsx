@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import { useAddress } from 'hooks/useAddress';
 import { useBankData } from 'hooks/useBankData';
 import { useTokenBalance } from 'hooks/useTokenBalance';
@@ -79,8 +78,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
 
   const tvl = useMemo(() => {
     return (
-      virtualBalance &&
-      limitDecimalsWithCommas(getBalanceNumber(new BigNumber(virtualBalance ?? 0), bank?.decimals))
+      virtualBalance && limitDecimalsWithCommas(getBalanceNumber(virtualBalance, bank?.decimals))
     );
   }, [virtualBalance, bank]);
 
