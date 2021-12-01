@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { textPink } from '~/constants/tempTailwindConfig';
 import { useThemeStore } from '~/stores/useThemeStore';
 import { useWalletStore } from '~/stores/useWalletStore';
-import { textPink } from '~/tempTailwindConfig';
 
 export function MarketingBody() {
   const { theme } = useThemeStore();
