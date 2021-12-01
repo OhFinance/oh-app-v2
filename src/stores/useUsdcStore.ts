@@ -12,6 +12,7 @@ import { combine } from 'zustand/middleware';
 const initialState = {
   usdcBalance: 0,
   isLoading: true,
+  address: '0x000000',
 };
 
 export const useUsdcStore = createStore(
@@ -26,6 +27,7 @@ export const useUsdcStore = createStore(
       try {
         const bank = banks[chainId];
         const address = bank.underlying.address![chainId as keyof Address];
+        const addressString = address as string;
         const contract = getContract(library, ERC20Abi, address, account);
 
         if (contract == null) {
@@ -37,7 +39,7 @@ export const useUsdcStore = createStore(
           .dividedBy(Math.pow(10, bank.underlying.decimals ?? 6))
           .toNumber();
 
-        set({ isLoading: false, usdcBalance });
+        set({ isLoading: false, usdcBalance: usdcBalance, address: addressString });
       } catch (error) {
         console.error('Failed to initialize usdc store', error);
         set(initialState);

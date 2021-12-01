@@ -1,3 +1,4 @@
+import { useBankData } from 'hooks/useBankData';
 import { useEagerConnect } from 'hooks/useEagerConnect';
 import { useWeb3StoreConnector } from 'hooks/useWeb3StoreConnector';
 import type { NextPage } from 'next';
@@ -62,7 +63,7 @@ const Home: NextPage = React.forwardRef(function Home() {
   } = useWalletStore();
   const { isLoading: isLoadingChart, data, fetchData: fetchChart } = useChartStore();
   const { isLoading: isLoadingPrice, price, fetchData: fetchPrice } = usePriceStore();
-  const { isLoading: isLoadingUsdc, usdcBalance } = useUsdcStore();
+  const { isLoading: isLoadingUsdc, usdcBalance, address } = useUsdcStore();
   const {
     isLoading: isLoadingMarketCap,
     marketCap,
@@ -74,6 +75,8 @@ const Home: NextPage = React.forwardRef(function Home() {
     fetchData: fetchSupply,
   } = useCirculatingSupplyStore();
   const { isLoading: isLoadingTVL, tvl, fetchData: fetchTVL } = useTVLStore();
+
+  const { virtualBalance, virtualPrice, getShareValue } = useBankData(address);
 
   const [chartTimeRange, setChartTimeRange] = useState('all' as ChartTimeRange);
   const [depositValid, setDepositValid] = useState(false);
@@ -306,9 +309,9 @@ const Home: NextPage = React.forwardRef(function Home() {
                   className={`${styles['total-balance']} mt-12 ml-12 w-50 h-full justify-between`}
                 >
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
-                  <p className={`mt-2 ${textCashLg}`}>${limitDecimals(portfolioBalance)}</p>
+                  <p className={`mt-2 ${textCashLg}`}>${virtualBalance}</p>
                   <p className={`${textPink} mt-10`}>
-                    ${`${limitDecimals(portfolioBalance)} OUSDC (Deposited USDC)`}
+                    ${`${virtualBalance} OUSDC (Deposited USDC)`}
                   </p>
                 </div>
                 <div
