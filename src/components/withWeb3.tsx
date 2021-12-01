@@ -1,9 +1,14 @@
+import axios from 'axios';
+import { banks } from 'config/constants/banks';
+import { supportedChainIds } from 'config/constants/networks';
+import { MAXIMUM_RETRIES } from 'config/constants/values';
 import { useAddress } from 'hooks/useAddress';
 import { useBankData } from 'hooks/useBankData';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { useWeb3 } from 'hooks/useWeb3';
-import React, { useMemo, useRef, useState } from 'react';
-import { useBankAPYData } from 'state/banks/hooks';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { SetBankAPY } from 'state/banks/actions';
+import { useBankAPYData, useBankAPYManager } from 'state/banks/hooks';
 import { getFullDisplayBalance } from 'utils/formatBalances';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
@@ -70,8 +75,51 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   // Hooks
   const { chainId } = useWeb3();
   const address = useAddress(bank.address ?? {});
-  const { balance } = useTokenBalance(address);
+  const { balance, fetchStatus } = useTokenBalance(address);
   const { virtualBalance, virtualPrice, getShareValue } = useBankData(address);
+  const [retries, setRetries] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [setBankAPYData] = useBankAPYManager();
+
+  useEffect(() => {
+    const fetchAPY = async () => {
+      try {
+        const allBanks = supportedChainIds.map((chainId) => banks[chainId]).flat();
+        console.log('allBanks:', allBanks);
+        console.log('banks:', banks);
+        const values = await Promise.all(
+          allBanks.map((bank) =>
+            axios.get(
+              `https://api.oh.finance/apy?chain=${bank.chainId}&addr=${
+                (bank.address as any)[bank.chainId]
+              }`
+            )
+          )
+        );
+
+        let bankAPYs: SetBankAPY[] = [];
+        values.forEach((value, i) => {
+          const bank = allBanks[i];
+          console.log('pushing APY: to bank', value.data.apys, bank);
+          bankAPYs.push({
+            chainId: bank.chainId,
+            address: (bank.address as any)[bank.chainId],
+            apys: value.data.apys,
+          });
+        });
+        setBankAPYData(bankAPYs);
+        setLoading(false);
+      } catch (e) {
+        console.error(e);
+        setRetries(retries + 1);
+      }
+    };
+
+    if (loading && retries < MAXIMUM_RETRIES) {
+      fetchAPY();
+    }
+  }, [loading, retries, setBankAPYData]);
+
   const apys = useBankAPYData(chainId ?? -1, (bank?.address as any)?.[chainId ?? -1] ?? '');
 
   const tvl2 = useMemo(() => {
@@ -100,8 +148,11 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   console.log('tvl2', tvl2);
   console.log('sharePrice', sharePrice);
   console.log('balanceAmount', balanceAmount);
+  console.log('balance', balance);
+  console.log('fetchStatus', fetchStatus);
   console.log('shareValue', shareValue);
   console.log('balanceValue', balanceValue);
+  console.log('apys', apys);
   console.count('---------------');
 
   // State

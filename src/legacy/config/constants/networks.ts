@@ -7,7 +7,7 @@ import { isLocalhost } from 'utils/misc';
 import { Network } from './types';
 
 export const SupportedNetworks = [1, 43114];
-export const SupportedTestNetworks = [4, 42];
+export const SupportedTestNetworks = [42];
 
 // only include testnets in live version until release
 export const supportedChainIds = [
