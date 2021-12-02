@@ -261,8 +261,10 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                   className={`${styles['total-balance']} mt-12 ml-12 w-50 h-full justify-between`}
                 >
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
-                  <p className={`mt-2 ${textCashLg}`}>${tvl}</p>
-                  <p className={`${textPink} mt-10`}>${`${tvl} OUSDC (Deposited USDC)`}</p>
+                  <p className={`mt-2 ${textCashLg}`}>${balanceAmount}</p>
+                  <p className={`${textPink} mt-10`}>
+                    ${`${balanceAmount} OH-USDC (Deposited USDC)`}
+                  </p>
                 </div>
                 <div
                   className={`${styles['total-interest']} mt-12 ml-12 w-50 h-full justify-between`}
@@ -270,7 +272,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                   <h1 className={`${h1}`}>Total Interest Earned</h1>
                   <p className={`mt-2 ${textCashLg}`}>${limitDecimals(interestEarned)}</p>
                   <p className={`${textPink} mt-10`}>
-                    ${`${limitDecimals(portfolioBalance)} OUSDC (Deposited USDC)`}
+                    ${`${limitDecimals(portfolioBalance)} OH-USDC (Deposited USDC)`}
                   </p>
                 </div>
               </div>
@@ -368,9 +370,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
               <div className={`ml-6 mt-3`}>
                 <div className="w-64 min-w-32">
                   <h2 className={`${h2}`}>Total Value Locked</h2>
-                  <p className={`mt-2 ${textCash}`}>
-                    ${isLoadingTVL ? ' ---' : limitDecimalsWithCommas(totalValueLocked, 0)}
-                  </p>
+                  <p className={`mt-2 ${textCash}`}>${isLoadingTVL ? ' ---' : tvl}</p>
                 </div>
               </div>
             </div>
