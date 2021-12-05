@@ -1,0 +1,1 @@
+I put this in a seperate folder instead of in config, because connectors are third party applications that connect to your site, rather than a configuration of the website. In my opinion it therefore is better to seperate it from the rest of the rest. Better for readability and simplicity.
