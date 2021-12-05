@@ -1,7 +1,8 @@
-import MULTICALL_INTERFACE from '~/constants/abis/multicall';
+import ABI from '~/abis/multicall.json';
+import { Multicall } from '~/abis/types';
 import { MULTICALL_CONTRACT_ADDRESS } from '~/constants/addresses';
 import { useContract } from './useContract';
 
 export function useMulticall2Contract() {
-  return useContract(MULTICALL_CONTRACT_ADDRESS, MULTICALL_INTERFACE, false);
+  return useContract<Multicall>(MULTICALL_CONTRACT_ADDRESS, ABI, false) as Multicall;
 }

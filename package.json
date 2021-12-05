@@ -23,7 +23,8 @@
     "lint": "next lint --fix --dir src --dir scripts",
     "format": "npx prettier src scripts ./*.js ./*.json --check",
     "format:fix": "npx prettier src scripts ./*.js ./*.json --write",
-    "prepare": "npx husky install"
+    "prepare": "npx husky install",
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\""
   },
   "dependencies": {
     "@ethersproject/abi": "^5.5.0",
@@ -60,12 +61,14 @@
     "@svgr/webpack": "^5.5.0",
     "@tailwindcss/forms": "^0.3.4",
     "@tailwindcss/typography": "^0.4.1",
+    "@typechain/ethers-v5": "^8.0.5",
     "@types/d3-dsv": "^3.0.0",
     "@types/d3-time-format": "^4.0.0",
     "@types/ms.macro": "^2.0.0",
     "@types/react": "17.0.36",
     "@types/recharts": "^1.8.23",
     "@types/ua-parser-js": "^0.7.36",
+    "@uniswap/sdk-core": "^3.0.1",
     "@web3-react/fortmatic-connector": "^6.1.6",
     "@web3-react/portis-connector": "^6.1.9",
     "@web3-react/walletlink-connector": "^6.2.8",
@@ -78,8 +81,10 @@
     "husky": "^7.0.4",
     "inspectpack": "^4.7.1",
     "lint-staged": "^12.1.1",
+    "jsbi": "^3.1.4",
     "ms.macro": "^2.0.0",
     "prettier": "^2.4.1",
+    "typechain": "^6.0.5",
     "typescript": "^4.5.2",
     "ua-parser-js": "^1.0.2"
   },

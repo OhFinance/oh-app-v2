@@ -1,13 +1,19 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { CHAIN_INFO, SupportedChainId } from '~/constants/chains';
+import { useActiveWeb3React } from '~/hooks/web3';
 import { useThemeStore } from '~/stores/useThemeStore';
 import { Network, useWalletStore } from '~/stores/useWalletStore';
+import { switchToNetwork } from '~/utilities/switchToNetwork';
 import { HintButton } from './hintButton';
 import { WalletDisplay } from './walletDisplay';
 
 const selectNetworkHint = 'Select which network you want to connect to.';
 
 export function Navbar() {
+  const { chainId, library } = useActiveWeb3React();
+  const info = chainId ? CHAIN_INFO[chainId] : undefined;
+
   const { theme, setTheme } = useThemeStore();
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [selectNetworkOpen, setSelectNetworkOpen] = useState(false);
@@ -28,7 +34,32 @@ export function Navbar() {
       networkLabel = 'UNKNOWN';
       break;
   }
+  if (!chainId || !info || !library) {
+    return null;
+  }
 
+  function NetworkRow({ targetChain }: { targetChain: number }) {
+    if (!library || !chainId) {
+      return null;
+    }
+    const handleRowClick = () => {
+      switchToNetwork({ library, chainId: targetChain });
+      toggleConnectWalletDialog();
+    };
+    const rowText = `${CHAIN_INFO[targetChain].label}`;
+
+    return (
+      <li>
+        <button
+          className="rounded-t bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
+          // TODO: Oh! Finance will fill in network selection logic here
+          onClick={handleRowClick}
+        >
+          {rowText}
+        </button>
+      </li>
+    );
+  }
   return (
     <header className="h-24 sm:h-32 flex items-center z-30 w-full">
       <div className="container mx-auto px-6 flex items-center justify-between">
@@ -95,39 +126,14 @@ export function Navbar() {
                   className={`py-1 px-4 -lg bg-navBarBG w-40 rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
                   id="network-button"
                 >
-                  {networkLabel}
+                  {info.label}
                   <div
                     className={`object-bottom bg-selectionHighlight rounded-br-md h-2 -my-1 -mx-4 relative`}
                   ></div>
                 </button>
                 <ul className="dropdown-menu absolute hidden group-hover:block text-defaultText pt-1 z-10 w-40">
-                  <li>
-                    <button
-                      className="rounded-t bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
-                      // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(Network.Ethereum)}
-                    >
-                      Ethereum
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
-                      // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(Network.Avalanche)}
-                    >
-                      Avalanche
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="rounded-b bg-navBarBG hover:bg-navBarBGHover py-2 px-4 block whitespace-no-wrap w-full"
-                      // TODO: Oh! Finance will fill in network selection logic here
-                      onClick={() => setSelectedNetwork(Network.OH)}
-                    >
-                      OH!
-                    </button>
-                  </li>
+                  <NetworkRow targetChain={SupportedChainId.ETHEREUM_MAINNET} />
+                  <NetworkRow targetChain={SupportedChainId.AVALANCHE} />
                 </ul>
               </div>
             </div>

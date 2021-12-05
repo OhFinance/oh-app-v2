@@ -1,0 +1,18 @@
+import { BigNumber } from '@ethersproject/bignumber';
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
+import { useMemo } from 'react';
+import { useBankContract } from '~/hooks/contracts/useBankContract';
+import { useSingleCallResult } from '~/state/multicall/hooks';
+
+export function useVirtualBalance(token?: Currency): CurrencyAmount<Token> | undefined {
+  const contract = useBankContract(token?.isToken ? token.address : undefined, false);
+  const virtualBalance: BigNumber = useSingleCallResult(contract, 'virtualBalance')?.result?.[0];
+
+  return useMemo(
+    () =>
+      token?.isToken && virtualBalance
+        ? CurrencyAmount.fromRawAmount(token, virtualBalance.toString())
+        : undefined,
+    [token, virtualBalance]
+  );
+}

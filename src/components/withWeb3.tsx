@@ -1,15 +1,12 @@
-import { useAddress } from 'hooks/useAddress';
-import { useBankData } from 'hooks/useBankData';
-import { useTokenBalance } from 'hooks/useTokenBalance';
-import { useWeb3 } from 'hooks/useWeb3';
+import { BigintIsh, CurrencyAmount, Token } from '@uniswap/sdk-core';
+import JSBI from 'jsbi';
 import React, { useMemo, useRef, useState } from 'react';
 import { useBankAPYData } from 'state/banks/hooks';
-import { Updaters } from 'Updaters';
-import { getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalances';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { HintButton } from '~/components/hintButton';
 import { UsdcInput } from '~/components/usdcInput';
+import { banks } from '~/constants/banks';
 import { claimOhHint, depositUsdcHint, withdrawUsdcHint } from '~/constants/descriptionText';
 import {
   h1,
@@ -20,13 +17,16 @@ import {
   textCashMd,
   textPink,
 } from '~/constants/tempTailwindConfig';
+import { useVirtualBalance } from '~/hooks/calls/bank/useVirtualBalance';
+import { useVirtualPrice } from '~/hooks/calls/bank/useVirtualPrice';
+import { useActiveWeb3React } from '~/hooks/web3';
 import styles from '~/pages/__styles__/index.module.css';
+import { useTokenBalance } from '~/state/wallet/hooks';
 import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
 import { usePriceStore } from '~/stores/usePriceStore';
 import { useTVLStore } from '~/stores/useTVLStore';
-import { useUsdcStore } from '~/stores/useUsdcStore';
 import { useWalletStore } from '~/stores/useWalletStore';
 import { limitDecimals, limitDecimalsWithCommas } from '~/utilities/numberUtilities';
 
@@ -48,6 +48,8 @@ function onClickClaimOh() {
 }
 
 export const WithWeb3 = React.forwardRef(function WithWeb3() {
+  const { account, chainId } = useActiveWeb3React();
+
   // Stores
   const {
     portfolioBalance,
@@ -58,7 +60,21 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
     setToBeDeposited,
     setToBeWithdrawn,
   } = useWalletStore();
-  const { isLoading: isLoadingUsdc, usdcBalance, bank } = useUsdcStore();
+
+  // replace for selected bank
+  const bank = banks[0];
+  const token = useMemo(
+    () => (chainId !== undefined ? bank.underlyingTokenMap[chainId] : undefined),
+    [chainId]
+  );
+  const bank_token = useMemo(
+    () => (chainId !== undefined ? bank.ohTokenMap[chainId] : undefined),
+    [chainId]
+  );
+
+  const underlyingTokenBalance = useTokenBalance(account || undefined, token);
+  const bankTokenBalance = useTokenBalance(account || undefined, bank_token);
+
   const { isLoading: isLoadingPrice, price } = usePriceStore();
   const { isLoading: isLoadingMarketCap, marketCap } = useMarketCapStore();
   const { isLoading: isLoadingSupply, supply } = useCirculatingSupplyStore();
@@ -69,45 +85,21 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
     throw new Error('Missing bank');
   }
   // Hooks
-  const { chainId } = useWeb3();
-  const address = useAddress(bank.address ?? {});
-  const { balance, fetchStatus } = useTokenBalance(address);
-  const { virtualBalance, virtualPrice, getShareValue } = useBankData(address);
+  const virtualBalance = useVirtualBalance(bank_token);
+  const virtualPrice = useVirtualPrice(bank_token);
 
-  const apys = useBankAPYData(chainId ?? -1, (bank?.address as any)?.[chainId ?? -1] ?? '');
-
-  const tvl = useMemo(() => {
-    return (
-      virtualBalance && limitDecimalsWithCommas(getBalanceNumber(virtualBalance, bank?.decimals))
+  const apys = useBankAPYData(chainId ?? -1, (bank_token?.address as any)?.[chainId ?? -1] ?? '');
+  let valueOfShare: CurrencyAmount<Token> | undefined;
+  if (bankTokenBalance && virtualPrice && bank_token) {
+    valueOfShare = CurrencyAmount.fromRawAmount(
+      bank_token,
+      JSBI.multiply(bankTokenBalance.quotient, virtualPrice.quotient) as BigintIsh
     );
-  }, [virtualBalance, bank]);
-
-  const sharePrice = useMemo(() => {
-    return virtualPrice && getFullDisplayBalance(virtualPrice, bank?.decimals);
-  }, [virtualPrice, bank]);
-
-  const balanceAmount = useMemo(() => {
-    return balance && getFullDisplayBalance(balance, bank?.decimals);
-  }, [balance, bank]);
-
-  const shareValue = useMemo(() => {
-    return balance && getShareValue(balance, bank?.decimals);
-  }, [balance, bank, getShareValue]);
-
-  const balanceValue = useMemo(() => {
-    return shareValue && getFullDisplayBalance(shareValue, bank?.decimals);
-  }, [shareValue, bank]);
+  }
 
   console.log('chainId', chainId);
   console.log('bank', bank);
-  console.log('address', address);
-  console.log('tvl', tvl);
-  console.log('sharePrice', sharePrice);
-  console.log('balanceAmount', balanceAmount);
-  console.log('balance', balance);
-  console.log('fetchStatus', fetchStatus);
-  console.log('shareValue', shareValue);
-  console.log('balanceValue', balanceValue);
+
   console.log('apys', apys);
   console.count('---------------');
 
@@ -148,7 +140,11 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                         <div className="ml-1 flex flex-col">
                           <p className={`${h3} mt-4 w-full h-8`}>Deposit USDC</p>
                           <p className={`${textCashMd}`}>
-                            ${isLoadingUsdc ? ' ---' : limitDecimals(usdcBalance)} Available
+                            $
+                            {underlyingTokenBalance === undefined
+                              ? ' ---'
+                              : underlyingTokenBalance.toFixed(0, { groupSeparator: ',' })}{' '}
+                            Available
                           </p>
                         </div>
                         <div className="ml-8 mt-8 flex">
@@ -180,17 +176,19 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                 <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
                   <UsdcInput
                     value={toBeDeposited}
-                    maxValue={usdcBalance}
+                    maxValue={Number(underlyingTokenBalance?.toFixed())}
                     onChange={setToBeDeposited}
                     onValidate={(isValid) => setDepositValid(isValid)}
-                    disabled={usdcBalance <= 0}
+                    disabled={underlyingTokenBalance?.lessThan(1)}
                   />
                 </div>
                 <div className={`h-auto m-2 flex flex-col`}>
                   <button
                     className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickDeposit}
-                    disabled={!depositValid || usdcBalance <= 0 || toBeDeposited <= 0}
+                    disabled={
+                      !depositValid || underlyingTokenBalance?.lessThan(1) || toBeDeposited <= 0
+                    }
                   >
                     Deposit
                   </button>
@@ -218,7 +216,11 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                           <div className="ml-1 flex flex-col">
                             <p className={`${h3} mt-4 w-full h-8`}>Withdraw USDC</p>
                             <p className={`${textCashMd}`}>
-                              ${isLoadingUsdc ? ' ---' : limitDecimals(usdcBalance)} Available
+                              $
+                              {underlyingTokenBalance === undefined
+                                ? ' ---'
+                                : underlyingTokenBalance.toSignificant(4)}{' '}
+                              Available
                             </p>
                           </div>
                           <div className="pt-2 mt-8 w-9">
@@ -231,17 +233,22 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                   <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
                     <UsdcInput
                       value={toBeWithdrawn}
-                      maxValue={usdcBalance}
+                      maxValue={Number(underlyingTokenBalance?.toSignificant(4))}
                       onChange={setToBeWithdrawn}
                       onValidate={(isValid) => setWithdrawValid(isValid)}
-                      disabled={usdcBalance <= 0}
+                      disabled={underlyingTokenBalance?.lessThan(1)}
                     />
                   </div>
                   <div className={`h-auto m-2 flex flex-col`}>
                     <button
                       className={`mb-1 w-full h-9 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                       onClick={onClickWithraw}
-                      disabled={!withdrawValid || usdcBalance <= 0 || toBeWithdrawn <= 0}
+                      disabled={
+                        !withdrawValid ||
+                        !underlyingTokenBalance ||
+                        underlyingTokenBalance?.lessThan(1) ||
+                        toBeWithdrawn <= 0
+                      }
                     >
                       Withdraw
                     </button>
@@ -261,9 +268,14 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                   className={`${styles['total-balance']} mt-12 ml-12 w-50 h-full justify-between`}
                 >
                   <h1 className={`${h1}`}>Total Portfolio Balance</h1>
-                  <p className={`mt-2 ${textCashLg}`}>${balanceAmount}</p>
+                  <p className={`mt-2 ${textCashLg}`}>
+                    ${bankTokenBalance?.toFixed(2, { groupSeparator: ',' })}
+                  </p>
                   <p className={`${textPink} mt-10`}>
-                    ${`${balanceAmount} OH-USDC (Deposited USDC)`}
+                    $
+                    {`${bankTokenBalance?.toFixed(2, {
+                      groupSeparator: ',',
+                    })} OH-USDC (Deposited USDC)`}
                   </p>
                 </div>
                 <div
@@ -370,14 +382,18 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
               <div className={`ml-6 mt-3`}>
                 <div className="w-64 min-w-32">
                   <h2 className={`${h2}`}>Total Value Locked</h2>
-                  <p className={`mt-2 ${textCash}`}>${isLoadingTVL ? ' ---' : tvl}</p>
+                  <p className={`mt-2 ${textCash}`}>
+                    $
+                    {virtualBalance === undefined
+                      ? ' ---'
+                      : virtualBalance.toFixed(0, { groupSeparator: ',' })}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Updaters />
     </>
   );
 });

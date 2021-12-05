@@ -49,7 +49,7 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 600000,
     docs: 'https://docs.avax.network/',
     explorer: 'https://snowtrace.io/',
-    label: 'Avalanche C-Chain',
+    label: 'Avalanche',
     logoUrl: avalancheLogoUrl,
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
     rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],

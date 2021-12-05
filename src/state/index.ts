@@ -1,10 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
-import { load, save } from 'redux-localstorage-simple';
 import application from './application/reducer';
+import banks from './banks/reducer';
 import multicall from './multicall/slice';
 import transactions from './transactions/reducer';
-
 const PERSISTED_KEYS: string[] = ['transactions'];
 
 const store = configureStore({
@@ -12,13 +11,9 @@ const store = configureStore({
     application,
     transactions,
     multicall,
+    banks,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ thunk: true }).concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
-  preloadedState: load({
-    states: PERSISTED_KEYS,
-    disableWarnings: process.env.NODE_ENV === 'test',
-  }),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: true }),
 });
 
 setupListeners(store.dispatch);
