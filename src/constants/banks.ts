@@ -9,7 +9,7 @@ import { OH_USDC_BANK } from './addresses';
 import { SupportedChainId } from './chains';
 import { USDC } from './tokens';
 
-interface Bank {
+export interface Bank {
   image: string;
   name: string;
   description: string;

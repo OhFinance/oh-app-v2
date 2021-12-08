@@ -17,6 +17,8 @@ export interface SerializableTransactionReceipt {
  */
 export enum TransactionType {
   APPROVAL = 0,
+  DEPOSIT = 1,
+  WITHDRAW = 2,
 }
 
 export interface BaseTransactionInfo {
@@ -29,7 +31,21 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   spender: string;
 }
 
-export type TransactionInfo = ApproveTransactionInfo;
+export interface DepositTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.DEPOSIT;
+  currencyId: string;
+  amountRaw: string;
+}
+export interface WithdrawTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.WITHDRAW;
+  currencyId: string;
+  amountRaw: string;
+}
+
+export type TransactionInfo =
+  | ApproveTransactionInfo
+  | DepositTransactionInfo
+  | WithdrawTransactionInfo;
 
 export const addTransaction = createAction<{
   chainId: number;
@@ -37,6 +53,7 @@ export const addTransaction = createAction<{
   from: string;
   info: TransactionInfo;
 }>('transactions/addTransaction');
+
 export const clearAllTransactions = createAction<{ chainId: number }>(
   'transactions/clearAllTransactions'
 );
@@ -45,6 +62,7 @@ export const finalizeTransaction = createAction<{
   hash: string;
   receipt: SerializableTransactionReceipt;
 }>('transactions/finalizeTransaction');
+
 export const checkedTransaction = createAction<{
   chainId: number;
   hash: string;

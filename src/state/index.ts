@@ -3,7 +3,9 @@ import { setupListeners } from '@reduxjs/toolkit/query/react';
 import application from './application/reducer';
 import banks from './banks/reducer';
 import multicall from './multicall/slice';
+import stake from './stake/reducer';
 import transactions from './transactions/reducer';
+
 const PERSISTED_KEYS: string[] = ['transactions'];
 
 const store = configureStore({
@@ -12,6 +14,7 @@ const store = configureStore({
     transactions,
     multicall,
     banks,
+    stake,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: true }),
 });

@@ -3,7 +3,7 @@ import { TOAST_POSITION } from 'config/constants/values';
 import { FC } from 'react';
 // import { TransitionGroup } from "react-transition-group";
 import { Toast } from './Toast';
-import { ToastContainerProps } from './types';
+import { ToastContainerProps, ToastType } from './types';
 
 /* const useStyles = makeStyles((theme) => ({
   container: {
@@ -37,6 +37,31 @@ export const ToastContainer: FC<ToastContainerProps> = ({
     <div /* className={classes.container} */>
       {/* <TransitionGroup> */}
       <div>
+        <Toast
+          toast={{
+            title: 'Transaction',
+            description: (
+              <div>
+                <span>hash: 0xabc</span>
+
+                <span>
+                  <a rel="noopenner noreferrer" target="_blank">
+                    View on Block Explorer
+                  </a>
+                </span>
+              </div>
+            ),
+            id: '1',
+            type: ToastType.SUCCESS,
+          }}
+          onRemove={onRemove}
+          duration={duration}
+          style={{
+            // zIndex: (theme.zIndex.snackbar - i).toString(),
+            zIndex: '1',
+            bottom: `${TOAST_POSITION + 1 * spacing}px`,
+          }}
+        />
         {toasts.map((toast, i) => (
           <Toast
             key={toast.id}
