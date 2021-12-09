@@ -24,12 +24,17 @@ function useTokensFromBank(tokens: Bank['underlyingTokenMap']): { [address: stri
 }
 
 export function useAllTokens(): { [address: string]: Token } {
-  const allTokens = banks.reduce<{ [chainId: number]: Token }>((prev, curr) => {
-    prev = { ...prev, ...curr.underlyingTokenMap, ...curr.ohTokenMap };
+  const allTokens = banks.reduce<{ [address: string]: Token }>((prev, curr) => {
+    Object.values(curr.underlyingTokenMap).forEach((token) => {
+      prev[token.address] = token;
+    });
+    Object.values(curr.ohTokenMap).forEach((token) => {
+      prev[token.address] = token;
+    });
     return prev;
   }, {});
 
-  return useTokensFromBank(allTokens);
+  return allTokens;
 }
 
 // parse a name or symbol from a token response
@@ -54,6 +59,8 @@ function parseStringOrBytes32(
 export function useToken(tokenAddress?: string | null): Token | undefined | null {
   const { chainId } = useActiveWeb3React();
   const tokens = useAllTokens();
+
+  console.log('all tokens ', tokens);
 
   const address = isAddress(tokenAddress);
 
@@ -110,6 +117,7 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
 
 export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {
   const token = useToken(currencyId);
+  console.log('Token ', { token, currencyId });
   if (currencyId === null || currencyId === undefined) return currencyId;
   return token;
 }

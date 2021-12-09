@@ -89,8 +89,6 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
     contract_address
   );
 
-  console.log({ approvalState });
-
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false);
 
@@ -133,15 +131,6 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
       JSBI.multiply(bankTokenBalance.quotient, virtualPrice.quotient) as BigintIsh
     );
   }
-
-  console.log('chainId', chainId);
-  console.log('bank', bank);
-  console.log('underlyingTokenBalance', underlyingTokenBalance);
-  console.log('bankTokenBalance', bankTokenBalance);
-  console.log('virtualPrice', virtualPrice);
-  console.log('virtualBalance', virtualBalance);
-  console.log('apys', apys);
-  console.count('---------------');
 
   // State
   const chartRef = useRef(null as null | HTMLDivElement);

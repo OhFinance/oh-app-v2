@@ -1,29 +1,11 @@
 import React from 'react';
-import { useWalletStore } from '~/stores/useWalletStore';
-
-const selectNetworkHint = 'This is a hint for selecting your network.';
-const connectWalletHint = 'This is a hint for connecting your wallet.';
-
-function onClickMetaMask() {
-  // TODO: Oh! Finance will fill in MetaMask connection logic here
-  console.log('clicked MetaMask');
-  useWalletStore.getState().connectWallet();
-}
+import { useActiveWeb3React } from '~/hooks/web3';
 
 export function WalletDisplay() {
-  const { walletAddress, walletConnected } = useWalletStore();
-
+  const { account } = useActiveWeb3React();
   return (
     <div>
-      {!walletConnected && (
-        <div
-          className={`py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight`}
-        >
-          <p>Connect Wallet</p>
-        </div>
-      )}
-
-      {walletConnected && (
+      {account ? (
         <div
           className={`py-1 px-2 rounded-lg bg-transparent border-2 border-selectionHighlight text-defaultText font-bold text-md flex`}
         >
@@ -34,7 +16,13 @@ export function WalletDisplay() {
             src="/img/dot.png"
             alt="Wallet Icon"
           />
-          <p className="overflow-ellipsis overflow-hidden">{walletAddress}</p>
+          <p className="overflow-ellipsis overflow-hidden">{account}</p>
+        </div>
+      ) : (
+        <div
+          className={`py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight`}
+        >
+          <p>Connect Wallet</p>
         </div>
       )}
     </div>

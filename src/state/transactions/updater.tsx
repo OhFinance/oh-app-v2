@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useActiveWeb3React } from '../../hooks/web3';
 import { retry, RetryableError, RetryOptions } from '../../utilities/retry';
-import { useBlockNumber } from '../application/hooks';
+import { useAddAlertCallback, useBlockNumber } from '../application/hooks';
 import { updateBlockNumber } from '../application/reducer';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { checkedTransaction, finalizeTransaction } from './actions';
+import { TransactionSummary } from './alertContents';
 
 interface TxInterface {
   addedTime: number;
@@ -35,6 +36,7 @@ const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 };
 export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React();
 
+  const addAlert = useAddAlertCallback();
   const lastBlockNumber = useBlockNumber();
 
   const dispatch = useAppDispatch();
@@ -90,7 +92,14 @@ export default function Updater(): null {
                   },
                 })
               );
+              const txInfo = transactions[hash];
 
+              addAlert(null, {
+                severity: 'success',
+                title: 'Transaction',
+                content: <TransactionSummary info={txInfo.info} />,
+                hash,
+              });
               // addPopup(
               //   {
               //     txn: {
@@ -120,7 +129,7 @@ export default function Updater(): null {
     return () => {
       cancels.forEach((cancel) => cancel());
     };
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt]);
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addAlert, addPopup, getReceipt]);
 
   return null;
 }

@@ -4,10 +4,13 @@ import { useWeb3StoreConnector } from 'hooks/useWeb3StoreConnector';
 import type { NextPage } from 'next';
 import React, { useEffect } from 'react';
 import { usePollBlockNumber } from 'state/block/hooks';
+import Alert from '~/components/Alert';
 import { ConnectWalletDialog } from '~/components/connectWalletDialog';
 import { MarketingBody } from '~/components/marketingBody';
+import WalletModal from '~/components/WalletModal';
 import { WithoutWeb3 } from '~/components/withoutWeb3';
 import { WithWeb3 } from '~/components/withWeb3';
+import { useAlerts } from '~/state/application/hooks';
 import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
@@ -26,6 +29,7 @@ const Home: NextPage = React.forwardRef(function Home() {
   const fetchTVL = useTVLStore((state) => state.fetchData);
   const bank = useUsdcStore((state) => state.bank);
 
+  const alerts = useAlerts();
   // Hooks
   usePollBlockNumber();
   useEagerConnect();
@@ -47,6 +51,18 @@ const Home: NextPage = React.forwardRef(function Home() {
       {hasWeb3 ? <WithWeb3 /> : <WithoutWeb3 />}
       {showConnectWalletDialog && <ConnectWalletDialog />}
       <MarketingBody />
+      <WalletModal />
+      <div className="fixed z-20 bottom-0 right-4 mb-5">
+        {alerts.map((alert) => (
+          <Alert
+            key={alert.key}
+            alertKey={alert.key}
+            {...alert.props}
+            show={alert.show}
+            removeAfterMs={alert.removeAfterMs}
+          />
+        ))}
+      </div>
     </main>
   );
 }) as NextPage;

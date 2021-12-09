@@ -1,4 +1,5 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { AlertProps } from '~/components/Alert';
 import { DEFAULT_TXN_DISMISS_MS } from '~/constants/misc';
 
 export type PopupContent = {
@@ -9,31 +10,15 @@ export type PopupContent = {
 
 export enum ApplicationModal {
   WALLET,
-  SETTINGS,
-  SELF_CLAIM,
-  ADDRESS_CLAIM,
-  CLAIM_POPUP,
-  MENU,
-  DELEGATE,
-  VOTE,
-  POOL_OVERVIEW_OPTIONS,
-  NETWORK_SELECTOR,
-  PRIVACY_POLICY,
 }
 
-type PopupList = Array<{
-  key: string;
-  show: boolean;
-  content: PopupContent;
-  removeAfterMs: number | null;
-}>;
-
+type Alert = { props: AlertProps; key: string; removeAfterMs: number | null; show: boolean };
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number };
   readonly chainId: number | null;
   readonly implements3085: boolean;
   readonly openModal: ApplicationModal | null;
-  readonly popupList: PopupList;
+  readonly alertList: Alert[];
 }
 
 const initialState: ApplicationState = {
@@ -41,7 +26,7 @@ const initialState: ApplicationState = {
   chainId: null,
   implements3085: false,
   openModal: null,
-  popupList: [],
+  alertList: [],
 };
 
 const applicationSlice = createSlice({
@@ -63,20 +48,21 @@ const applicationSlice = createSlice({
     setOpenModal(state, action) {
       state.openModal = action.payload;
     },
-    addPopup(state, { payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) {
-      state.popupList = (
-        key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList
+    addAlert(state, { payload: { props, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) {
+      state.alertList = (
+        key ? state.alertList.filter((alert) => alert.key !== key) : state.alertList
       ).concat([
         {
           key: key || nanoid(),
+          props,
           show: true,
-          content,
           removeAfterMs,
         },
       ]);
     },
-    removePopup(state, { payload: { key } }) {
-      state.popupList.forEach((p) => {
+
+    removeAlert(state, { payload: { key } }) {
+      state.alertList.forEach((p) => {
         if (p.key === key) {
           p.show = false;
         }
@@ -89,11 +75,11 @@ const applicationSlice = createSlice({
 });
 
 export const {
+  addAlert,
   updateChainId,
   updateBlockNumber,
   setOpenModal,
-  addPopup,
-  removePopup,
+  removeAlert,
   setImplements3085,
 } = applicationSlice.actions;
 export default applicationSlice.reducer;
