@@ -1,5 +1,5 @@
-import useDebounce from 'hooks/useDebounce';
 import { useCallback, useEffect, useState } from 'react';
+import useDebounce from '~/hooks/useDebounce';
 import useIsWindowVisible from '~/hooks/useIsWindowVisible';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { useAppDispatch, useAppSelector } from '~/state/hooks';

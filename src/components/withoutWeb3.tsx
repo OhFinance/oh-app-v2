@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { HintButton } from '~/components/hintButton';
-import { UsdcInput } from '~/components/usdcInput';
 import { claimOhHint, depositUsdcHint, withdrawUsdcHint } from '~/constants/descriptionText';
 import {
   h1,
@@ -14,18 +13,19 @@ import {
   textPink,
 } from '~/constants/tempTailwindConfig';
 import styles from '~/pages/__styles__/index.module.css';
+import { useWalletModalToggle } from '~/state/application/hooks';
 import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
 import { usePriceStore } from '~/stores/usePriceStore';
 import { useTVLStore } from '~/stores/useTVLStore';
-import { useWalletStore } from '~/stores/useWalletStore';
 import { limitDecimals, limitDecimalsWithCommas } from '~/utilities/numberUtilities';
+import { CurrencyInput } from './CurrencyInput';
 
 function doNothing() {}
 
 export const WithoutWeb3 = React.forwardRef(function WithoutWeb3() {
-  const { toggleConnectWalletDialog } = useWalletStore();
+  const toggleWalletModal = useWalletModalToggle();
   const { isLoading: isLoadingChart, data } = useChartStore();
   const { isLoading: isLoadingPrice, price } = usePriceStore();
   const { isLoading: isLoadingMarketCap, marketCap } = useMarketCapStore();
@@ -60,7 +60,7 @@ export const WithoutWeb3 = React.forwardRef(function WithoutWeb3() {
           <div className={`mt-10 flex flex-col shadow-lg rounded-lg p-10 w-96 bg-buttonBG`}>
             <button
               className={`py-1 px-2 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight`}
-              onClick={toggleConnectWalletDialog}
+              onClick={toggleWalletModal}
             >
               Connect Wallet to get started
             </button>
@@ -124,12 +124,11 @@ export const WithoutWeb3 = React.forwardRef(function WithoutWeb3() {
                   </div>
                 </div>
                 <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
-                  <UsdcInput
-                    value={0}
-                    maxValue={0}
-                    onChange={() => undefined}
-                    onValidate={(isValid) => undefined}
-                    disabled
+                  <CurrencyInput
+                    value={'0.00'}
+                    showMaxButton
+                    onUserInput={() => null}
+                    id="deposit-currency-input-default"
                   />
                 </div>
                 <div className={`h-auto m-2 flex flex-col`}>
@@ -173,12 +172,11 @@ export const WithoutWeb3 = React.forwardRef(function WithoutWeb3() {
                     </div>
                   </div>
                   <div className={`h-auto m-2 flex flex-col rounded-lg bg-black`}>
-                    <UsdcInput
-                      value={0}
-                      maxValue={0}
-                      onChange={() => undefined}
-                      onValidate={(isValid) => undefined}
-                      disabled
+                    <CurrencyInput
+                      value={'0.00'}
+                      showMaxButton
+                      onUserInput={() => null}
+                      id="withdraw-currency-input-default"
                     />
                   </div>
                   <div className={`h-auto m-2 flex flex-col`}>
@@ -213,7 +211,7 @@ export const WithoutWeb3 = React.forwardRef(function WithoutWeb3() {
                     />
                     <button
                       className="mt-6 py-2 px-24 rounded-lg bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight"
-                      onClick={toggleConnectWalletDialog}
+                      onClick={toggleWalletModal}
                     >
                       Connect Wallet
                     </button>

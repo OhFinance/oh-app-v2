@@ -1,10 +1,10 @@
 import { Token } from '@uniswap/sdk-core';
-import aave from 'assets/img/aave.svg';
-import benqi from 'assets/img/benqi.png';
-import comp from 'assets/img/comp.svg';
-import crv from 'assets/img/crv.svg';
-import ohUsdc from 'assets/img/oh-usdc.svg';
-import traderJoe from 'assets/img/trader-joe.png';
+import aave from '~/assets/img/aave.svg';
+import benqi from '~/assets/img/benqi.png';
+import comp from '~/assets/img/comp.svg';
+import crv from '~/assets/img/crv.svg';
+import ohUsdc from '~/assets/img/oh-usdc.svg';
+import traderJoe from '~/assets/img/trader-joe.png';
 import { OH_USDC_BANK } from './addresses';
 import { SupportedChainId } from './chains';
 import { USDC } from './tokens';

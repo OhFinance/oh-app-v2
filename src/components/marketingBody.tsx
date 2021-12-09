@@ -1,18 +1,18 @@
+import { useActiveWeb3React } from 'hooks/web3';
 import React, { useEffect, useState } from 'react';
 import { textPink } from '~/constants/tempTailwindConfig';
 import { useThemeStore } from '~/stores/useThemeStore';
-import { useWalletStore } from '~/stores/useWalletStore';
 
 export function MarketingBody() {
   const { theme } = useThemeStore();
-  const { walletConnected } = useWalletStore();
-  const [marketingHidden, setMarketingHidden] = useState(walletConnected);
+  const { account } = useActiveWeb3React();
+  const [marketingHidden, setMarketingHidden] = useState(typeof account === 'string');
 
   useEffect(() => {
-    if (walletConnected) {
+    if (account) {
       setMarketingHidden(true);
     }
-  }, [walletConnected, setMarketingHidden]);
+  }, [account, setMarketingHidden]);
 
   return (
     <div

@@ -11,7 +11,7 @@ import { WalletDisplay } from './walletDisplay';
 const selectNetworkHint = 'Select which network you want to connect to.';
 
 export function Navbar() {
-  const { chainId, library } = useActiveWeb3React();
+  const { chainId, library, account } = useActiveWeb3React();
   const info = chainId ? CHAIN_INFO[chainId] : undefined;
 
   const { theme, setTheme } = useThemeStore();
@@ -97,31 +97,33 @@ export function Navbar() {
                 height={35}
               />
             </div>
-            <div className="flex pr-4 pl-8">
-              <div className="bg-navBarAccent flex-col rounded-l-md w-52">
-                <div className="flex flex-grow justify-center items-center w-48">
-                  <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
-                    Network
-                  </p>
-                  <HintButton hint={selectNetworkHint} />
+            {account && (
+              <div className="flex pr-4 pl-8">
+                <div className="bg-navBarAccent flex-col rounded-l-md w-52">
+                  <div className="flex flex-grow justify-center items-center w-48">
+                    <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
+                      Network
+                    </p>
+                    <HintButton hint={selectNetworkHint} />
+                  </div>
+                </div>
+                <div className="w-full group">
+                  <button
+                    className={`py-1 px-4 -lg bg-navBarBG w-40 rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
+                    id="network-button"
+                  >
+                    {info.label}
+                    <div
+                      className={`object-bottom bg-selectionHighlight rounded-br-md h-2 -my-1 -mx-4 relative`}
+                    ></div>
+                  </button>
+                  <ul className="dropdown-menu absolute hidden group-hover:block text-defaultText pt-1 z-10 w-40">
+                    <NetworkRow targetChain={SupportedChainId.ETHEREUM_MAINNET} />
+                    <NetworkRow targetChain={SupportedChainId.AVALANCHE} />
+                  </ul>
                 </div>
               </div>
-              <div className="w-full group">
-                <button
-                  className={`py-1 px-4 -lg bg-navBarBG w-40 rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
-                  id="network-button"
-                >
-                  {info.label}
-                  <div
-                    className={`object-bottom bg-selectionHighlight rounded-br-md h-2 -my-1 -mx-4 relative`}
-                  ></div>
-                </button>
-                <ul className="dropdown-menu absolute hidden group-hover:block text-defaultText pt-1 z-10 w-40">
-                  <NetworkRow targetChain={SupportedChainId.ETHEREUM_MAINNET} />
-                  <NetworkRow targetChain={SupportedChainId.AVALANCHE} />
-                </ul>
-              </div>
-            </div>
+            )}
             <button
               className="ml-6 py-1 px-2 rounded-lg text-md mr-4 lg:w-64"
               onClick={toggleWalletModal}
@@ -196,32 +198,33 @@ export function Navbar() {
               >
                 <WalletDisplay />
               </button>
-
-              <div className="flex pl-2 mt-4 w-9/10">
-                <div className="bg-navBarAccent flex-col rounded-l-md w-1/2">
-                  <div className="flex flex-grow justify-center items-center">
-                    <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
-                      Network
-                    </p>
-                    <HintButton hint={selectNetworkHint} />
+              {account && (
+                <div className="flex pl-2 mt-4 w-9/10">
+                  <div className="bg-navBarAccent flex-col rounded-l-md w-1/2">
+                    <div className="flex flex-grow justify-center items-center">
+                      <p className="text-sm text-accentText py-2 px-2 -lg normal-case text-center">
+                        Network
+                      </p>
+                      <HintButton hint={selectNetworkHint} />
+                    </div>
+                  </div>
+                  <div className="w-1/2 group">
+                    <button
+                      className={`py-2 px-4 w-11/12 -lg bg-navBarBG border-b-4 border-t-0 border-l-0 border-r-0 border-selectionHighlight rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
+                      id="network-button"
+                      onClick={() => setSelectNetworkOpen(!selectNetworkOpen)}
+                    >
+                      {info.label}
+                    </button>
+                    {selectNetworkOpen && (
+                      <ul className="dropdown-menu absolute block text-defaultText pt-1 z-10 w-1/2 pr-4">
+                        <NetworkRow targetChain={SupportedChainId.ETHEREUM_MAINNET} />
+                        <NetworkRow targetChain={SupportedChainId.AVALANCHE} />
+                      </ul>
+                    )}
                   </div>
                 </div>
-                <div className="w-1/2 group">
-                  <button
-                    className={`py-2 px-4 w-11/12 -lg bg-navBarBG border-b-4 border-t-0 border-l-0 border-r-0 border-selectionHighlight rounded-r-md text-defaultText text-md hover:bg-navBarBGHover`}
-                    id="network-button"
-                    onClick={() => setSelectNetworkOpen(!selectNetworkOpen)}
-                  >
-                    {info.label}
-                  </button>
-                  {selectNetworkOpen && (
-                    <ul className="dropdown-menu absolute block text-defaultText pt-1 z-10 w-1/2 pr-4">
-                      <NetworkRow targetChain={SupportedChainId.ETHEREUM_MAINNET} />
-                      <NetworkRow targetChain={SupportedChainId.AVALANCHE} />
-                    </ul>
-                  )}
-                </div>
-              </div>
+              )}
 
               <div className="text-right pr-5 text-defaultText">
                 <Link href="https://docs.oh.finance/getting-started/faq">

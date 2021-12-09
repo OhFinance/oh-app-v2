@@ -1,12 +1,13 @@
+import { useActiveWeb3React } from 'hooks/web3';
 import { useWalletStore } from '~/stores/useWalletStore';
 import styles from './__styles__/chartPnL.module.css';
 
 export function ChartPnL() {
-  const { walletConnected, portfolioPl, portfolioPlPercent } = useWalletStore();
-
+  const { portfolioPl, portfolioPlPercent } = useWalletStore();
+  const { account } = useActiveWeb3React();
   return (
     <div className="w-auto h-10 flex flex-row">
-      {!walletConnected ? (
+      {!account ? (
         <p className={`ml-5 mt-4 absolute text-lg text-pink-500`}>
           Connect wallet to see your data
         </p>

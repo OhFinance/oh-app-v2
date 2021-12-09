@@ -1,9 +1,7 @@
-import axios from 'axios';
-import { banks } from 'config/constants/banks';
-import { useEffect, useState } from 'react';
-import { ALL_SUPPORTED_CHAIN_IDS } from '~/constants/chains';
+import { useCallback, useEffect, useState } from 'react';
+import { banks } from '~/constants/banks';
 import { SetBankAPY } from './actions';
-import { useBankAPYManager } from './hooks';
+import { useBankAPYManager, useFetchBankInfoCallback } from './hooks';
 
 const MAXIMUM_RETRIES = 5;
 export default function Updater() {
@@ -11,41 +9,40 @@ export default function Updater() {
   const [loading, setLoading] = useState(true);
   const [setBankAPYData] = useBankAPYManager();
 
-  useEffect(() => {
-    const fetchAPY = async () => {
-      try {
-        const allBanks = ALL_SUPPORTED_CHAIN_IDS.map((chainId) => banks[chainId]).flat();
-        const values = await Promise.all(
-          allBanks.map((bank) =>
-            axios.get(
-              `https://api.oh.finance/apy?chain=${bank.chainId}&addr=${
-                (bank.address as any)[bank.chainId]
-              }`
-            )
-          )
-        );
+  const fetchBankInfo = useFetchBankInfoCallback();
 
-        let bankAPYs: SetBankAPY[] = [];
-        values.forEach((value, i) => {
-          const bank = allBanks[i];
-          bankAPYs.push({
-            chainId: bank.chainId,
-            address: (bank.address as any)[bank.chainId],
-            apys: value.data.apys,
-          });
-        });
-        setBankAPYData(bankAPYs);
-        setLoading(false);
-      } catch (e) {
-        console.log(e);
-        setRetries(retries + 1);
+  const fetchAllBankInfo = useCallback(async () => {
+    let bankAPYs: SetBankAPY[] = [];
+    for (let i = 0; i < banks.length; i++) {
+      const bank = banks[i];
+      const entries = Object.entries(bank.contractAddressMap);
+      for (let i = 0; i < entries.length; i++) {
+        const [chainId, contract] = entries[i];
+        try {
+          const info = await fetchBankInfo(Number(chainId), contract);
+          if (info) {
+            bankAPYs.push({
+              chainId: Number(chainId),
+              address: contract,
+              apys: info.apys,
+            });
+          }
+        } catch (err) {
+          console.debug('No bank data could be fetched ', { chainId, contract });
+        }
       }
-    };
-
-    if (loading && retries < MAXIMUM_RETRIES) {
-      fetchAPY();
     }
-  }, [loading, retries, setBankAPYData]);
+
+    setBankAPYData(bankAPYs);
+    setLoading(false);
+  }, [banks, fetchBankInfo, setBankAPYData, setLoading]);
+
+  useEffect(() => {
+    if (loading && retries < MAXIMUM_RETRIES) {
+      console.log('fetching');
+      fetchAllBankInfo();
+    }
+  }, [loading, retries, fetchAllBankInfo, setBankAPYData]);
 
   return null;
 }

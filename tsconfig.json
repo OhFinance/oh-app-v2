@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["src/legacy/*"], // the legacy folder should eventually be removed and cleaned up
+      "*": ["src/*"],
       "~/*": ["src/*"],
       "@/*": ["public/*"]
     },

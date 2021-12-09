@@ -1,23 +1,26 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import React, { useState } from 'react';
+import React from 'react';
 import { injected } from '~/connectors';
 import { SUPPORTED_WALLETS } from '~/constants/wallet';
-import { useAddAlertCallback, useModalOpen, useWalletModalToggle } from '~/state/application/hooks';
+import {
+  useAddAlertCallback,
+  useModalOpen,
+  useRemoveAlertCallback,
+  useWalletModalToggle,
+} from '~/state/application/hooks';
 import { ApplicationModal } from '~/state/application/reducer';
 import { isMobile } from '~/utilities/userAgent';
 import Option from './Option';
 
 export default function WalletModal() {
-  const { active, account, connector, activate, error } = useWeb3React();
-
-  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>();
-  const [pendingError, setPendingError] = useState<boolean>();
+  const { connector, activate } = useWeb3React();
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET);
   const toggleModal = useWalletModalToggle();
   const addAlert = useAddAlertCallback();
+  const removeAlert = useRemoveAlertCallback();
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = '';
@@ -28,8 +31,6 @@ export default function WalletModal() {
       return true;
     });
     // log selected wallet
-
-    setPendingWallet(connector); // set wallet for pending view
 
     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
     if (connector instanceof WalletConnectConnector) {
@@ -45,11 +46,11 @@ export default function WalletModal() {
         .catch((error) => {
           if (error instanceof UnsupportedChainIdError) {
             activate(connector);
+            removeAlert('connecting-wallet');
             toggleModal();
 
             // a little janky...can't use setError because the connector isn't set
           } else {
-            setPendingError(true);
             addAlert(
               'connecting-wallet',
               {

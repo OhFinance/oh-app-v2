@@ -1,7 +1,6 @@
 import { BigintIsh, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import JSBI from 'jsbi';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useBankAPYData } from 'state/banks/hooks';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
 import { HintButton } from '~/components/hintButton';
@@ -22,6 +21,7 @@ import { useBankContract } from '~/hooks/contracts/useBankContract';
 import { ApprovalState, useApproveCallback } from '~/hooks/transactionCallbacks/useApproveCallback';
 import { useActiveWeb3React } from '~/hooks/web3';
 import styles from '~/pages/__styles__/index.module.css';
+import { useBankAPYData } from '~/state/banks/hooks';
 import { useDerivedStakeInfo, useStakeActionHandlers, useStakeState } from '~/state/stake/hooks';
 import { Field } from '~/state/stake/reducer';
 import { TransactionType } from '~/state/transactions/actions';
@@ -31,7 +31,6 @@ import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
 import { usePriceStore } from '~/stores/usePriceStore';
-import { useWalletStore } from '~/stores/useWalletStore';
 import { calculateGasMargin } from '~/utilities/calculateGasMargin';
 import { currencyId } from '~/utilities/currencyId';
 import { limitDecimals, limitDecimalsWithCommas } from '~/utilities/numberUtilities';
@@ -106,7 +105,6 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
       (approvalSubmitted && approvalState === ApprovalState.APPROVED));
 
   // Stores
-  const { portfolioBalance, availableOh, toBeWithdrawn } = useWalletStore();
 
   const underlyingTokenBalance = useTokenBalance(account || undefined, token);
   const bankTokenBalance = useTokenBalance(account || undefined, bank_token);
@@ -298,9 +296,14 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                   className={`${styles['total-interest']} mt-12 ml-12 w-50 h-full justify-between`}
                 >
                   <h1 className={`${h1}`}>Total Interest Earned</h1>
-                  <p className={`mt-2 ${textCashLg}`}>${limitDecimals(portfolioBalance)}</p>
+                  <p className={`mt-2 ${textCashLg}`}>
+                    ${bankTokenBalance?.toFixed(2, { groupSeparator: ',' })}
+                  </p>
                   <p className={`${textPink} mt-10`}>
-                    ${`${limitDecimals(portfolioBalance)} OH-USDC (Deposited USDC)`}
+                    $
+                    {`${bankTokenBalance?.toFixed(2, {
+                      groupSeparator: ',',
+                    })} OH-USDC (Deposited USDC)`}
                   </p>
                 </div>
               </div>
@@ -353,11 +356,11 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                   <button
                     className={`mt-3 mb-1 w-36 h-12 rounded bg-button border-2 border-transparent text-white text-md hover:bg-buttonHighlight disabled:opacity-50`}
                     onClick={onClickClaimOh}
-                    disabled={!availableOh}
+                    disabled={true}
                   >
                     Claim OH!
                   </button>
-                  <p className="text-accentText">${limitDecimals(availableOh)} Available</p>
+                  <p className="text-accentText">$0.00 Available</p>
                 </div>
                 <div className="mr-2 mt-8 flex flex-col">
                   <HintButton hint={claimOhHint} />
