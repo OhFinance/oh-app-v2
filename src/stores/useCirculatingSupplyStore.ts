@@ -16,7 +16,6 @@ export const useCirculatingSupplyStore = createStore(
         const supply = await getCirculatingSupply();
         set({ isLoading: false, supply });
       } catch (error) {
-        console.log(error);
         set({ isLoading: false });
       }
     },

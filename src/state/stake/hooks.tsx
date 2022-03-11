@@ -52,26 +52,17 @@ export function tryParseAmount<T extends Currency>(
 }
 
 // TEMP
-export function useDepositCurrency() {
-  const { chainId } = useActiveWeb3React();
-  return chainId ? banks[0].underlyingTokenMap[chainId] : undefined;
-}
 
-export function useWithdrawCurrency() {
-  const { chainId } = useActiveWeb3React();
-  return chainId ? banks[0].ohTokenMap[chainId] : undefined;
-}
-
-export function useDerivedStakeInfo() {
-  const { account } = useActiveWeb3React();
+export function useDerivedStakeInfo(bankIndex: number) {
+  const { chainId, account } = useActiveWeb3React();
 
   const {
     [Field.DEPOSIT]: { typedValue: depositTypedValue },
     [Field.WITHDRAW]: { typedValue: withdrawTypedValue },
   } = useStakeState();
 
-  const depositCurrency = useDepositCurrency();
-  const withdrawCurrency = useWithdrawCurrency();
+  const depositCurrency = banks[chainId || 1]?.[bankIndex]?.underlyingToken;
+  const withdrawCurrency = banks[chainId || 1]?.[bankIndex]?.ohToken;
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     depositCurrency ?? undefined,

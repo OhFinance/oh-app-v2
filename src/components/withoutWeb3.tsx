@@ -228,13 +228,6 @@ export const WithoutWeb3 = React.forwardRef(function WithoutWeb3() {
                   <p className={`mt-2 ${textCashLg}`}>$0</p>
                   <p className={`${textPink} mt-10`}>${`0 OH-USDC (Deposited USDC)`}</p>
                 </div>
-                <div
-                  className={`${styles['total-interest']} mt-12 ml-12 w-50 h-full justify-between`}
-                >
-                  <h1 className={`${h1}`}>Total Interest Earned</h1>
-                  <p className={`mt-2 ${textCashLg}`}>$0</p>
-                  <p className={`${textPink} mt-10`}>$0 OH-USDC (Deposited USDC)</p>
-                </div>
               </div>
               <div
                 ref={chartRef}

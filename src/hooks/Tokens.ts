@@ -1,38 +1,24 @@
 import { Currency, Token } from '@uniswap/sdk-core';
 import { arrayify, parseBytes32String } from 'ethers/lib/utils';
+import { flatten } from 'lodash';
 import { useMemo } from 'react';
-import { Bank, banks } from '~/constants/banks';
+import { banks } from '~/constants/banks';
 import { NEVER_RELOAD } from '~/state/multicall/constants';
 import { useSingleCallResult } from '~/state/multicall/hooks';
 import { isAddress } from '~/utilities';
 import { useBytes32TokenContract, useTokenContract } from './contracts/useTokenContract';
 import { useActiveWeb3React } from './web3';
 
-// reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromBank(tokens: Bank['underlyingTokenMap']): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React();
-
-  return useMemo(() => {
-    if (!chainId) return {};
-    return Object.entries(tokens[chainId]).reduce<{
-      [address: string]: Token;
-    }>((prev, [chainId, token]: [string, Token]) => {
-      prev[token.address] = token;
-      return prev;
-    }, {});
-  }, [chainId, tokens]);
-}
-
 export function useAllTokens(): { [address: string]: Token } {
-  const allTokens = banks.reduce<{ [address: string]: Token }>((prev, curr) => {
-    Object.values(curr.underlyingTokenMap).forEach((token) => {
-      prev[token.address] = token;
-    });
-    Object.values(curr.ohTokenMap).forEach((token) => {
-      prev[token.address] = token;
-    });
-    return prev;
-  }, {});
+  const allTokens = flatten(Object.values(banks)).reduce<{ [address: string]: Token }>(
+    (prev, curr) => {
+      prev[curr.underlyingToken.address] = curr.underlyingToken;
+      prev[curr.ohToken.address] = curr.ohToken;
+
+      return prev;
+    },
+    {}
+  );
 
   return allTokens;
 }
@@ -59,8 +45,6 @@ function parseStringOrBytes32(
 export function useToken(tokenAddress?: string | null): Token | undefined | null {
   const { chainId } = useActiveWeb3React();
   const tokens = useAllTokens();
-
-  console.log('all tokens ', tokens);
 
   const address = isAddress(tokenAddress);
 
@@ -117,7 +101,6 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
 
 export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {
   const token = useToken(currencyId);
-  console.log('Token ', { token, currencyId });
   if (currencyId === null || currencyId === undefined) return currencyId;
   return token;
 }

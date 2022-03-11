@@ -11,51 +11,52 @@ const initialState = {
 
 export const useChartStore = createStore(
   combine(initialState, (set, get) => ({
-    fetchData: async (timeRange: ChartTimeRange = 'all') => {
+    fetchData: async (chainId: number, address: string, timeRange: ChartTimeRange = 'all') => {
       set({ isLoading: true });
 
       let url;
       switch (timeRange) {
         case 'hourly':
-          url =
-            'https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=10&aggregate=3&e=Kraken';
+          url = `https://api.oh.finance/tvl/history?addr=${address}&chain=${chainId}`;
           break;
         case 'daily':
-          url =
-            'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=20&aggregate=3&e=Kraken';
+          url = `https://api.oh.finance/tvl/history?addr=${address}&chain=${chainId}`;
           break;
         case 'weekly':
-          url =
-            'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=30&aggregate=3&e=Kraken';
+          url = `https://api.oh.finance/tvl/history?addr=${address}&chain=${chainId}`;
           break;
         case 'monthly':
-          url =
-            'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=40&aggregate=3&e=Kraken';
+          url = `https://api.oh.finance/tvl/history?addr=${address}&chain=${chainId}`;
           break;
         case 'yearly':
-          url =
-            'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=50&aggregate=3&e=Kraken';
+          url = `https://api.oh.finance/tvl/history?addr=${address}&chain=${chainId}`;
           break;
         default:
         case 'all':
-          url =
-            'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=100&aggregate=3&e=Kraken';
+          url = `https://api.oh.finance/tvl/history?addr=${address}&chain=${chainId}`;
           break;
       }
 
       axios
         .get(url)
         .then((res) => {
-          set({ isLoading: false, data: (res.data as any)['Data'] });
+          set({
+            isLoading: false,
+            data: (res.data as any)['data'].map((item: { timestamp: string; tvl: number }) => ({
+              time: Math.floor(new Date(item.timestamp).getTime() / 1000),
+              open: item.tvl,
+              close: item.tvl,
+              low: item.tvl,
+            })),
+          });
         })
         .catch((error) => {
-          console.log(error);
           set({ isLoading: false });
         });
     },
-    setTimeRange(timeRange: ChartTimeRange) {
+    setTimeRange(chainId: number, address: string, timeRange: ChartTimeRange) {
       // We cannot use `this` here because we pass this action function as a reference
-      useChartStore.getState().fetchData(timeRange);
+      useChartStore.getState().fetchData(chainId, address, timeRange);
     },
   }))
 );

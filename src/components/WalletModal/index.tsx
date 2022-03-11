@@ -2,7 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import React from 'react';
-import { injected } from '~/connectors';
+import { injected, walletlink } from '~/connectors';
 import { SUPPORTED_WALLETS } from '~/constants/wallet';
 import {
   useAddAlertCallback,
@@ -143,6 +143,7 @@ export default function WalletModal() {
   if (!walletModalOpen) {
     return null;
   }
+
   return (
     <div
       className="fixed z-10 inset-0 overflow-y-auto"
@@ -166,16 +167,39 @@ export default function WalletModal() {
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-left sm:mt-0 ">
                 <h3 className="text-xl font-medium text-defaultText" id="modal-title">
-                  Connect a Wallet
+                  {connector ? 'Wallet Connected' : 'Connect a Wallet'}
                 </h3>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">Connect to a supported wallet</p>
-                </div>
+                {!connector && (
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500"> Connect to a supported wallet</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col m-4">{getOptions()}</div>
+          <div className="flex flex-col m-4">
+            {connector ? (
+              <button
+                onClick={() => {
+                  if (connector !== injected && connector !== walletlink) {
+                    (connector as any).close();
+                  }
+                }}
+                className={` ${
+                  connector !== injected && connector !== walletlink
+                    ? 'bg-inputBG hover:bg-buttonHighlight hover:text-white '
+                    : 'bg-buttonDisabled'
+                }  text-button font-bold py-4 px-4 rounded`}
+              >
+                {connector !== injected && connector !== walletlink
+                  ? 'Disconnect'
+                  : 'Disconnect in Wallet'}
+              </button>
+            ) : (
+              getOptions()
+            )}
+          </div>
         </div>
       </div>
     </div>

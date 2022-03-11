@@ -29,7 +29,6 @@ const Home: NextPage = React.forwardRef(function Home() {
 
   // This effect will run only once
   useEffect(() => {
-    fetchChart();
     fetchPrice();
     fetchMarketCap();
     fetchSupply();

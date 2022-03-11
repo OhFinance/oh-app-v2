@@ -3,9 +3,7 @@ import JSBI from 'jsbi';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CaptureResize } from '~/components/captureResize';
 import { Chart } from '~/components/chart';
-import { HintButton } from '~/components/hintButton';
 import { banks } from '~/constants/banks';
-import { claimOhHint } from '~/constants/descriptionText';
 import {
   h1,
   h2,
@@ -44,6 +42,25 @@ function onClickClaimOh() {
 
 export const WithWeb3 = React.forwardRef(function WithWeb3() {
   const { account, chainId, library } = useActiveWeb3React();
+  const [selectedBank, setSelectedBank] = useState(0);
+  const fetchChart = useChartStore((state) => state.fetchData);
+
+  useEffect(() => {
+    if (chainId && banks[chainId]) {
+      const chainBanks = banks[chainId];
+      if (selectedBank > chainBanks.length - 1) {
+        setSelectedBank(0);
+      }
+    }
+  }, [selectedBank, banks, setSelectedBank]);
+
+  const bank = useMemo(() => {
+    if (chainId && banks[chainId]) {
+      return banks[chainId][selectedBank];
+    } else {
+      return undefined;
+    }
+  }, [chainId, banks, selectedBank]);
   const {
     [Field.DEPOSIT]: { typedValue: depositTypedValue },
     [Field.WITHDRAW]: { typedValue: withdrawTypedValue },
@@ -64,22 +81,14 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   );
 
   // replace for selected bank
-  const bank = banks[0];
-  const token = useMemo(
-    () => (chainId !== undefined ? bank.underlyingTokenMap[chainId] : undefined),
-    [chainId, bank.underlyingTokenMap]
-  );
-  const bank_token = useMemo(
-    () => (chainId !== undefined ? bank.ohTokenMap[chainId] : undefined),
-    [chainId, bank.ohTokenMap]
-  );
 
-  const contract_address = useMemo(
-    () => (chainId !== undefined ? bank.contractAddressMap[chainId] : undefined),
-    [chainId, bank.contractAddressMap]
-  );
+  const token = useMemo(() => (bank ? bank.underlyingToken : undefined), [bank]);
+  const bank_token = useMemo(() => (bank ? bank.ohToken : undefined), [bank]);
 
-  const { currencies, currencyBalances, inputError, parsedAmounts } = useDerivedStakeInfo();
+  const contract_address = useMemo(() => (bank ? bank.contractAddress : undefined), [bank]);
+
+  const { currencies, currencyBalances, inputError, parsedAmounts } =
+    useDerivedStakeInfo(selectedBank);
   const isValidDeposit = !inputError || !inputError[Field.DEPOSIT];
   const isValidWithdraw = !inputError || !inputError[Field.WITHDRAW];
 
@@ -114,14 +123,17 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   const { isLoading: isLoadingSupply, supply } = useCirculatingSupplyStore();
   const { isLoading: isLoadingChart, data, setTimeRange } = useChartStore();
 
-  if (!bank) {
-    throw new Error('Missing bank');
-  }
+  useEffect(() => {
+    if (chainId && bank) {
+      fetchChart(chainId, bank.ohToken.address);
+    }
+  }, [chainId, bank]);
+
   // Hooks
   const virtualBalance = useVirtualBalance(bank_token);
   const virtualPrice = useVirtualPrice(bank_token);
 
-  const apys = useBankAPYData(chainId ?? -1, (bank_token?.address as any)?.[chainId ?? -1] ?? '');
+  const apys = useBankAPYData(bank ? bank.ohToken.chainId : -1, bank ? bank.ohToken.address : '');
   let valueOfShare: CurrencyAmount<Token> | undefined;
   if (bankTokenBalance && virtualPrice && bank_token) {
     valueOfShare = CurrencyAmount.fromRawAmount(
@@ -187,10 +199,29 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   const onWithdraw = useCallback(() => {
     onAddOrWithdraw(Field.WITHDRAW);
   }, [onAddOrWithdraw]);
+  if (!bank) {
+    return null;
+  }
   return (
     <>
       <div
-        className={`${styles['main-container']} mt-2 mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
+        className={`${styles['main-container']} mx-auto flex flex-row rounded-lg h-auto items-center`}
+      >
+        {banks[chainId || 1].map((bank, i) => (
+          <div
+            key={`bank-${bank.contractAddress}`}
+            onClick={() => {
+              setSelectedBank(i);
+            }}
+            className="flex flex-row items-center f py-2 px-3 bg-consoleBGOuter hover:bg-consoleBGOuter/75 h-auto rounded-lg shadow-lg mr-2 cursor-pointer"
+          >
+            <img src={bank.image} alt={bank.name} className="h-8 w-8 rounded-full shadow-lg mr-4" />
+            <p className="text-defaultText">{bank.name}</p>
+          </div>
+        ))}
+      </div>
+      <div
+        className={`${styles['main-container']} mt-4 mx-auto flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
       >
         <div className={`${styles['first-container']} p-6 w-full h-full`}>
           <div className={`${styles['second-container']} w-full h-full flex`}>
@@ -289,21 +320,7 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                     $
                     {`${bankTokenBalance?.toFixed(2, {
                       groupSeparator: ',',
-                    })} OH-USDC (Deposited USDC)`}
-                  </p>
-                </div>
-                <div
-                  className={`${styles['total-interest']} mt-12 ml-12 w-50 h-full justify-between`}
-                >
-                  <h1 className={`${h1}`}>Total Interest Earned</h1>
-                  <p className={`mt-2 ${textCashLg}`}>
-                    ${bankTokenBalance?.toFixed(2, { groupSeparator: ',' })}
-                  </p>
-                  <p className={`${textPink} mt-10`}>
-                    $
-                    {`${bankTokenBalance?.toFixed(2, {
-                      groupSeparator: ',',
-                    })} OH-USDC (Deposited USDC)`}
+                    })} ${bank.ohToken.symbol} (Deposited ${bank.underlyingToken.symbol})`}
                   </p>
                 </div>
               </div>
@@ -320,7 +337,6 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                           isLoading={isLoadingChart}
                           width={Math.min(width, 906)}
                           height={height}
-                          onChartTimeChanged={setTimeRange}
                         />
                       </div>
                     );
@@ -334,12 +350,12 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
       <div
         className={`${styles['main-container']} ${styles['stats-claim']} mt-4 mx-auto flex justify-between shadow-lg rounded-lg h-auto items-center`}
       >
-        <div
+        {/* <div
           className={`${styles['stats-claim-bg']} flex flex-col justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
         >
           <div className={`flex-col w-auto`}>
-            <div className={`flex flex-row justify-between`}>
-              <div
+            <div className={`flex flex-row justify-between`} style={{ width: 300 }}>
+               <div
                 className={`h-24 container flex flex-row justify-between rounded-lg border-2 border-consoleBorderAccent bg-consoleAccent`}
                 style={{ width: '300px' }}
               >
@@ -365,10 +381,10 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
                 <div className="mr-2 mt-8 flex flex-col">
                   <HintButton hint={claimOhHint} />
                 </div>
-              </div>
+              </div> 
             </div>
           </div>
-        </div>
+        </div> */}
         <div
           className={`${styles['stats-oh-bg']} w-full flex ${styles['stats-claim']} justify-between shadow-lg rounded-lg bg-consoleBGOuter h-auto items-center`}
         >

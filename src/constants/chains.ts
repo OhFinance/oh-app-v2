@@ -5,7 +5,7 @@ export enum SupportedChainId {
   ETHEREUM_MAINNET = 1,
   RINKEBY = 4,
   KOVAN = 42,
-
+  MOONRIVER = 1285,
   AVALANCHE = 43114,
 }
 
@@ -13,7 +13,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.ETHEREUM_MAINNET,
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
-
+  SupportedChainId.MOONRIVER,
   SupportedChainId.AVALANCHE,
 ];
 
@@ -21,6 +21,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.ETHEREUM_MAINNET,
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
+  SupportedChainId.MOONRIVER,
   SupportedChainId.AVALANCHE,
 ] as const;
 
@@ -53,6 +54,15 @@ export const CHAIN_INFO: ChainInfo = {
     logoUrl: avalancheLogoUrl,
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
     rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+  },
+  [SupportedChainId.MOONRIVER]: {
+    blockWaitMsBeforeWarning: 600000,
+    docs: 'https://docs.moonbeam.network/builders/get-started/networks/moonriver/',
+    explorer: 'https://blockscout.moonriver.moonbeam.network/',
+    label: 'Moonriver',
+    logoUrl: avalancheLogoUrl,
+    nativeCurrency: { name: 'MOVR', symbol: 'MOVR', decimals: 18 },
+    rpcUrls: ['https://rpc.api.moonriver.moonbeam.network/'],
   },
   [SupportedChainId.ETHEREUM_MAINNET]: {
     docs: 'https://docs.uniswap.org/',

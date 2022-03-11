@@ -16,7 +16,6 @@ export const useMarketCapStore = createStore(
         const marketCap = await getMarketCap();
         set({ isLoading: false, marketCap });
       } catch (error) {
-        console.log(error);
         set({ isLoading: false });
       }
     },

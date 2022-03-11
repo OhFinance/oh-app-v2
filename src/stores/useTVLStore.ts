@@ -16,7 +16,6 @@ export const useTVLStore = createStore(
         const tvl = await getTVL();
         set({ isLoading: false, tvl });
       } catch (error) {
-        console.log(error);
         set({ isLoading: false });
       }
     },

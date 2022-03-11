@@ -1,4 +1,4 @@
-import { banks } from 'config/constants/banks';
+import { banks } from 'constants/banks';
 import { useMemo } from 'react';
 import { useActiveWeb3React } from './web3';
 

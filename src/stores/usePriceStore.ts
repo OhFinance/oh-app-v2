@@ -16,7 +16,6 @@ export const usePriceStore = createStore(
         const price = await getOhTokenPrice();
         set({ isLoading: false, price });
       } catch (error) {
-        console.log(error);
         set({ isLoading: false });
       }
     },

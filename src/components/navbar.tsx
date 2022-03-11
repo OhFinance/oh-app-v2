@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { CHAIN_INFO, SupportedChainId } from '~/constants/chains';
+import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from '~/constants/chains';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { useWalletModalToggle } from '~/state/application/hooks';
 import { useThemeStore } from '~/stores/useThemeStore';
@@ -118,8 +118,9 @@ export function Navbar() {
                     ></div>
                   </button>
                   <ul className="dropdown-menu absolute hidden group-hover:block text-defaultText pt-1 z-10 w-40">
-                    <NetworkRow targetChain={SupportedChainId.ETHEREUM_MAINNET} />
-                    <NetworkRow targetChain={SupportedChainId.AVALANCHE} />
+                    {ALL_SUPPORTED_CHAIN_IDS.map((chainId, i) => (
+                      <NetworkRow targetChain={chainId} key={`chain-${i}-${chainId}`} />
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -218,8 +219,9 @@ export function Navbar() {
                     </button>
                     {selectNetworkOpen && (
                       <ul className="dropdown-menu absolute block text-defaultText pt-1 z-10 w-1/2 pr-4">
-                        <NetworkRow targetChain={SupportedChainId.ETHEREUM_MAINNET} />
-                        <NetworkRow targetChain={SupportedChainId.AVALANCHE} />
+                        {ALL_SUPPORTED_CHAIN_IDS.map((chainId, i) => (
+                          <NetworkRow targetChain={chainId} key={`chain-${i}-${chainId}`} />
+                        ))}
                       </ul>
                     )}
                   </div>

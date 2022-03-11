@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useBankAPYData } from 'state/banks/hooks';
 import { Bank } from '~/constants/banks';
 import { depositUsdcHint } from '~/constants/descriptionText';
 import { h3, textCashMd } from '~/constants/tempTailwindConfig';
@@ -18,13 +19,25 @@ export default function StakeField({ imageUrl, fieldType, selectedBank }: StakeF
   const token = useMemo(
     () =>
       chainId !== undefined
-        ? selectedBank[fieldType === Field.DEPOSIT ? 'underlyingTokenMap' : 'ohTokenMap'][chainId]
+        ? selectedBank[fieldType === Field.DEPOSIT ? 'underlyingToken' : 'ohToken']
         : undefined,
     [chainId, fieldType, selectedBank]
   );
 
   const balance = useTokenBalance(account || undefined, token);
-
+  const apys = useBankAPYData(selectedBank.ohToken.chainId, selectedBank.ohToken.address);
+  const apyString = useMemo(() => {
+    if (apys && apys[0] && apys[2]) {
+      return `${apys[0].apy?.toLocaleString('en-US', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      })}% - ${apys[2].apy?.toLocaleString('en-US', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      })}% APR`;
+    }
+    return 'loading...';
+  }, [apys]);
   return (
     <div
       className={`w-full h-full flex flex-col rounded-lg border-2 border-consoleBorderAccent bg-consoleAccent`}
@@ -37,12 +50,15 @@ export default function StakeField({ imageUrl, fieldType, selectedBank }: StakeF
               width={72}
               height={72}
               alt="OH! Token Logo"
-              src="/img/oh_usdc_token.png"
+              src={selectedBank.image}
+              style={{ maxWidth: 'none' }}
             />
           </div>
           <div className="ml-1 flex flex-col">
-            <p className={`${h3} mt-4 w-full h-8 whitespace-nowrap`}>
-              {fieldType === Field.DEPOSIT ? 'Deposit USDC' : 'Withdraw USDC'}
+            <p className={`${h3} mt-4 w-full whitespace-wrap`}>
+              {fieldType === Field.DEPOSIT
+                ? `Deposit ${selectedBank.underlyingToken.symbol}`
+                : `Withdraw ${selectedBank.ohToken.symbol}`}
             </p>
             <p className={`${textCashMd} whitespace-normal`}>
               ${balance === undefined ? ' ---' : balance.toFixed(2, { groupSeparator: ',' })}{' '}
@@ -61,13 +77,9 @@ export default function StakeField({ imageUrl, fieldType, selectedBank }: StakeF
             <div
               className={`ml-3 mr-3 mb-3 w-auto h-auto flex flex-col justify-between border-4 border-selectionHighlight rounded-lg`}
             >
-              <div className="mt-2 w-full h-auto flex flex-col ">
-                <p className={`text-center text-xl text-defaultText`}>10-21% APR</p>
+              <div className="my-2 w-full h-auto flex flex-col ">
+                <p className={`text-center text-xl text-defaultText`}>{`${apyString}`}</p>
                 <p className={`text-center text-xs text-defaultText`}>in-kind</p>
-              </div>
-              <div className="mt-4 mb-2 w-full h-auto">
-                <p className={`text-center text-xl text-defaultText`}>+ Bonus 10-21% APR</p>
-                <p className={`text-center text-xs text-defaultText`}>in OH!</p>
               </div>
             </div>
           </div>

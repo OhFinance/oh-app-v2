@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Area, ComposedChart, Line, Tooltip, XAxis } from 'recharts';
 import { ChartTimeRange } from '~/stores/useChartStore';
 import { ChartPnL } from './chartPnL';
 
 export type ChartProps = {
-  data: null | unknown[];
+  data: null | { time: number; open: number; close: number; high: number }[];
   isLoading: boolean;
   width: number;
   height: number;
-  onChartTimeChanged: (timeRange: ChartTimeRange) => void;
+  onChartTimeChanged?: (timeRange: ChartTimeRange) => void;
 };
 
 function convertDate(timestamp: number) {
@@ -40,13 +40,32 @@ const CustomTooltip = ({
   return null;
 };
 
+const dividers: { [range in ChartTimeRange]: number } = {
+  hourly: 0,
+  daily: 86400,
+  weekly: 604800,
+  monthly: 2419200,
+  yearly: 0,
+  all: 0,
+};
+
 export function Chart({ data, isLoading, width, height, onChartTimeChanged }: ChartProps) {
+  const [divider, setDivider] = useState(0);
+
   function buttonClicked(event: React.MouseEvent<HTMLButtonElement>) {
-    onChartTimeChanged(event.currentTarget.dataset.time as ChartTimeRange);
+    const range = event.currentTarget.dataset.time as ChartTimeRange;
+    setDivider(dividers[range]);
   }
 
   const buttonStyle =
     'w-12 h-8 mt-2 ml-4 text-white bg-button hover:bg-buttonHighlight disabled:bg-buttonDisabled rounded-full';
+
+  const chartData = useMemo(() => {
+    if (divider === 0) {
+      return data;
+    }
+    return data?.filter((value) => value.time % divider === 0);
+  }, [data, divider]);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -116,7 +135,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
           <ComposedChart
             width={width}
             height={height - 70}
-            data={data as object[]}
+            data={chartData as object[]}
             margin={{ top: 25, right: 0, left: 0, bottom: 0 }}
           >
             <defs>

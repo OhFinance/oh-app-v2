@@ -1,3 +1,4 @@
+import { flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { banks } from '~/constants/banks';
 import { SetBankAPY } from './actions';
@@ -13,33 +14,32 @@ export default function Updater() {
 
   const fetchAllBankInfo = useCallback(async () => {
     let bankAPYs: SetBankAPY[] = [];
-    for (let i = 0; i < banks.length; i++) {
-      const bank = banks[i];
-      const entries = Object.entries(bank.contractAddressMap);
-      for (let i = 0; i < entries.length; i++) {
-        const [chainId, contract] = entries[i];
-        try {
-          const info = await fetchBankInfo(Number(chainId), contract);
-          if (info) {
-            bankAPYs.push({
-              chainId: Number(chainId),
-              address: contract,
-              apys: info.apys,
-            });
-          }
-        } catch (err) {
-          console.debug('No bank data could be fetched ', { chainId, contract });
+    const allBanks = flatten(Object.values(banks));
+
+    for (let i = 0; i < allBanks.length; i++) {
+      const bank = allBanks[i];
+      try {
+        const info = await fetchBankInfo(Number(bank.ohToken.chainId), bank.contractAddress);
+        if (info) {
+          bankAPYs.push({
+            chainId: Number(bank.ohToken.chainId),
+            address: bank.contractAddress,
+            apys: info.apys,
+          });
         }
+      } catch (err) {
+        console.debug('No bank data could be fetched ', {
+          chainId: bank.ohToken.chainId,
+          contract: bank.contractAddress,
+        });
       }
     }
-
     setBankAPYData(bankAPYs);
     setLoading(false);
   }, [banks, fetchBankInfo, setBankAPYData, setLoading]);
 
   useEffect(() => {
     if (loading && retries < MAXIMUM_RETRIES) {
-      console.log('fetching');
       fetchAllBankInfo();
     }
   }, [loading, retries, fetchAllBankInfo, setBankAPYData]);
