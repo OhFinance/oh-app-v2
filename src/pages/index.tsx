@@ -40,6 +40,7 @@ const Home: NextPage = React.forwardRef(function Home() {
       {hasWeb3 ? <WithWeb3 /> : <WithoutWeb3 />}
       <MarketingBody />
       <WalletModal />
+      {/* <ConfirmationModal /> */}
       <div className="fixed z-20 bottom-0 right-4 mb-5">
         {alerts.map((alert) => (
           <Alert

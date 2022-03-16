@@ -120,6 +120,29 @@ export default function Alert({
           </p>
         </div>
       </div>
+
+      <div className=" w-1/12 sm:w-auto flex justify-end items-start mr-1 mt-1">
+        <button
+          type="button"
+          className="text-white hover:text-indigo-100 outline-none active:text-indigo-200 transition duration-100"
+          onClick={removeThisAlert}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 xl:w-5 h-4 xl:h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }

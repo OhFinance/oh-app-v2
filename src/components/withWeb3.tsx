@@ -1,4 +1,5 @@
 import { BigintIsh, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
+import { SupportedChainId } from 'constants/chains';
 import JSBI from 'jsbi';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CaptureResize } from '~/components/captureResize';
@@ -173,7 +174,10 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
       estimate(parsedAmount.quotient.toString())
         .then((estimatedGasLimit) =>
           method((parsedAmount as CurrencyAmount<Token>).quotient.toString(), {
-            gasLimit: calculateGasMargin(estimatedGasLimit),
+            gasLimit:
+              chainId === SupportedChainId.MOONRIVER
+                ? 5000000
+                : calculateGasMargin(estimatedGasLimit),
           }).then((response) => {
             // setAttemptingTx(false)
             addTransaction(response, {
@@ -204,6 +208,33 @@ export const WithWeb3 = React.forwardRef(function WithWeb3() {
   }
   return (
     <>
+      <div
+        className="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+        id="exampleModalSm"
+        aria-labelledby="exampleModalSmLabel"
+        aria-modal="true"
+        role="dialog"
+      >
+        <div className="modal-dialog modal-sm relative w-auto pointer-events-none">
+          <div className="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+            <div className="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+              <h5
+                className="text-xl font-medium leading-normal text-gray-800"
+                id="exampleModalSmLabel"
+              >
+                Small modal
+              </h5>
+              <button
+                type="button"
+                className="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body relative p-4">...</div>
+          </div>
+        </div>
+      </div>
       <div
         className={`${styles['main-container']} mx-auto flex flex-row rounded-lg h-auto items-center`}
       >

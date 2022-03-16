@@ -72,6 +72,13 @@ export default function Updater(): null {
     const cancels = Object.keys(transactions)
       .filter((hash) => shouldCheck(lastBlockNumber, transactions[hash]))
       .map((hash) => {
+        const txInfo = transactions[hash];
+        addAlert(null, {
+          severity: 'success',
+          title: 'Transaction',
+          content: <TransactionSummary info={txInfo.info} awaiting />,
+          hash,
+        });
         const { promise, cancel } = getReceipt(hash);
         promise
           .then((receipt) => {

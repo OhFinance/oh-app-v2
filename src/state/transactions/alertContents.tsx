@@ -10,14 +10,31 @@ import {
   WithdrawTransactionInfo,
 } from './actions';
 
-export function TransactionSummary({ info }: { info: TransactionInfo }) {
-  switch (info.type) {
-    case TransactionType.APPROVAL:
-      return <ApprovalAlertContent {...info} />;
-    case TransactionType.DEPOSIT:
-      return <DepositAlertContent {...info} />;
-    case TransactionType.WITHDRAW:
-      return <WithdrawAlertContent {...info} />;
+export function TransactionSummary({
+  info,
+  awaiting,
+}: {
+  info: TransactionInfo;
+  awaiting?: boolean;
+}) {
+  if (awaiting) {
+    switch (info.type) {
+      case TransactionType.APPROVAL:
+        return <ApprovalAlertContent {...info} awaiting={awaiting} />;
+      case TransactionType.DEPOSIT:
+        return <DepositAlertContent {...info} awaiting={awaiting} />;
+      case TransactionType.WITHDRAW:
+        return <WithdrawAlertContent {...info} awaiting={awaiting} />;
+    }
+  } else {
+    switch (info.type) {
+      case TransactionType.APPROVAL:
+        return <ApprovalAlertContent {...info} />;
+      case TransactionType.DEPOSIT:
+        return <DepositAlertContent {...info} />;
+      case TransactionType.WITHDRAW:
+        return <WithdrawAlertContent {...info} />;
+    }
   }
 }
 
@@ -66,20 +83,52 @@ function FormattedCurrencyAmountManaged({
   ) : null;
 }
 
-function ApprovalAlertContent({ tokenAddress }: ApproveTransactionInfo) {
+function ApprovalAlertContent({
+  tokenAddress,
+  awaiting = false,
+}: ApproveTransactionInfo & { awaiting?: boolean }) {
   const token = useToken(tokenAddress);
+  if (awaiting) {
+    return <p>Confirming approval for {token?.symbol}...</p>;
+  }
   return <p>Approved {token?.symbol}</p>;
 }
 
-function DepositAlertContent({ currencyId, amountRaw }: DepositTransactionInfo) {
+function DepositAlertContent({
+  currencyId,
+  amountRaw,
+  awaiting,
+}: DepositTransactionInfo & { awaiting?: boolean }) {
+  if (awaiting) {
+    return (
+      <p>
+        Confirming{' '}
+        <FormattedCurrencyAmountManaged rawAmount={amountRaw} sigFigs={3} currencyId={currencyId} />{' '}
+        Deposit...
+      </p>
+    );
+  }
   return (
     <p>
-      Deposit{' '}
+      Deposited{' '}
       <FormattedCurrencyAmountManaged rawAmount={amountRaw} sigFigs={3} currencyId={currencyId} />
     </p>
   );
 }
-function WithdrawAlertContent({ currencyId, amountRaw }: WithdrawTransactionInfo) {
+function WithdrawAlertContent({
+  currencyId,
+  amountRaw,
+  awaiting,
+}: WithdrawTransactionInfo & { awaiting?: boolean }) {
+  if (awaiting) {
+    return (
+      <p>
+        Confirming{' '}
+        <FormattedCurrencyAmountManaged rawAmount={amountRaw} sigFigs={3} currencyId={currencyId} />{' '}
+        Withdrawal...
+      </p>
+    );
+  }
   return (
     <p>
       Withdraw{' '}
