@@ -103,7 +103,7 @@ export default function Alert({
         </svg>
       </div>
 
-      <div className="px-4 py-2 -mx-3">
+      <div className="px-4 py-2 -mx-3 mr-4">
         <div className="mx-3">
           <p className="text-sm text-gray-600 dark:text-gray-200">
             {content}{' '}
@@ -121,7 +121,7 @@ export default function Alert({
         </div>
       </div>
 
-      <div className=" w-1/12 sm:w-auto flex justify-end items-start mr-1 mt-1">
+      <div className="order-2 sm:order-none w-1/12 sm:w-auto flex justify-end items-start sm:absolute sm:right-0 sm:mr-2 xl:mr-3">
         <button
           type="button"
           className="text-white hover:text-indigo-100 outline-none active:text-indigo-200 transition duration-100"
