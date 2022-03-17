@@ -21,6 +21,7 @@ const NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ETHEREUM_MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.MOONRIVER]: `https://rpc.api.moonriver.moonbeam.network`,
   // TODO: INFURA ALTERNATIVE
   [SupportedChainId.AVALANCHE]: ``,
 };
