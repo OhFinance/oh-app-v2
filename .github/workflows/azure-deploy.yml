@@ -3,8 +3,7 @@ name: Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - v2beta-cicd
-      - v2-beta
+      - main
   #pull_request:
   #  types: [opened, synchronize, reopened, closed]
   #  branches:
