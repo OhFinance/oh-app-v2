@@ -1,7 +1,9 @@
+import { CurrencyAmount, Token } from '@uniswap/sdk-core';
+import { CHAIN_INFO } from 'constants/chains';
+import { useActiveWeb3React } from 'hooks/web3';
 import React from 'react';
-import { Link } from 'rebass';
 import styled, { css, keyframes } from 'styled-components';
-import { ThemedText } from 'theme';
+import { ExternalLink, ThemedText } from 'theme';
 import { ModalView } from '../modalViews';
 import depositAnimation from './animations/deposit.gif';
 import loader from './animations/loader.svg';
@@ -60,12 +62,13 @@ const Icon = styled.img({
   position: 'relative',
 });
 
-const BlockExplorer = styled(Link)({
+const BlockExplorer = styled(ExternalLink)({
   fontSize: '12px',
   fontWeight: 400,
   textDecoration: 'none',
   color: '#fff',
   cursor: 'pointer',
+  marginTop: 4,
 });
 
 interface ModalIconProps {
@@ -74,8 +77,7 @@ interface ModalIconProps {
 
 interface DepositProps extends ModalIconProps {
   view: ModalView.DEPOSIT | ModalView.DEPOSITING;
-  amount: string;
-  token: string;
+  amount: CurrencyAmount<Token>;
 }
 
 interface DepositCompleteProps extends ModalIconProps {
@@ -85,8 +87,7 @@ interface DepositCompleteProps extends ModalIconProps {
 
 interface WithdrawProps extends ModalIconProps {
   view: ModalView.WITHDRAW | ModalView.WITHDRAWING;
-  amountIn: string;
-  amountOut: string;
+  amount: CurrencyAmount<Token>;
 }
 
 interface WithdrawCompleteProps extends ModalIconProps {
@@ -97,6 +98,19 @@ interface WithdrawCompleteProps extends ModalIconProps {
 type ViewProps = DepositProps | DepositCompleteProps | WithdrawProps | WithdrawCompleteProps;
 
 export default function ModalIcon(info: ViewProps) {
+  const { chainId } = useActiveWeb3React();
+  let chain = chainId ? CHAIN_INFO[chainId] : undefined;
+  function getExplorerUrl(hash: string) {
+    if (chain) {
+      let prefix = chain.explorer;
+      if (prefix.charAt(prefix.length - 1) === '/') {
+        prefix = prefix.substring(0, prefix.length - 1);
+      }
+      return prefix + '/tx/' + hash;
+    } else {
+      return 'https://etherscan.io/tx/' + hash;
+    }
+  }
   function getContent() {
     switch (info.view) {
       case ModalView.DEPOSIT:
@@ -105,8 +119,8 @@ export default function ModalIcon(info: ViewProps) {
             <IconContainer>
               <Icon src={depositAnimation} alt="Depositing animation" />
             </IconContainer>
-            <ThemedText.H1 fontWeight={500}>{info.amount}</ThemedText.H1>
-            <ThemedText.Main>{info.token} Bank Tokens</ThemedText.Main>
+            <ThemedText.H1 fontWeight={500}>{info.amount.toFixed(3)}</ThemedText.H1>
+            <ThemedText.Main>{info.amount.currency.symbol} Bank Tokens</ThemedText.Main>
           </>
         );
       case ModalView.DEPOSITING:
@@ -116,8 +130,11 @@ export default function ModalIcon(info: ViewProps) {
               <Loader src={loader} alt="loader" />
               <Icon src={pig} alt="pig" width={'45px'} />
             </IconContainer>
-            <ThemedText.H1 fontWeight={500}>{info.amount}</ThemedText.H1>
-            <ThemedText.Main>{info.token} Bank Tokens</ThemedText.Main>
+            <ThemedText.H1 fontWeight={500}>{info.amount.toFixed(3)}</ThemedText.H1>
+            <ThemedText.Main>{info.amount.currency.symbol} Bank Tokens</ThemedText.Main>
+            <ThemedText.Main fontWeight={400} fontSize="12px" marginTop="4px">
+              Confirm this transaction in your wallet
+            </ThemedText.Main>
           </>
         );
       case ModalView.DEPOSIT_COMPLETE:
@@ -127,7 +144,7 @@ export default function ModalIcon(info: ViewProps) {
               <Icon src={pig_success} alt="pig success" />
             </IconContainer>
             <ThemedText.Main fontWeight={400}>Transaction Submitted</ThemedText.Main>
-            <BlockExplorer fontWeight={400} fontSize="12px" href="#" marginTop={'8px'}>
+            <BlockExplorer href={getExplorerUrl(info.hash)}>
               View on Block Explorer{' '}
               <svg
                 width="11"
@@ -158,8 +175,8 @@ export default function ModalIcon(info: ViewProps) {
             <IconContainer>
               <Icon src={pig_withdraw} alt="Withdraw" />
             </IconContainer>
-            <ThemedText.H1 fontWeight={500}>{info.amountIn}</ThemedText.H1>
-            <ThemedText.Main>TODO Bank Tokens</ThemedText.Main>
+            <ThemedText.H1 fontWeight={500}>{info.amount.toFixed(3)}</ThemedText.H1>
+            <ThemedText.Main>{info.amount.currency.symbol} Bank Tokens</ThemedText.Main>
           </>
         );
       case ModalView.WITHDRAWING:
@@ -168,8 +185,8 @@ export default function ModalIcon(info: ViewProps) {
             <IconContainer>
               <Icon src={withdrawingAnimation} alt="Withdrawing" />
             </IconContainer>
-            <ThemedText.H1 fontWeight={500}>Withdrawing</ThemedText.H1>
-            <ThemedText.Main>7000.058 USDC for 6783.157 OH-USDC</ThemedText.Main>
+            <ThemedText.H1 fontWeight={500}>{info.amount.toFixed(3)}</ThemedText.H1>
+            <ThemedText.Main>{info.amount.currency.symbol} Bank Tokens</ThemedText.Main>
             <ThemedText.Main fontWeight={400} fontSize="12px" marginTop="4px">
               Confirm this transaction in your wallet
             </ThemedText.Main>
@@ -182,7 +199,7 @@ export default function ModalIcon(info: ViewProps) {
               <Icon src={withdrawSuccess} alt="pig success" />
             </IconContainer>
             <ThemedText.Main fontWeight={400}>Transaction Submitted</ThemedText.Main>
-            <BlockExplorer fontWeight={400} fontSize="12px" href="#" marginTop={'8px'}>
+            <BlockExplorer href={getExplorerUrl(info.hash)}>
               View on Block Explorer{' '}
               <svg
                 width="11"

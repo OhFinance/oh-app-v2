@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { ThemedText } from 'theme';
 
 const Wrapper = styled.div(({ theme }) => ({
-  padding: '20px 30px',
+  padding: '20px 30px 60px 30px',
 
   position: 'relative',
   boxSizing: 'border-box',
@@ -50,9 +50,9 @@ const StyledCloseButton = styled(CloseButton)(({ theme, color }) => ({
 interface OhModalProps extends ModalProps {
   title: string;
 }
-export default function OhModal({ children, title, ...props }: OhModalProps) {
+export default function OhModal({ children, title, onDismiss, ...props }: OhModalProps) {
   return (
-    <Modal {...props}>
+    <Modal onDismiss={onDismiss} {...props}>
       <Wrapper>
         <Flex
           alignItems="flex-start"
@@ -95,7 +95,7 @@ export default function OhModal({ children, title, ...props }: OhModalProps) {
             </svg>
             <Title>{title}</Title>
           </div>
-          <StyledCloseButton color="#009CE2" />
+          <StyledCloseButton color="#009CE2" onClick={onDismiss} />
         </Flex>
         {children}
       </Wrapper>

@@ -1,22 +1,19 @@
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import Button from 'components/Button';
 import { CurrencyInput } from 'components/CurrencyInput';
+import DepositModal from 'components/_modals/DepositModal';
+import WithdrawModal from 'components/_modals/WithdrawModal';
 import { Bank } from 'constants/banks';
-import { SupportedChainId } from 'constants/chains';
 import { useVirtualBalance } from 'hooks/calls/bank/useVirtualBalance';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
-import { useBankContract } from 'hooks/contracts/useBankContract';
 import { ApprovalState, useApproveCallback } from 'hooks/transactionCallbacks/useApproveCallback';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Flex } from 'rebass';
+import { useModalOpen, useToggleModal } from 'state/application/hooks';
+import { ApplicationModal } from 'state/application/reducer';
 import { useBankAPYData } from 'state/banks/hooks';
 import { useDerivedStakeInfo, useStakeActionHandlers, useStakeState } from 'state/stake/hooks';
 import { Field } from 'state/stake/reducer';
-import { TransactionType } from 'state/transactions/actions';
-import { useTransactionAdder } from 'state/transactions/hooks';
 import styled from 'styled-components';
-import { calculateGasMargin } from 'utilities/calculateGasMargin';
-import { currencyId } from 'utilities/currencyId';
 import { useActiveWeb3React } from '~/hooks/web3';
 
 const ContainerBase = styled.div(({ theme }) => ({
@@ -144,7 +141,7 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
     [currencyBalances, onUserInput]
   );
 
-  const isValidDeposit = !inputError || !inputError[Field.DEPOSIT];
+  const isValid = !inputError || !inputError[field];
 
   // START APPROVAL
   const [approvalState, approveCallback] = useApproveCallback(
@@ -186,161 +183,137 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
   }, [apys]);
   // END STATISTICS
 
-  const bankContract = useBankContract(bank.contractAddress);
-  const addTransaction = useTransactionAdder();
+  const isDepositModalOpen = useModalOpen(ApplicationModal.DEPOSIT);
+  const isWithdrawModalOpen = useModalOpen(ApplicationModal.WITHDRAW);
 
-  // TODO: open deposit modal
-  const onDeposit = useCallback(
-    async (field: Field) => {
-      let parsedAmount = parsedAmounts[field];
-      let currency = currencies[field];
-
-      if (!chainId || !library || !account || !bankContract || !parsedAmount || !currency) return;
-
-      let estimate = bankContract.estimateGas.deposit;
-
-      let method = bankContract.deposit;
-
-      estimate(parsedAmount.quotient.toString())
-        .then((estimatedGasLimit) =>
-          method((parsedAmount as CurrencyAmount<Token>).quotient.toString(), {
-            gasLimit:
-              chainId === SupportedChainId.MOONRIVER
-                ? 5000000
-                : calculateGasMargin(estimatedGasLimit),
-          }).then((response) => {
-            // setAttemptingTx(false)
-            addTransaction(response, {
-              type: TransactionType.DEPOSIT,
-              currencyId: currencyId(currency as Currency),
-              amountRaw: (parsedAmount as CurrencyAmount<Token>).quotient.toString(),
-            });
-          })
-        )
-        .catch((error) => {
-          if (error?.code !== 4001) {
-            console.error(error);
-          }
-        });
-    },
-    [chainId, library, account, parsedAmounts, currencies, addTransaction, bankContract]
+  const toggleModal = useToggleModal(
+    field === Field.DEPOSIT ? ApplicationModal.DEPOSIT : ApplicationModal.WITHDRAW
   );
 
   if (!bank) {
     return <h1>Not a bank</h1>;
   }
   return (
-    <DepositContainer
-      style={
-        buttonHeight !== undefined
-          ? {
-              marginBottom: `${buttonHeight / 2}px`,
-            }
-          : undefined
-      }
-    >
-      <Flex alignItems={'center'}>
-        <Logo src={bank.image} alt="placeholder" />
-        <CardTokenTitle>
-          <Symbol>{bank.ohToken.symbol}</Symbol>
-          {field === Field.DEPOSIT && (
-            <SubHeading>Deposit {bank.underlyingToken.symbol} to earn yield</SubHeading>
-          )}
-        </CardTokenTitle>
-      </Flex>
-      {field === Field.DEPOSIT && (
-        <>
-          <APRContainer>
-            <APRTitle>
-              <span style={{ fontSize: '14px' }}>Earning Rate</span>
-              <br /> APY
-            </APRTitle>
-            <APRValue>{apyString}</APRValue>
-          </APRContainer>
-          <Stat>
-            TVL{' '}
-            <span>
-              ${totalValueLocked ? totalValueLocked.toFixed(2, { groupSeparator: ',' }) : '---'}
-            </span>
-          </Stat>
-          <Stat>
-            Share Price{' '}
-            <span>${sharePrice ? sharePrice.toFixed(3, { groupSeperator: ',' }) : '---'}</span>
-          </Stat>
-        </>
-      )}
-      <CurrencyInput
-        logoUrl={
-          field === Field.WITHDRAW
-            ? bank.image
-            : `/img/tokens/${bank.underlyingToken.address.toLowerCase()}.png`
-        }
-        value={field === Field.DEPOSIT ? depositTypedValue : withdrawTypedValue}
-        id={`input-${bank.contractAddress}`}
-        currency={currencies[field]}
-        onUserInput={handleType}
-        onMax={() => handleMax(field)}
+    <>
+      {isDepositModalOpen && <DepositModal bank={bank} />}
+      {isWithdrawModalOpen && <WithdrawModal bank={bank} />}
+
+      <DepositContainer
         style={
           buttonHeight !== undefined
             ? {
-                bottom: `-${buttonHeight / 2 + 12}px`,
-                marginTop: `-${buttonHeight / (2 + 12) - (field === Field.DEPOSIT ? 30 : 0)}px`,
+                marginBottom: `${buttonHeight / 2}px`,
               }
             : undefined
         }
-        showMaxButton
-      />
-      {!account ? (
-        <OverflowingButton
-          ref={buttonRef}
-          size="large"
-          fullWidth
-          disabled={!isValidDeposit}
+      >
+        <Flex alignItems={'center'}>
+          <Logo src={bank.image} alt="placeholder" />
+          <CardTokenTitle>
+            <Symbol>{bank.ohToken.symbol}</Symbol>
+            {field === Field.DEPOSIT && (
+              <SubHeading>Deposit {bank.underlyingToken.symbol} to earn yield</SubHeading>
+            )}
+          </CardTokenTitle>
+        </Flex>
+        {field === Field.DEPOSIT && (
+          <>
+            <APRContainer>
+              <APRTitle>
+                <span style={{ fontSize: '14px' }}>Earning Rate</span>
+                <br /> APY
+              </APRTitle>
+              <APRValue>{apyString}</APRValue>
+            </APRContainer>
+            <Stat>
+              TVL{' '}
+              <span>
+                ${totalValueLocked ? totalValueLocked.toFixed(2, { groupSeparator: ',' }) : '---'}
+              </span>
+            </Stat>
+            <Stat>
+              Share Price{' '}
+              <span>${sharePrice ? sharePrice.toFixed(3, { groupSeperator: ',' }) : '---'}</span>
+            </Stat>
+          </>
+        )}
+        <CurrencyInput
+          logoUrl={
+            field === Field.WITHDRAW
+              ? bank.image
+              : `/img/tokens/${bank.underlyingToken.address.toLowerCase()}.png`
+          }
+          value={field === Field.DEPOSIT ? depositTypedValue : withdrawTypedValue}
+          id={`input-${bank.contractAddress}`}
+          currency={currencies[field]}
+          onUserInput={handleType}
+          onMax={() => handleMax(field)}
           style={
             buttonHeight !== undefined
               ? {
-                  bottom: `-${buttonHeight / 2 + 20}px`,
+                  bottom: `-${buttonHeight / 2 + 12}px`,
+                  marginTop: `-${buttonHeight / (2 + 12) - (field === Field.DEPOSIT ? 30 : 0)}px`,
                 }
               : undefined
           }
-        >
-          Connect Wallet
-        </OverflowingButton>
-      ) : showApproveFlow ? (
-        <OverflowingButton
-          ref={buttonRef}
-          size="large"
-          fullWidth
-          disabled={approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-          style={
-            buttonHeight !== undefined
-              ? {
-                  bottom: `-${buttonHeight / 2 + 20}px`,
-                }
-              : undefined
-          }
-        >
-          {approvalState === ApprovalState.APPROVED
-            ? `You can now deposit ${currencies.DEPOSIT?.symbol}`
-            : `Approve ${currencies.DEPOSIT?.symbol}`}
-        </OverflowingButton>
-      ) : (
-        <OverflowingButton
-          ref={buttonRef}
-          size="large"
-          fullWidth
-          disabled={!isValidDeposit}
-          style={
-            buttonHeight !== undefined
-              ? {
-                  bottom: `-${buttonHeight / 2 + 20}px`,
-                }
-              : undefined
-          }
-        >
-          {inputError?.DEPOSIT ? inputError.DEPOSIT : 'Deposit'}
-        </OverflowingButton>
-      )}
-    </DepositContainer>
+          showMaxButton
+        />
+        {!account ? (
+          <OverflowingButton
+            ref={buttonRef}
+            size="large"
+            fullWidth
+            style={
+              buttonHeight !== undefined
+                ? {
+                    bottom: `-${buttonHeight / 2 + 20}px`,
+                  }
+                : undefined
+            }
+          >
+            Connect Wallet
+          </OverflowingButton>
+        ) : showApproveFlow ? (
+          <OverflowingButton
+            ref={buttonRef}
+            size="large"
+            fullWidth
+            disabled={approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+            style={
+              buttonHeight !== undefined
+                ? {
+                    bottom: `-${buttonHeight / 2 + 20}px`,
+                  }
+                : undefined
+            }
+          >
+            {approvalState === ApprovalState.APPROVED
+              ? `You can now deposit ${currencies.DEPOSIT?.symbol}`
+              : `Approve ${currencies.DEPOSIT?.symbol}`}
+          </OverflowingButton>
+        ) : (
+          <OverflowingButton
+            ref={buttonRef}
+            size="large"
+            fullWidth
+            style={
+              buttonHeight !== undefined
+                ? {
+                    bottom: `-${buttonHeight / 2 + 20}px`,
+                  }
+                : undefined
+            }
+            disabled={!isValid}
+            onClick={toggleModal}
+          >
+            {inputError?.[field]
+              ? inputError[field]
+              : field === Field.DEPOSIT
+              ? 'Deposit'
+              : 'Withdraw'}
+          </OverflowingButton>
+        )}
+      </DepositContainer>
+    </>
   );
 }

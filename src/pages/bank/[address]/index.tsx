@@ -212,6 +212,7 @@ export default function BankPage() {
       {/* <OhModal title="Deposit USDC.e" isOpen onDismiss={() => false}>
         <DepositView />
       </OhModal> */}
+
       <Left>
         <DepositCard bank={bank} field={Field.DEPOSIT} />
         <DepositCard bank={bank} field={Field.WITHDRAW} />
