@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core';
 import Button from 'components/Button';
 import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { formatCurrencyAmount } from 'utilities/formatCurrencyAmount';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { useCurrencyBalance } from '~/state/wallet/hooks';
 import { escapeRegExp } from '~/utilities';
@@ -98,7 +99,7 @@ export function CurrencyInput({
   return (
     <Container style={style}>
       <Balance>
-        Available Balance <span>233,023.02</span>
+        Available Balance <span>{formatCurrencyAmount(selectedCurrencyBalance, 4)}</span>
       </Balance>
       <InputContainer>
         <Content>

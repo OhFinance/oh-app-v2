@@ -10,6 +10,7 @@ import Button from './Button';
 import { HintButton } from './hintButton';
 import UnstyledButton from './UnstyledButton';
 import { WalletDisplay } from './walletDisplay';
+import Web3Status from './Web3Status';
 
 const selectNetworkHint = 'Select which network you want to connect to.';
 
@@ -212,7 +213,7 @@ export function Navbar() {
               </ExpandIcon>
             </NetworksButton>
           </NetworksContainer>
-          <ConnectButton>Connect Wallet</ConnectButton>
+          <Web3Status />
         </HeaderContent>
       </HeaderFrame>
     );

@@ -1,8 +1,10 @@
 import { useWeb3React } from '@web3-react/core';
+import Identicon from 'components/Identicon';
 import React from 'react';
 import { Button, Flex } from 'rebass';
 import styled from 'styled-components';
-import { BorderedLogo } from 'theme';
+import { ThemedText } from 'theme';
+import { shortenAddress } from 'utilities';
 
 const ConnectButton = styled(Button)({
   alignSelf: 'stretch',
@@ -11,7 +13,9 @@ const ConnectButton = styled(Button)({
 const Web3StatusConnected = styled.div(({ theme }) => ({
   alignSelf: 'stretch',
   backgroundColor: theme.bg2,
-  padding: '20px 7px',
+  padding: '0px 20px',
+
+  borderRadius: 20,
   boxSizing: 'border-box',
   color: '#fff',
 }));
@@ -22,16 +26,19 @@ function Web3StatusInner() {
   if (account) {
     return (
       <Web3StatusConnected>
-        <Flex alignItems={'center'}>
-          <BorderedLogo></BorderedLogo>
+        <Flex alignItems={'center'} height="100%">
+          <Identicon />
+          <ThemedText.Main fontSize="20px" lineHeight="20px" paddingLeft="8px">
+            {shortenAddress(account)}
+          </ThemedText.Main>
         </Flex>
       </Web3StatusConnected>
     );
   } else {
+    return <ConnectButton>Connect Wallet</ConnectButton>;
   }
-  return <></>;
 }
 
 export default function Web3Status() {
-  return <ConnectButton>Connect Wallet</ConnectButton>;
+  return <Web3StatusInner />;
 }

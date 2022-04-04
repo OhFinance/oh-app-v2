@@ -185,3 +185,12 @@ export const banks: { [chainId: number]: Bank[] } = {
     },
   ],
 };
+export const banksByContract: { [address: string]: Bank } = Object.values(banks).reduce(
+  (prev, curr) => {
+    curr.forEach((bank) => {
+      prev[bank.contractAddress] = bank;
+    });
+    return prev;
+  },
+  {} as { [address: string]: Bank }
+);

@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import { parseUnits } from 'ethers/lib/utils';
 import JSBI from 'jsbi';
 import { ReactNode, useCallback, useMemo } from 'react';
-import { banks } from '~/constants/banks';
+import { Bank } from '~/constants/banks';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { AppState } from '..';
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -53,16 +53,16 @@ export function tryParseAmount<T extends Currency>(
 
 // TEMP
 
-export function useDerivedStakeInfo(bankIndex: number) {
-  const { chainId, account } = useActiveWeb3React();
+export function useDerivedStakeInfo(bank?: Bank) {
+  const { account } = useActiveWeb3React();
 
   const {
     [Field.DEPOSIT]: { typedValue: depositTypedValue },
     [Field.WITHDRAW]: { typedValue: withdrawTypedValue },
   } = useStakeState();
 
-  const depositCurrency = banks[chainId || 1]?.[bankIndex]?.underlyingToken;
-  const withdrawCurrency = banks[chainId || 1]?.[bankIndex]?.ohToken;
+  const depositCurrency = bank?.underlyingToken;
+  const withdrawCurrency = bank?.ohToken;
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     depositCurrency ?? undefined,

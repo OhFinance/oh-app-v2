@@ -1,9 +1,13 @@
 import Button from 'components/Button';
-import { CurrencyInput } from 'components/CurrencyInput';
+import { banks } from 'constants/banks';
+import { useRouter } from 'next/router';
 import React, { useMemo, useRef } from 'react';
 import { Flex } from 'rebass';
+import { Field } from 'state/stake/reducer';
 import styled from 'styled-components';
 import placeholder from '~/assets/img/oh-usdc-moonriver.png';
+import { useActiveWeb3React } from '~/hooks/web3';
+import DepositCard from './DepositCard';
 
 const Grid = styled.div({
   display: 'grid',
@@ -184,7 +188,14 @@ const OverflowingButton = styled(Button)({
 });
 
 export default function BankPage() {
+  const { account, chainId } = useActiveWeb3React();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const router = useRouter();
+  const { address } = router.query;
+  const bank = useMemo(
+    () => (address && chainId ? banks[chainId].find((b) => b.contractAddress === address) : null),
+    [address, chainId]
+  );
 
   const buttonHeight: number | null = useMemo(() => {
     if (buttonRef.current) {
@@ -193,119 +204,17 @@ export default function BankPage() {
     return null;
   }, [buttonRef.current]);
 
+  if (!bank) {
+    return <h1>Not a bank</h1>;
+  }
   return (
     <Grid>
       {/* <OhModal title="Deposit USDC.e" isOpen onDismiss={() => false}>
         <DepositView />
       </OhModal> */}
       <Left>
-        <DepositContainer
-          style={
-            buttonHeight !== null
-              ? {
-                  marginBottom: `${buttonHeight / 2}px`,
-                }
-              : undefined
-          }
-        >
-          <Flex alignItems={'center'}>
-            <Logo src={placeholder} alt="placeholder" />
-            <CardTokenTitle>
-              <Symbol>OH! USDC.e</Symbol>
-              <SubHeading>Deposit USDC.e to earn yield</SubHeading>
-            </CardTokenTitle>
-          </Flex>
-          <APRContainer>
-            <APRTitle>
-              <span style={{ fontSize: '14px' }}>Earning Rate</span>
-              <br /> APY
-            </APRTitle>
-            <APRValue>10.00%</APRValue>
-          </APRContainer>
-          <Stat>
-            TVL <span>$768,000.00</span>
-          </Stat>
-          <Stat>
-            Share Price <span>$1.031</span>
-          </Stat>
-
-          <CurrencyInput
-            logoUrl={'/img/usdc.svg'}
-            value="12"
-            id="input"
-            onUserInput={(some) => null}
-            style={
-              buttonHeight !== null
-                ? {
-                    bottom: `-${buttonHeight / 2 + 12}px`,
-                    marginTop: `-${buttonHeight / (2 + 12) - 30}px`,
-                  }
-                : undefined
-            }
-            showMaxButton
-          />
-
-          <OverflowingButton
-            ref={buttonRef}
-            size="large"
-            fullWidth
-            style={
-              buttonHeight !== null
-                ? {
-                    bottom: `-${buttonHeight / 2 + 20}px`,
-                  }
-                : undefined
-            }
-          >
-            Deposit
-          </OverflowingButton>
-        </DepositContainer>
-
-        <DepositContainer
-          style={
-            buttonHeight !== null
-              ? {
-                  marginBottom: `${buttonHeight / 2}px`,
-                }
-              : undefined
-          }
-        >
-          <Flex alignItems={'center'}>
-            <Logo src={placeholder} alt="placeholder" />
-            <CardTokenTitle>
-              <Symbol>OH! USDC.e</Symbol>
-            </CardTokenTitle>
-          </Flex>
-          <CurrencyInput
-            logoUrl={'/img/usdc.svg'}
-            value="12"
-            id="input"
-            onUserInput={(some) => null}
-            style={
-              buttonHeight !== null
-                ? {
-                    bottom: `-${buttonHeight / 2 + 12}px`,
-                    marginTop: `-${buttonHeight / (2 + 12)}px`,
-                  }
-                : undefined
-            }
-            showMaxButton
-          />
-          <OverflowingButton
-            ref={buttonRef}
-            size="large"
-            fullWidth
-            style={
-              buttonHeight !== null
-                ? {
-                    bottom: `-${buttonHeight / 2 + 20}px`,
-                  }
-                : undefined
-            }
-          >
-            Withdraw
-          </OverflowingButton>
-        </DepositContainer>
+        <DepositCard bank={bank} field={Field.DEPOSIT} />
+        <DepositCard bank={bank} field={Field.WITHDRAW} />
       </Left>
       <RightContainer>
         <Flex alignItems="flex-end" marginBottom={25}>
