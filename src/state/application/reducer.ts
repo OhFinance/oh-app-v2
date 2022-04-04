@@ -10,6 +10,9 @@ export type PopupContent = {
 
 export enum ApplicationModal {
   WALLET,
+  DEPOSIT,
+  WITHDRAW,
+  NETWORK_SELECTOR,
 }
 
 type Alert = { props: AlertProps; key: string; removeAfterMs: number | null; show: boolean };

@@ -1,5 +1,6 @@
-const ethereumLogoUrl = '/img/ethereum-logo.png';
-const avalancheLogoUrl = '/img/avalanche-logo.png';
+const ethereumLogoUrl = '/img/chains/ethereum.png';
+const avalancheLogoUrl = '/img/chains/avalanche.png';
+const moonriverLogoUrl = '/img/chains/moonriver.svg';
 
 export enum SupportedChainId {
   ETHEREUM_MAINNET = 1,
@@ -60,7 +61,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://docs.moonbeam.network/builders/get-started/networks/moonriver/',
     explorer: 'https://blockscout.moonriver.moonbeam.network/',
     label: 'Moonriver',
-    logoUrl: avalancheLogoUrl,
+    logoUrl: moonriverLogoUrl,
     nativeCurrency: { name: 'MOVR', symbol: 'MOVR', decimals: 18 },
     rpcUrls: ['https://rpc.api.moonriver.moonbeam.network/'],
   },

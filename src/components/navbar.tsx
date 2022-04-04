@@ -11,6 +11,7 @@ import { HintButton } from './hintButton';
 import UnstyledButton from './UnstyledButton';
 import { WalletDisplay } from './walletDisplay';
 import Web3Status from './Web3Status';
+import NetworkSelector from './_navigation/NetworkSelector';
 
 const selectNetworkHint = 'Select which network you want to connect to.';
 
@@ -195,24 +196,8 @@ export function Navbar() {
         <HeaderContent>
           <NavLink>FAQ</NavLink>
           <NavLink>Docs</NavLink>
-          <NetworksContainer>
-            <p>Network</p>
-            <NetworksButton>
-              <NetworkLogo>
-                <img src={CHAIN_INFO[43114].logoUrl} alt="avalanche" />
-              </NetworkLogo>
-              <Network>Avalanche</Network>
-              <ExpandIcon
-                width="12"
-                height="9"
-                viewBox="0 0 12 9"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M2 2L6 6L10 2" stroke="#009CE2" strokeWidth="3" strokeLinecap="round" />
-              </ExpandIcon>
-            </NetworksButton>
-          </NetworksContainer>
+          <NetworkSelector />
+
           <Web3Status />
         </HeaderContent>
       </HeaderFrame>

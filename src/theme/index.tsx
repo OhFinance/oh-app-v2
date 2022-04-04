@@ -191,6 +191,10 @@ export const ThemedText = {
 };
 
 export const ThemedGlobalStyle = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+  }
+  
   html {
     color: ${({ theme }) => theme.white};
     background-color: ${({ theme }) => theme.bg0} !important;
