@@ -1,9 +1,11 @@
+import '@reach/dialog/styles.css';
 import { Web3ReactProvider } from '@web3-react/core';
 import BigNumber from 'bignumber.js';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
+import ThemeProvider, { ThemedGlobalStyle } from 'theme';
 import { Layout } from '~/components/layout';
 import Web3ReactManager from '~/components/Web3ReactManager';
 import store from '~/state';
@@ -13,8 +15,6 @@ import MulticallUpdater from '~/state/multicall/updater';
 import TransactionUpdater from '~/state/transactions/updater';
 import { selectSetTheme, Theme, useThemeStore } from '~/stores/useThemeStore';
 import getLibrary from '~/utilities/getLibrary';
-import '~/__styles__/globals.css';
-import '~/__styles__/tailwind.css';
 
 // set big number precision
 BigNumber.config({
@@ -59,9 +59,14 @@ export default function App({ Component, pageProps }: AppProps) {
         <Provider store={store}>
           <Updaters />
           <Web3ReactManager>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <ThemeProvider>
+              <>
+                <ThemedGlobalStyle />
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </>
+            </ThemeProvider>
           </Web3ReactManager>
         </Provider>
       </Web3ProviderNetwork>

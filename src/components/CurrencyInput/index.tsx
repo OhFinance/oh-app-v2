@@ -1,9 +1,67 @@
 import { Currency } from '@uniswap/sdk-core';
+import Button from 'components/Button';
 import React, { useRef } from 'react';
+import styled from 'styled-components';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { useCurrencyBalance } from '~/state/wallet/hooks';
 import { escapeRegExp } from '~/utilities';
-import styles from '../__styles__/usdcInput.module.css';
+
+const Container = styled.div(({ theme }) => ({
+  position: 'relative',
+}));
+const Balance = styled.p(({ theme }) => ({
+  margin: 0,
+  color: theme.grey,
+  fontSize: '14px',
+  lineHeight: '16px',
+  textAlign: 'right',
+  padding: '0px 0px 8px',
+  '& span': {
+    color: theme.white,
+  },
+}));
+
+const InputContainer = styled.div(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  position: 'relative',
+  borderRadius: '20px',
+  backgroundColor: theme.inputBG,
+  boxSizing: 'border-box',
+  width: '100%',
+}));
+
+const Content = styled.div(({ theme }) => ({
+  display: 'flex',
+  ...theme.flexRowNoWrap,
+  padding: '16px 20px 17px 20px',
+}));
+
+const Input = styled.input(({ theme }) => ({
+  border: 'none',
+  outline: 'none',
+  background: 'none',
+  color: '#A4AADF',
+  fontSize: '20px',
+  flex: '0 1 auto',
+  maxWidth: '220px',
+}));
+
+const Symbol = styled.img(({ theme }) => ({
+  width: 24,
+  height: 24,
+  borderRadius: 50,
+  marginRight: '8px',
+  boxShadow: '0px 3px 12px 0px rgba(0, 0, 0, 0.14)',
+}));
+
+const MaxButton = styled(Button)(({ theme }) => ({
+  marginRight: -8,
+  alignSelf: 'center',
+  padding: '12px 17px 13px 17px',
+  fontSize: '12px',
+  fontWeight: 600,
+}));
 
 interface CurrencyInputProps {
   value: string;
@@ -12,6 +70,8 @@ interface CurrencyInputProps {
   showMaxButton?: boolean;
   currency?: Currency | null;
   id: string;
+  logoUrl?: string;
+  style?: React.CSSProperties;
 }
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." characters via in a non-capturing group
@@ -23,6 +83,8 @@ export function CurrencyInput({
   showMaxButton,
   currency,
   id,
+  logoUrl,
+  style,
 }: CurrencyInputProps) {
   const { account } = useActiveWeb3React();
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined);
@@ -34,18 +96,37 @@ export function CurrencyInput({
     }
   };
   return (
-    <>
-      <div ref={inputRef} className="w-full bg-inputBG rounded-lg w-full flex flex-row">
-        {/* {!walletConnected && (
-          <CaptureResize captureRef={inputRef}>
-            {({ width, height }) => (
-              <div
-                className={`flex flex-col absolute bg-black bg-opacity-50 z-10 items-center justify-center`}
-                style={{ width, height }}
-              ></div>
-            )}
-          </CaptureResize>
-        )} */}
+    <Container style={style}>
+      <Balance>
+        Available Balance <span>233,023.02</span>
+      </Balance>
+      <InputContainer>
+        <Content>
+          {logoUrl && <Symbol src={logoUrl} alt="placeholder" />}
+          <Input
+            value={value}
+            onChange={(event) => {
+              enforcer(event.target.value.replace(/,/g, '.'));
+            }}
+            type="text"
+            inputMode="decimal"
+            autoComplete="off"
+            autoCorrect="off"
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            placeholder={'Enter amount'}
+            minLength={1}
+            maxLength={79}
+            spellCheck="false"
+          />
+        </Content>
+        {showMaxButton && selectedCurrencyBalance && (
+          <MaxButton size="small" onClick={onMax}>
+            MAX
+          </MaxButton>
+        )}
+      </InputContainer>
+      {/* <div ref={inputRef} className="w-full bg-inputBG rounded-lg w-full flex flex-row">
+   
         {showMaxButton && selectedCurrencyBalance && (
           <button onClick={onMax} className={`w-16 text-xl text-pink-800 pl-2 pr-2 underline`}>
             MAX
@@ -72,7 +153,7 @@ export function CurrencyInput({
             {currency.symbol}
           </p>
         )}
-      </div>
-    </>
+      </div> */}
+    </Container>
   );
 }
