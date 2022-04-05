@@ -288,6 +288,7 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
                   }
                 : undefined
             }
+            onClick={approveCallback}
           >
             {approvalState === ApprovalState.APPROVED
               ? `You can now deposit ${currencies.DEPOSIT?.symbol}`
