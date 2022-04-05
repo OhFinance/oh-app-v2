@@ -5,6 +5,10 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
+import { useCirculatingSupplyStore } from 'stores/useCirculatingSupplyStore';
+import { useMarketCapStore } from 'stores/useMarketCapStore';
+import { usePriceStore } from 'stores/usePriceStore';
+import { useTVLStore } from 'stores/useTVLStore';
 import ThemeProvider, { ThemedGlobalStyle } from 'theme';
 import { Layout } from '~/components/layout';
 import Web3ReactManager from '~/components/Web3ReactManager';
@@ -31,6 +35,18 @@ if (typeof window !== 'undefined' && !!window.ethereum) {
 }
 
 function Updaters() {
+  const fetchPrice = usePriceStore((state) => state.fetchData);
+  const fetchMarketCap = useMarketCapStore((state) => state.fetchData);
+  const fetchSupply = useCirculatingSupplyStore((state) => state.fetchData);
+  const fetchTVL = useTVLStore((state) => state.fetchData);
+  // This effect will run only once
+  useEffect(() => {
+    fetchPrice();
+    fetchMarketCap();
+    fetchSupply();
+    fetchTVL();
+  }, [fetchPrice, fetchMarketCap, fetchSupply, fetchTVL]);
+
   return (
     <>
       <ApplicationUpdater />

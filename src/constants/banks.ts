@@ -20,7 +20,7 @@ export interface Bank {
   contractAddress: string;
   ohToken: Token;
   underlyingToken: Token;
-  strategies: Record<number, { protocol: string; image: string }[]>;
+  strategies: { protocol: string; image: string }[];
 }
 
 export const banks: { [chainId: number]: Bank[] } = {
@@ -45,29 +45,11 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDC',
         'USDC'
       ),
-      strategies: {
-        [SupportedChainId.ETHEREUM_MAINNET]: [
-          { protocol: 'Aave V2', image: aave },
-          { protocol: 'Compound', image: comp },
-          { protocol: 'Curve', image: crv },
-        ],
-        [SupportedChainId.KOVAN]: [
-          { protocol: 'Aave V2', image: aave },
-          { protocol: 'Compound', image: comp },
-          { protocol: 'Curve', image: crv },
-        ],
-        [SupportedChainId.RINKEBY]: [
-          { protocol: 'Aave V2', image: aave },
-          { protocol: 'Compound', image: comp },
-          { protocol: 'Curve', image: crv },
-        ],
-        [SupportedChainId.AVALANCHE]: [
-          { protocol: 'Aave V2', image: aave },
-          { protocol: 'Benqi', image: benqi },
-          { protocol: 'Banker Joe', image: traderJoe },
-          { protocol: 'Curve', image: crv },
-        ],
-      },
+      strategies: [
+        { protocol: 'Aave V2', image: aave },
+        { protocol: 'Compound', image: comp },
+        { protocol: 'Curve', image: crv },
+      ],
     },
   ],
   [SupportedChainId.AVALANCHE]: [
@@ -91,7 +73,12 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDC.e',
         'USDC.e'
       ),
-      strategies: {},
+      strategies: [
+        { protocol: 'Aave V2', image: aave },
+        { protocol: 'Benqi', image: benqi },
+        { protocol: 'Banker Joe', image: traderJoe },
+        { protocol: 'Curve', image: crv },
+      ],
     },
     {
       image: ohUsdte,
@@ -113,7 +100,12 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDT.e',
         'USDT.e'
       ),
-      strategies: {},
+      strategies: [
+        { protocol: 'Aave V2', image: aave },
+        { protocol: 'Benqi', image: benqi },
+        { protocol: 'Banker Joe', image: traderJoe },
+        { protocol: 'Curve', image: crv },
+      ],
     },
     {
       image: ohDaie,
@@ -135,7 +127,12 @@ export const banks: { [chainId: number]: Bank[] } = {
         'DAI.e',
         'DAI.e'
       ),
-      strategies: {},
+      strategies: [
+        { protocol: 'Aave V2', image: aave },
+        { protocol: 'Benqi', image: benqi },
+        { protocol: 'Banker Joe', image: traderJoe },
+        { protocol: 'Curve', image: crv },
+      ],
     },
   ],
   [SupportedChainId.MOONRIVER]: [
@@ -159,7 +156,12 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDC',
         'USDC'
       ),
-      strategies: {},
+      strategies: [
+        { protocol: 'Aave V2', image: aave },
+        { protocol: 'Benqi', image: benqi },
+        { protocol: 'Banker Joe', image: traderJoe },
+        { protocol: 'Curve', image: crv },
+      ],
     },
     {
       image: ohUsdtMoonriver,
@@ -181,7 +183,12 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDT',
         'USDT'
       ),
-      strategies: {},
+      strategies: [
+        { protocol: 'Aave V2', image: aave },
+        { protocol: 'Benqi', image: benqi },
+        { protocol: 'Banker Joe', image: traderJoe },
+        { protocol: 'Curve', image: crv },
+      ],
     },
   ],
 };

@@ -1,11 +1,16 @@
-import Button from 'components/Button';
 import { banks } from 'constants/banks';
+import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import { useRouter } from 'next/router';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { Flex } from 'rebass';
 import { Field } from 'state/stake/reducer';
+import { useTokenBalance } from 'state/wallet/hooks';
+import { useCirculatingSupplyStore } from 'stores/useCirculatingSupplyStore';
+import { useMarketCapStore } from 'stores/useMarketCapStore';
+import { usePriceStore } from 'stores/usePriceStore';
+import { useTVLStore } from 'stores/useTVLStore';
 import styled from 'styled-components';
-import placeholder from '~/assets/img/oh-usdc-moonriver.png';
+import ohLogo from '~/assets/img/oh-token.svg';
 import { useActiveWeb3React } from '~/hooks/web3';
 import DepositCard from './DepositCard';
 
@@ -36,7 +41,6 @@ const Logo = styled.img<{ size?: 'small' | 'big' }>(({ size }) => ({
   boxShadow: '0px 2px 6px 0px rgba(0, 0, 0, 0.14)',
 }));
 
-const DepositContainer = styled(ContainerBase)({ padding: 20 });
 const RightContainer = styled(ContainerBase)({
   display: 'flex',
   flexDirection: 'column',
@@ -102,51 +106,11 @@ const StatsValue = styled.p(({ theme }) => ({
   margin: 0,
 }));
 
-const CardTokenTitle = styled.div({
-  paddingLeft: 16,
-});
-
-// change for themed h2
-const Symbol = styled.h2({
-  fontSize: '28px',
-  lineHeight: '28px',
-  fontWeight: 500,
-  color: '#fff',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  margin: 0,
-});
-
-const SubHeading = styled.h4({
-  fontSize: '14px',
-  color: 'rgba(255, 255, 255, 0.87)',
-  fontWeight: 500,
-  lineHeight: '14px',
-  margin: 0,
-});
-
-const APRContainer = styled.div(({ theme }) => ({
-  width: '100%',
-  boxSizing: 'border-box',
-  padding: '17px 20px',
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  backgroundColor: theme.bg2,
-  borderRadius: 20,
-  marginTop: 30,
-  marginBottom: 10,
-}));
-
 const TitleText = styled.h5(({ theme }) => ({
   fontSize: '20px',
   lineHeight: '20px',
   margin: 0,
   fontWeight: 500,
-}));
-
-const APRTitle = styled(TitleText)(({ theme }) => ({
-  color: theme.grey,
 }));
 
 const PortfolioTitle = styled(TitleText)(({ theme }) => ({
@@ -163,33 +127,8 @@ const PortfolioBalance = styled.h3(({ theme }) => ({
   lineHeight: '56px',
 }));
 
-const APRValue = styled.h3(({ theme }) => ({
-  fontSize: '36px',
-  lineHeight: '36px',
-  color: theme.white,
-  margin: 0,
-  fontWeight: 600,
-}));
-
-const Stat = styled.p(({ theme }) => ({
-  margin: 0,
-  color: theme.grey,
-  fontSize: '14px',
-  lineHeight: '16px',
-  textAlign: 'right',
-  padding: '0px 0px 8px',
-  '& span': {
-    color: theme.white,
-  },
-}));
-
-const OverflowingButton = styled(Button)({
-  position: 'relative',
-});
-
 export default function BankPage() {
   const { account, chainId } = useActiveWeb3React();
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const router = useRouter();
   const { address } = router.query;
   const bank = useMemo(
@@ -197,12 +136,19 @@ export default function BankPage() {
     [address, chainId]
   );
 
-  const buttonHeight: number | null = useMemo(() => {
-    if (buttonRef.current) {
-      return buttonRef.current.getBoundingClientRect().height;
+  const { isLoading: isLoadingTVL, tvl } = useTVLStore();
+  const { isLoading: isLoadingPrice, price } = usePriceStore();
+  const { isLoading: isLoadingMarketCap, marketCap } = useMarketCapStore();
+  const { isLoading: isLoadingSupply, supply } = useCirculatingSupplyStore();
+  const balance = useTokenBalance(account || undefined, bank?.ohToken);
+  const sharePrice = useVirtualPrice(bank?.ohToken);
+
+  const portfolioValue = useMemo(() => {
+    if (balance && sharePrice) {
+      return Number(sharePrice.toFixed(3)) * Number(balance.toFixed(3));
     }
-    return null;
-  }, [buttonRef.current]);
+    return undefined;
+  }, [balance, sharePrice]);
 
   if (!bank) {
     return <h1>Not a bank</h1>;
@@ -224,34 +170,71 @@ export default function BankPage() {
             <br />
             Balance
           </PortfolioTitle>
-          <PortfolioBalance>$1200</PortfolioBalance>
+          <PortfolioBalance>
+            ${' '}
+            {portfolioValue?.toLocaleString('en-US', {
+              minimumFractionDigits: 3,
+              maximumFractionDigits: 3,
+            })}
+          </PortfolioBalance>
           <Flex marginLeft="auto">
-            <Logo src={placeholder} alt="placeholder" size="small" />
-            <DepositBalance>$0.00 OH-USDC (Deposited USDC)</DepositBalance>
+            <Logo src={bank.image} alt={bank.name} size="small" />
+            <DepositBalance>
+              {balance ? balance.toFixed(3, { groupSeperator: ',' }) : '0.000'}{' '}
+              {bank.ohToken.symbol} (Deposited {bank.underlyingToken.symbol})
+            </DepositBalance>
           </Flex>
         </Flex>
         <ChartContainer></ChartContainer>
         <StatsContainer>
           <StatsItem>
             <Flex alignItems="center">
-              <Logo src={placeholder} alt="placeholder" />
+              <Logo src={ohLogo} alt="placeholder" />
               <div style={{ marginLeft: 10 }}>
                 <StatsTitle>Token Price</StatsTitle>
-                <StatsValue>$ 0.02</StatsValue>
+                <StatsValue>
+                  ${' '}
+                  {!isLoadingPrice &&
+                    price.toLocaleString('en-US', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                </StatsValue>
               </div>
             </Flex>
           </StatsItem>
           <StatsItem>
             <StatsTitle>Circulating Supply</StatsTitle>
-            <StatsValue>123,456 OH</StatsValue>
+            <StatsValue>
+              {!isLoadingSupply &&
+                supply.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+              OH
+            </StatsValue>
           </StatsItem>
           <StatsItem>
             <StatsTitle>Market Cap</StatsTitle>
-            <StatsValue>$ 934,234</StatsValue>
+            <StatsValue>
+              ${' '}
+              {!isLoadingMarketCap &&
+                marketCap.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+            </StatsValue>
           </StatsItem>
           <StatsItem noBg>
             <StatsTitle>Total Value Locked</StatsTitle>
-            <StatsValue>$108,295</StatsValue>
+            <StatsValue>
+              ${' '}
+              {!isLoadingTVL &&
+                tvl.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+            </StatsValue>
           </StatsItem>
         </StatsContainer>
       </RightContainer>

@@ -159,7 +159,7 @@ export function Navbar() {
   if (1) {
     return (
       <HeaderFrame>
-        <Logo href=".">
+        <Logo href="/">
           <svg
             width="263"
             height="40"

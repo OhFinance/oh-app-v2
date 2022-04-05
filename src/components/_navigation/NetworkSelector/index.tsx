@@ -130,6 +130,7 @@ const Logo = styled.img`
 `;
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
+  color: ${({ theme }) => theme.white};
 `;
 
 const ActiveRowLinkList = styled.div`
@@ -139,7 +140,7 @@ const ActiveRowLinkList = styled.div`
   box-sizing: border-box;
   & > a {
     align-items: center;
-    color: ${({ theme }) => theme.white};
+    color: ${({ theme }) => theme.blue};
     display: flex;
     flex-direction: row;
     font-size: 14px;

@@ -28,7 +28,7 @@ function Web3StatusInner() {
       <Web3StatusConnected>
         <Flex alignItems={'center'} height="100%">
           <Identicon />
-          <ThemedText.Main fontSize="20px" lineHeight="20px" paddingLeft="8px">
+          <ThemedText.Main fontSize="16px" lineHeight="16px" paddingLeft="8px">
             {shortenAddress(account)}
           </ThemedText.Main>
         </Flex>
