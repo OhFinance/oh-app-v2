@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Navbar } from './navbar';
+import { Navbar } from './_navigation/Navbar';
 
 const App = styled.div(({ theme }) => ({
   width: '100%',
@@ -10,6 +10,7 @@ const App = styled.div(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-start',
+  height: '100%',
 }));
 
 const NavWrapper = styled.div(({ theme }) => ({
@@ -21,6 +22,8 @@ const NavWrapper = styled.div(({ theme }) => ({
 const Container = styled.div(({ theme }) => ({
   width: '80%',
   maxWidth: '1364px',
+  flexGrow: 1,
+  paddingBottom: 60,
 }));
 
 export function Layout({ children }: { children: JSX.Element }) {

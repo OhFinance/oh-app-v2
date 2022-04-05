@@ -1,7 +1,7 @@
-import { banks } from 'constants/banks';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Flex } from 'rebass';
 import { Field } from 'state/stake/reducer';
 import { useTokenBalance } from 'state/wallet/hooks';
@@ -12,7 +12,14 @@ import { useTVLStore } from 'stores/useTVLStore';
 import styled from 'styled-components';
 import ohLogo from '~/assets/img/oh-token.svg';
 import { useActiveWeb3React } from '~/hooks/web3';
+import UnstyledButton from '../../../components/UnstyledButton';
+import { banksByContract } from '../../../constants/banks';
+import { SupportedChainId } from '../../../constants/chains';
+import { switchToNetwork } from '../../../utilities/switchToNetwork';
 import DepositCard from './DepositCard';
+
+// nextjs bullies us if we don't do this
+const Chart = dynamic(() => import('./Chart'), { ssr: false });
 
 const Grid = styled.div({
   display: 'grid',
@@ -127,13 +134,28 @@ const PortfolioBalance = styled.h3(({ theme }) => ({
   lineHeight: '56px',
 }));
 
+const TimeframeButtons = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const TimeframeButton = styled(UnstyledButton)(({ theme }) => ({
+  color: theme.grey,
+  borderRadius: 15,
+  padding: '6px 12px',
+  fontSize: '12px',
+  fontWeight: 500,
+  backgroundColor: theme.bg4,
+  marginRight: '5px',
+}));
+
 export default function BankPage() {
-  const { account, chainId } = useActiveWeb3React();
+  const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
   const { address } = router.query;
   const bank = useMemo(
-    () => (address && chainId ? banks[chainId].find((b) => b.contractAddress === address) : null),
-    [address, chainId]
+    () => (typeof address === 'string' ? banksByContract[address] : null),
+    [address]
   );
 
   const { isLoading: isLoadingTVL, tvl } = useTVLStore();
@@ -149,6 +171,13 @@ export default function BankPage() {
     }
     return undefined;
   }, [balance, sharePrice]);
+
+  useEffect(() => {
+    if (chainId && bank.ohToken.chainId !== chainId && chainId in SupportedChainId) {
+      if (!library) return;
+      switchToNetwork({ library, chainId: bank.ohToken.chainId });
+    }
+  }, [chainId, bank, library]);
 
   if (!bank) {
     return <h1>Not a bank</h1>;
@@ -185,7 +214,14 @@ export default function BankPage() {
             </DepositBalance>
           </Flex>
         </Flex>
-        <ChartContainer></ChartContainer>
+        <ChartContainer>
+          <TimeframeButtons>
+            {['1HR', '1D', '1M', '1Y', 'ALL'].map((item, i) => (
+              <TimeframeButton key={`${item}-${i}`}>{item}</TimeframeButton>
+            ))}
+          </TimeframeButtons>
+          <Chart />
+        </ChartContainer>
         <StatsContainer>
           <StatsItem>
             <Flex alignItems="center">

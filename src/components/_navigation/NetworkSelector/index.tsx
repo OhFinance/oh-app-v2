@@ -229,7 +229,7 @@ export default function NetworkSelector() {
 
   const handleChainSwitch = useCallback(
     (targetChain: number, skipToggle?: boolean) => {
-      if (!library?.provider) return;
+      if (!library) return;
       switchToNetwork({ library, chainId: targetChain })
         .then(() => {
           if (!skipToggle) {

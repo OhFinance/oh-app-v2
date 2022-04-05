@@ -1,8 +1,10 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
+import OhModal from 'components/_modals/common/OhModal';
 import React from 'react';
-import { injected, walletlink } from '~/connectors';
+import styled from 'styled-components';
+import { injected } from '~/connectors';
 import { SUPPORTED_WALLETS } from '~/constants/wallet';
 import {
   useAddAlertCallback,
@@ -13,6 +15,16 @@ import {
 import { ApplicationModal } from '~/state/application/reducer';
 import { isMobile } from '~/utilities/userAgent';
 import Option from './Option';
+
+const OptionGrid = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  padding-top: 20px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  `};
+`;
 
 export default function WalletModal() {
   const { connector, activate } = useWeb3React();
@@ -145,63 +157,8 @@ export default function WalletModal() {
   }
 
   return (
-    <div
-      className="fixed z-10 inset-0 overflow-y-auto"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div
-          className="fixed backdrop-blur-sm inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-          aria-hidden="true"
-          onClick={toggleModal}
-        ></div>
-
-        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-          &#8203;
-        </span>
-
-        <div className="inline-block align-bottom bg-consoleBGOuter border-consoleBorderInner border-2 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-          <div className="border-consoleBorderInner bg-consoleBGOuter px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div className="sm:flex sm:items-start">
-              <div className="mt-3 text-left sm:mt-0 ">
-                <h3 className="text-xl font-medium text-defaultText" id="modal-title">
-                  {connector ? 'Wallet Connected' : 'Connect a Wallet'}
-                </h3>
-                {!connector && (
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500"> Connect to a supported wallet</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col m-4">
-            {connector ? (
-              <button
-                onClick={() => {
-                  if (connector !== injected && connector !== walletlink) {
-                    (connector as any).close();
-                  }
-                }}
-                className={` ${
-                  connector !== injected && connector !== walletlink
-                    ? 'bg-inputBG hover:bg-buttonHighlight hover:text-white '
-                    : 'bg-buttonDisabled'
-                }  text-button font-bold py-4 px-4 rounded`}
-              >
-                {connector !== injected && connector !== walletlink
-                  ? 'Disconnect'
-                  : 'Disconnect in Wallet'}
-              </button>
-            ) : (
-              getOptions()
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+    <OhModal title="Connect Wallet" isOpen={walletModalOpen} onDismiss={toggleModal}>
+      <OptionGrid>{getOptions()}</OptionGrid>
+    </OhModal>
   );
 }

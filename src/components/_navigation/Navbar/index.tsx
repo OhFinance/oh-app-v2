@@ -6,12 +6,10 @@ import { useActiveWeb3React } from '~/hooks/web3';
 import { useWalletModalToggle } from '~/state/application/hooks';
 import { useThemeStore } from '~/stores/useThemeStore';
 import { switchToNetwork } from '~/utilities/switchToNetwork';
-import Button from './Button';
-import { HintButton } from './hintButton';
-import UnstyledButton from './UnstyledButton';
-import { WalletDisplay } from './walletDisplay';
-import Web3Status from './Web3Status';
-import NetworkSelector from './_navigation/NetworkSelector';
+import { HintButton } from '../../hintButton';
+import { WalletDisplay } from '../../walletDisplay';
+import Web3Status from '../../Web3Status';
+import NetworkSelector from '../NetworkSelector';
 
 const selectNetworkHint = 'Select which network you want to connect to.';
 
@@ -58,68 +56,6 @@ const NavLink = styled.a(({ theme }) => ({
   wordBreak: 'break-word',
   whiteSpace: 'nowrap',
 }));
-
-const NetworksContainer = styled.div(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  color: theme.blue,
-  backgroundColor: theme.bg4,
-  fontSize: '0.875rem',
-  fontWeight: 500,
-  borderRadius: '20px',
-  position: 'relative',
-  paddingLeft: 26,
-  marginRight: 12,
-}));
-
-const NetworksButton = styled(UnstyledButton)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  backgroundColor: theme.bg2,
-  color: theme.white,
-  padding: '7px 20px 6px 20px',
-  borderRadius: 20,
-  marginLeft: 26,
-  fontWeight: 600,
-  boxSizing: 'content-box',
-  border: '2px solid transparent',
-  transition: 'border 0.1s ease-in',
-  fontSize: '1rem',
-  '&:hover': {
-    border: `2px solid rgba(255, 255, 255, 0.1)`,
-  },
-}));
-
-const NetworkLogo = styled.div(({ theme }) => ({
-  backgroundColor: theme.bg2,
-  width: 37,
-  height: 37,
-  borderRadius: 50,
-  boxShadow: 'inset 3px 3px 6px #000000',
-  padding: 5,
-  '& img': {
-    width: '100%',
-    height: '100%',
-    borderRadius: 50,
-  },
-}));
-
-const Network = styled.p({
-  padding: '0px 30px 0px 14px',
-  margin: 0,
-  fontSize: 'inherit',
-});
-
-const ExpandIcon = styled.svg({
-  position: 'relative',
-  bottom: -2,
-});
-
-const ConnectButton = styled(Button)({
-  alignSelf: 'stretch',
-});
 
 export function Navbar() {
   const { chainId, library, account } = useActiveWeb3React();
@@ -194,8 +130,10 @@ export function Navbar() {
           </svg>
         </Logo>
         <HeaderContent>
-          <NavLink>FAQ</NavLink>
-          <NavLink>Docs</NavLink>
+          <NavLink href="https://docs.oh.finance/">FAQ</NavLink>
+          <NavLink href="https://docs.oh.finance/" target="_blank">
+            Docs
+          </NavLink>
           <NetworkSelector />
 
           <Web3Status />

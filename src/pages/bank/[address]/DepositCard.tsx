@@ -107,9 +107,10 @@ const OverflowingButton = styled(Button)({
 });
 
 export default function DepositCard({ bank, field }: { bank: Bank; field: Field }) {
-  const { account, chainId, library } = useActiveWeb3React();
+  const { account } = useActiveWeb3React();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [buttonHeight, setButtonHeight] = useState<number | undefined>();
+  const toggleWalletModal = useToggleModal(ApplicationModal.WALLET);
 
   useLayoutEffect(() => {
     const current = buttonRef.current;
@@ -270,6 +271,7 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
                   }
                 : undefined
             }
+            onClick={toggleWalletModal}
           >
             Connect Wallet
           </OverflowingButton>
