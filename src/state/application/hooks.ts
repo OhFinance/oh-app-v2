@@ -1,10 +1,10 @@
+import axios from 'axios';
 import { CandlestickData, UTCTimestamp } from 'lightweight-charts';
 import { useCallback, useMemo } from 'react';
 import { AlertProps } from '~/components/Alert';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { AppState } from '..';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { chartData } from './placeholder';
 import {
   addAlert,
   ApplicationModal,
@@ -70,22 +70,19 @@ export function useFetchChartCallback() {
   const dispatch = useAppDispatch();
 
   return useCallback(async () => {
-    const obj = createChartObject(chartData.data);
-    dispatch(setChart(obj));
-    return obj;
-    // return axios
-    //   .get<{ data: { tvl: number; timestamp: string }[] }>(
-    //     `https://api.oh.finance/tvl/history?addr=all&chain=-1&start=0`
-    //   )
-    //   .then(({ data }) => {
-    //     // set
-    //     const obj = createChartObject(data.data);
-    //     dispatch(setChart(obj));
-    //     return obj;
-    //   })
-    //   .catch((err) => {
-    //     throw err;
-    //   });
+    return axios
+      .get<{ data: { tvl: number; timestamp: string }[] }>(
+        `https://api.oh.finance/tvl/history?addr=all&chain=-1&start=0`
+      )
+      .then(({ data }) => {
+        // set
+        const obj = createChartObject(data.data);
+        dispatch(setChart(obj));
+        return obj;
+      })
+      .catch((err) => {
+        throw err;
+      });
   }, [dispatch]);
 }
 
