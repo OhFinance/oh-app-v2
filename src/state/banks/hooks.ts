@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core';
 import axios from 'axios';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +13,17 @@ interface ApyAPIResponse {
 
   timestamp_updated: string;
   addr: string;
+}
+
+export function useFetchChartCallback() {
+  const { chainId } = useWeb3React();
+  return useCallback(async (contractAddress: string) => {
+    if (!chainId) {
+      return;
+    } else {
+      const respo = axios.get(`https://api.oh.finance/tvl/history?addr=all&chain=-1&start=0`);
+    }
+  }, []);
 }
 
 export function useFetchBankInfoCallback() {

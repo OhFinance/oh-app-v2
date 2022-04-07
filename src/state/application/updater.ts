@@ -5,12 +5,14 @@ import { useActiveWeb3React } from '~/hooks/web3';
 import { useAppDispatch, useAppSelector } from '~/state/hooks';
 import { supportedChainId } from '~/utilities/supportedChainId';
 import { switchToNetwork } from '~/utilities/switchToNetwork';
+import { useFetchChartCallback } from './hooks';
 import { setImplements3085, updateBlockNumber, updateChainId } from './reducer';
 
 export default function Updater(): null {
   const { account, chainId, library } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const windowVisible = useIsWindowVisible();
+  const fetchTvlChart = useFetchChartCallback();
 
   const [state, setState] = useState<{ chainId: number | undefined; blockNumber: number | null }>({
     chainId,
@@ -28,6 +30,22 @@ export default function Updater(): null {
       });
     },
     [chainId, setState]
+  );
+
+  const fetchTvlChartCallback: (tries?: number) => Promise<boolean> = useCallback(
+    async (tries: number = 0): Promise<boolean> => {
+      return fetchTvlChart()
+        .then(() => true)
+        .catch((err) => {
+          if (tries >= 5) {
+            console.error(err);
+            return false;
+          }
+          console.debug('Error fetch TVL chart, retrying...', err.message);
+          return fetchTvlChartCallback(tries + 1);
+        });
+    },
+    [fetchTvlChart]
   );
 
   // attach/detach listeners
@@ -81,5 +99,8 @@ export default function Updater(): null {
     }
   }, [account, dispatch, implements3085, library]);
 
+  useEffect(() => {
+    fetchTvlChartCallback();
+  }, [fetchTvlChartCallback]);
   return null;
 }

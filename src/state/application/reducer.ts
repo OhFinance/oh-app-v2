@@ -1,6 +1,8 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { CandlestickData } from 'lightweight-charts';
 import { AlertProps } from '~/components/Alert';
 import { DEFAULT_TXN_DISMISS_MS } from '~/constants/misc';
+export type ChartTimeRange = 'day' | 'hour' | 'week' | 'month' | 'all';
 
 export type PopupContent = {
   txn: {
@@ -22,6 +24,11 @@ export interface ApplicationState {
   readonly implements3085: boolean;
   readonly openModal: ApplicationModal | null;
   readonly alertList: Alert[];
+  readonly tvlChart:
+    | {
+        [range in ChartTimeRange]: CandlestickData[];
+      }
+    | null;
 }
 
 const initialState: ApplicationState = {
@@ -30,12 +37,16 @@ const initialState: ApplicationState = {
   implements3085: false,
   openModal: null,
   alertList: [],
+  tvlChart: null,
 };
 
 const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
+    setChart(state, action) {
+      state.tvlChart = action.payload;
+    },
     updateChainId(state, action) {
       const { chainId } = action.payload;
       state.chainId = chainId;
@@ -84,5 +95,6 @@ export const {
   setOpenModal,
   removeAlert,
   setImplements3085,
+  setChart,
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

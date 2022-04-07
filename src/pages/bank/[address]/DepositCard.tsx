@@ -102,9 +102,13 @@ const Stat = styled.p(({ theme }) => ({
   },
 }));
 
-const OverflowingButton = styled(Button)({
-  position: 'relative',
-});
+const OverflowingButton = styled(Button)<{ confirmed?: boolean }>`
+  position: relative;
+  background-color: ${({ confirmed, theme }) =>
+    confirmed ? `${theme.buttonBG} !important` : undefined};
+  color: ${({ confirmed }) => (confirmed ? `#fff !important` : undefined)};
+  pointer-events: ${({ confirmed }) => (confirmed ? `all !important` : undefined)};
+`;
 
 export default function DepositCard({ bank, field }: { bank: Bank; field: Field }) {
   const { account } = useActiveWeb3React();
@@ -211,10 +215,13 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
         <Flex alignItems={'center'}>
           <Logo src={bank.image} alt="placeholder" />
           <CardTokenTitle>
-            <Symbol>{bank.ohToken.symbol}</Symbol>
-            {field === Field.DEPOSIT && (
-              <SubHeading>Deposit {bank.underlyingToken.symbol} to earn yield</SubHeading>
-            )}
+            <Symbol>{field === Field.DEPOSIT ? 'Deposit' : 'Withdraw'}</Symbol>
+
+            <SubHeading>
+              {field === Field.DEPOSIT
+                ? `Deposit ${bank.underlyingToken.symbol} to earn yield`
+                : `Withdraw your ${bank.ohToken.symbol} to ${bank.underlyingToken.symbol}`}
+            </SubHeading>
           </CardTokenTitle>
         </Flex>
         {field === Field.DEPOSIT && (
@@ -289,6 +296,7 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
                 : undefined
             }
             onClick={approveCallback}
+            confirmed={approvalState === ApprovalState.APPROVED}
           >
             {approvalState === ApprovalState.APPROVED
               ? `You can now deposit ${currencies.DEPOSIT?.symbol}`

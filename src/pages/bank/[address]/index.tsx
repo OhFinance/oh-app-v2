@@ -1,8 +1,11 @@
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import { transparentize } from 'polished';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Flex } from 'rebass';
+import { useChart } from 'state/application/hooks';
+import { ChartTimeRange } from 'state/application/reducer';
 import { Field } from 'state/stake/reducer';
 import { useTokenBalance } from 'state/wallet/hooks';
 import { useCirculatingSupplyStore } from 'stores/useCirculatingSupplyStore';
@@ -139,15 +142,44 @@ const TimeframeButtons = styled.div({
   alignItems: 'center',
 });
 
-const TimeframeButton = styled(UnstyledButton)(({ theme }) => ({
+const TimeframeButton = styled(UnstyledButton)<{ active?: boolean }>(({ theme, active }) => ({
   color: theme.grey,
   borderRadius: 15,
   padding: '6px 12px',
   fontSize: '12px',
   fontWeight: 500,
-  backgroundColor: theme.bg4,
+  backgroundColor: active ? theme.bg4 : 'transparent',
   marginRight: '5px',
+  '&:hover': {
+    backgroundColor: transparentize(0.3, theme.bg4),
+  },
 }));
+
+const ranges: {
+  label: string;
+  value: ChartTimeRange;
+}[] = [
+  {
+    label: '1HR',
+    value: 'hour',
+  },
+  {
+    label: '1D',
+    value: 'day',
+  },
+  {
+    label: '1W',
+    value: 'week',
+  },
+  {
+    label: '1M',
+    value: 'month',
+  },
+  {
+    label: 'All',
+    value: 'all',
+  },
+];
 
 export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
@@ -157,6 +189,10 @@ export default function BankPage() {
     () => (typeof address === 'string' ? banksByContract[address] : null),
     [address]
   );
+
+  const [selectedRange, setSelectedRange] = useState<ChartTimeRange>('hour');
+
+  const chart = useChart(selectedRange);
 
   const { isLoading: isLoadingTVL, tvl } = useTVLStore();
   const { isLoading: isLoadingPrice, price } = usePriceStore();
@@ -173,7 +209,7 @@ export default function BankPage() {
   }, [balance, sharePrice]);
 
   useEffect(() => {
-    if (chainId && bank.ohToken.chainId !== chainId && chainId in SupportedChainId) {
+    if (chainId && bank && bank.ohToken.chainId !== chainId && chainId in SupportedChainId) {
       if (!library) return;
       switchToNetwork({ library, chainId: bank.ohToken.chainId });
     }
@@ -216,11 +252,17 @@ export default function BankPage() {
         </Flex>
         <ChartContainer>
           <TimeframeButtons>
-            {['1HR', '1D', '1M', '1Y', 'ALL'].map((item, i) => (
-              <TimeframeButton key={`${item}-${i}`}>{item}</TimeframeButton>
+            {ranges.map(({ value, label }, i) => (
+              <TimeframeButton
+                key={`${value}-${i}`}
+                onClick={() => setSelectedRange(value)}
+                active={selectedRange === value}
+              >
+                {label}
+              </TimeframeButton>
             ))}
           </TimeframeButtons>
-          <Chart />
+          <Chart data={chart} timeframe={selectedRange} />
         </ChartContainer>
         <StatsContainer>
           <StatsItem>

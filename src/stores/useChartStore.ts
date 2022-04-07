@@ -4,6 +4,18 @@ import { combine } from 'zustand/middleware';
 
 export type ChartTimeRange = 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'all';
 
+interface ChartState {
+  byChainId: {
+    [chainId: number]:
+      | {
+          [byAddress: string]:
+            | { [key in ChartTimeRange]: { time: string; value: number }[] }
+            | undefined;
+        }
+      | undefined;
+  };
+}
+
 const initialState = {
   data: null,
   isLoading: true,
