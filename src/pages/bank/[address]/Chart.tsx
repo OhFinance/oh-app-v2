@@ -1,4 +1,4 @@
-import { CandlestickData, createChart } from 'lightweight-charts';
+import { BarPrice, CandlestickData, createChart } from 'lightweight-charts';
 import React, { useEffect, useRef } from 'react';
 import { ChartTimeRange } from 'state/application/reducer';
 import styled from 'styled-components';
@@ -47,10 +47,22 @@ export default React.memo(function Chart({
       });
       if (timeframe === 'hour') {
         let lineData = data.map((v) => ({ time: v.time, value: v.open }));
-        const lineSeries = chart.addAreaSeries();
+        const lineSeries = chart.addAreaSeries({
+          priceFormat: {
+            type: 'custom',
+            formatter: (price: BarPrice) =>
+              price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+          },
+        });
         lineSeries.setData(lineData);
       } else {
-        const candleSeries = chart.addCandlestickSeries();
+        const candleSeries = chart.addCandlestickSeries({
+          priceFormat: {
+            type: 'custom',
+            formatter: (price: BarPrice) =>
+              price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+          },
+        });
         candleSeries.setData(data);
       }
 
