@@ -196,6 +196,8 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
   
   html {
+    display: flex;
+    flex-direction: column;
     color: ${({ theme }) => theme.white};
     background-color: ${({ theme }) => theme.bg0} !important;
     min-height: 100%;
@@ -203,13 +205,26 @@ export const ThemedGlobalStyle = createGlobalStyle`
     font-variant: none;
     font-smooth: always;
     font-family: 'Roboto', sans-serif;
+    position: relative;
   }
   button {
     user-select: none;
   }
 
   body {
+    display: flex;
+    flex-direction: column;
     margin: 0px;
+    min-height: 100%;
+    flex-grow: 1;
+    
+  }
+
+  #__next {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    flex-grow: 1;
   }
 
   a {

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { Area, ComposedChart, Line, Tooltip, XAxis } from 'recharts';
 import { ChartTimeRange } from '~/stores/useChartStore';
 import { ChartPnL } from './chartPnL';
@@ -120,7 +121,9 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
           ALL
         </button>
         {data && isLoading && (
-          <div className={`pt-3 pl-4 text-accentText pointer-events-none`}>Loading...</div>
+          <div className={`pt-3 pl-4 text-accentText pointer-events-none`}>
+            <Skeleton />
+          </div>
         )}
       </div>
       {/* P&L Indicator */}
@@ -128,7 +131,7 @@ export function Chart({ data, isLoading, width, height, onChartTimeChanged }: Ch
       {/* Chart */}
       {!data ? (
         <div className={`text-center text-accentText pt-44`} style={{ width, height }}>
-          Loading...
+          <Skeleton />
         </div>
       ) : (
         <div className="mt-6 w-full flex-row">

@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { Provider } from 'react-redux';
 import { useCirculatingSupplyStore } from 'stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from 'stores/useMarketCapStore';

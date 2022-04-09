@@ -7,6 +7,7 @@ import { useVirtualBalance } from 'hooks/calls/bank/useVirtualBalance';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import { ApprovalState, useApproveCallback } from 'hooks/transactionCallbacks/useApproveCallback';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { Flex } from 'rebass';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
@@ -184,7 +185,7 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
         minimumFractionDigits: 2,
       })}%`;
     }
-    return 'loading...';
+    return <Skeleton />;
   }, [apys]);
   // END STATISTICS
 
@@ -236,12 +237,19 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
             <Stat>
               TVL{' '}
               <span>
-                ${totalValueLocked ? totalValueLocked.toFixed(2, { groupSeparator: ',' }) : '---'}
+                $
+                {totalValueLocked ? (
+                  totalValueLocked.toFixed(2, { groupSeparator: ',' })
+                ) : (
+                  <Skeleton />
+                )}
               </span>
             </Stat>
             <Stat>
               Share Price{' '}
-              <span>${sharePrice ? sharePrice.toFixed(3, { groupSeperator: ',' }) : '---'}</span>
+              <span>
+                ${sharePrice ? sharePrice.toFixed(3, { groupSeperator: ',' }) : <Skeleton />}
+              </span>
             </Stat>
           </>
         )}

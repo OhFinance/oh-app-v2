@@ -6,11 +6,12 @@ const App = styled.div(({ theme }) => ({
   width: '100%',
   overflowX: 'hidden',
   overflowY: 'auto',
+  flexGrow: 1,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  height: '100%',
+  minHeight: '100%',
 }));
 
 const NavWrapper = styled.div(({ theme }) => ({
@@ -20,6 +21,9 @@ const NavWrapper = styled.div(({ theme }) => ({
 }));
 
 const Container = styled.div(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100%',
   width: '80%',
   maxWidth: '1364px',
   flexGrow: 1,

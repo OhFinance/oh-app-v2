@@ -14,7 +14,10 @@ import { usePriceStore } from 'stores/usePriceStore';
 import { useTVLStore } from 'stores/useTVLStore';
 import styled from 'styled-components';
 import ohLogo from '~/assets/img/oh-token.svg';
+import Button from '~/components/Button';
+import PigPic from '~/components/_modals/common/animations/pig.svg';
 import { useActiveWeb3React } from '~/hooks/web3';
+import { ThemedText } from '~/theme';
 import UnstyledButton from '../../../components/UnstyledButton';
 import { banksByContract } from '../../../constants/banks';
 import { SupportedChainId } from '../../../constants/chains';
@@ -54,7 +57,6 @@ const Logo = styled.img<{ size?: 'small' | 'big' }>(({ size }) => ({
 const RightContainer = styled(ContainerBase)({
   display: 'flex',
   flexDirection: 'column',
-
   padding: 30,
 });
 
@@ -155,6 +157,24 @@ const TimeframeButton = styled(UnstyledButton)<{ active?: boolean }>(({ theme, a
   },
 }));
 
+const FourOhFourContent = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  maxWidth: 600,
+  padding: 16,
+  '& img': {
+    width: '200px',
+    height: 'auto',
+    marginBottom: 24,
+  },
+  '& button': {
+    marginTop: 16,
+  },
+});
+
 const ranges: {
   label: string;
   value: ChartTimeRange;
@@ -216,7 +236,28 @@ export default function BankPage() {
   }, [chainId, bank, library]);
 
   if (!bank) {
-    return <h1>Not a bank</h1>;
+    const handleClick = () => {
+      router.push('/');
+    };
+    return (
+      <Flex
+        flexDirection={'column'}
+        alignItems="center"
+        justifyContent={'center'}
+        height="100%"
+        flexGrow={1}
+      >
+        <FourOhFourContent>
+          <img src={PigPic} alt="sad piggy" />
+          <ThemedText.H1>
+            Ah <b>OH!</b> This bank was not found.
+          </ThemedText.H1>
+          <Button onClick={handleClick} size="large">
+            <b>Back to banks</b>
+          </Button>
+        </FourOhFourContent>
+      </Flex>
+    );
   }
   return (
     <Grid>
