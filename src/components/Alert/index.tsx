@@ -57,7 +57,7 @@ export default function Alert({
   const { chainId } = useActiveWeb3React();
 
   const removeAlert = useRemoveAlertCallback();
-  const removeThisAlert = useCallback(() => removeAlert(alertKey), [removeAlert]);
+  const removeThisAlert = useCallback(() => removeAlert(alertKey), [removeAlert, alertKey]);
 
   useEffect(() => {
     if (removeAfterMs === null) return undefined;

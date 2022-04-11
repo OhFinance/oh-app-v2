@@ -129,7 +129,10 @@ export function useAlerts() {
 
 export function useRemoveAlertCallback() {
   const dispatch = useAppDispatch();
-  return useCallback((key: string) => {
-    dispatch(removeAlert({ key }));
-  }, []);
+  return useCallback(
+    (key: string) => {
+      dispatch(removeAlert({ key }));
+    },
+    [dispatch]
+  );
 }

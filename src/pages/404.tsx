@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function NotFound() {
   return (
     <div className="bg-indigo-900 relative overflow-hidden h-screen">

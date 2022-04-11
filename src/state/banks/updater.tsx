@@ -36,7 +36,7 @@ export default function Updater() {
     }
     setBankAPYData(bankAPYs);
     setLoading(false);
-  }, [banks, fetchBankInfo, setBankAPYData, setLoading]);
+  }, [fetchBankInfo, setBankAPYData, setLoading]);
 
   useEffect(() => {
     if (loading && retries < MAXIMUM_RETRIES) {

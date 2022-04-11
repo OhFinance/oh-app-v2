@@ -140,7 +140,7 @@ export default function DepositModal({ bank }: { bank: Bank }) {
         .multiply(100);
     }
     return undefined;
-  }, [receivingAmount, totalSupply]);
+  }, [receivingAmount, totalSupply, parsedAmounts.DEPOSIT, sharePrice]);
 
   const { chainId, library, account } = useActiveWeb3React();
   const bankContract = useBankContract(bank.contractAddress);

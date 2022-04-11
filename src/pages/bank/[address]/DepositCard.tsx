@@ -136,7 +136,7 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
     (value: string) => {
       onUserInput(field, value);
     },
-    [onUserInput]
+    [onUserInput, field]
   );
 
   const handleMax = useCallback(

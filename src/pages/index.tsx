@@ -9,7 +9,6 @@ import { useBankAPYData } from 'state/banks/hooks';
 import styled from 'styled-components';
 import { ThemedText } from 'theme';
 import { useActiveWeb3React } from '~/hooks/web3';
-import { useAlerts } from '~/state/application/hooks';
 import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from '~/stores/useMarketCapStore';
@@ -193,11 +192,9 @@ const Home: NextPage = React.forwardRef(function Home() {
   const fetchSupply = useCirculatingSupplyStore((state) => state.fetchData);
   const fetchTVL = useTVLStore((state) => state.fetchData);
 
-  const alerts = useAlerts();
   // Hooks
 
-  const { active, account, library, chainId } = useActiveWeb3React();
-  const hasWeb3 = active && account && library;
+  const { chainId } = useActiveWeb3React();
 
   const chain = chainId ? CHAIN_INFO[chainId] : undefined;
   const chainBanks = useMemo(() => {
@@ -206,7 +203,7 @@ const Home: NextPage = React.forwardRef(function Home() {
     } else {
       return undefined;
     }
-  }, [banks, chainId]);
+  }, [chainId]);
   // This effect will run only once
   useEffect(() => {
     fetchPrice();

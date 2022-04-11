@@ -270,7 +270,7 @@ export default function NetworkSelector() {
           // );
         });
     },
-    [library, toggle, history, chainId]
+    [library, toggle]
   );
 
   if (!info || !chainId || !library) {

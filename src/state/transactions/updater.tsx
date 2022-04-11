@@ -44,9 +44,6 @@ export default function Updater(): null {
 
   const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state]);
 
-  // show popup on confirm
-  const addPopup = () => null;
-
   const getReceipt = useCallback(
     (hash: string) => {
       if (!library || !chainId) throw new Error('No library or chainId');
@@ -136,7 +133,7 @@ export default function Updater(): null {
     return () => {
       cancels.forEach((cancel) => cancel());
     };
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addAlert, addPopup, getReceipt]);
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addAlert, getReceipt]);
 
   return null;
 }

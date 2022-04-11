@@ -70,7 +70,7 @@ export default React.memo(function Chart({
         chart.remove();
       };
     }
-  }, [node, data]);
+  }, [node, data, timeframe]);
   if (data === null) {
     return <h1>Loading...</h1>;
   }
