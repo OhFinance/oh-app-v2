@@ -101,6 +101,6 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
 
 export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {
   const token = useToken(currencyId);
-  if (currencyId === null || currencyId === undefined) return currencyId;
+  if (currencyId === null || currencyId === undefined) return undefined;
   return token;
 }

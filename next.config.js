@@ -3,6 +3,10 @@ const { DuplicatesPlugin } = require('inspectpack/plugin');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+const withTranspiledModules = require('next-transpile-modules')([
+  'lightweight-charts',
+  'fancy-canvas',
+]);
 
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000');
 
@@ -64,4 +68,5 @@ module.exports = withPlugins([
       },
     },
   ],
+  [withTranspiledModules],
 ]);

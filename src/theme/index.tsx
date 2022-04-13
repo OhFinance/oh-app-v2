@@ -84,7 +84,7 @@ function theme(darkMode: boolean): DefaultTheme {
   };
 }
 
-export default function ThemeProvider({ children }: { children: React.ReactNode }) {
+export default function ThemeProvider({ children }: { children: any }) {
   const themeObject = theme(false);
   return <SCThemeProvider theme={themeObject}>{children}</SCThemeProvider>;
 }

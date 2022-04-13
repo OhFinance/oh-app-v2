@@ -92,7 +92,7 @@ export default function Updater(): null {
       dispatch(setImplements3085({ implements3085: false }));
     } else if (account && !implements3085) {
       switchToNetwork({ library })
-        .then((x) => x ?? dispatch(setImplements3085({ implements3085: true })))
+        .then((x: any) => x ?? dispatch(setImplements3085({ implements3085: true })))
         .catch(() => dispatch(setImplements3085({ implements3085: false })));
     } else if (!account && implements3085) {
       dispatch(setImplements3085({ implements3085: false }));

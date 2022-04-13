@@ -117,7 +117,7 @@ export default function ModalIcon(info: ViewProps) {
         return (
           <>
             <IconContainer>
-              <Icon src={depositAnimation} alt="Depositing animation" />
+              <Icon src={depositAnimation as any} alt="Depositing animation" />
             </IconContainer>
             <ThemedText.H1 fontWeight={500}>{info.amount.toFixed(3)}</ThemedText.H1>
             <ThemedText.Main>{info.amount.currency.symbol} Bank Tokens</ThemedText.Main>
@@ -183,7 +183,7 @@ export default function ModalIcon(info: ViewProps) {
         return (
           <>
             <IconContainer>
-              <Icon src={withdrawingAnimation} alt="Withdrawing" />
+              <Icon src={withdrawingAnimation as any} alt="Withdrawing" />
             </IconContainer>
             <ThemedText.H1 fontWeight={500}>{info.amount.toFixed(3)}</ThemedText.H1>
             <ThemedText.Main>{info.amount.currency.symbol} Bank Tokens</ThemedText.Main>
@@ -196,7 +196,7 @@ export default function ModalIcon(info: ViewProps) {
         return (
           <>
             <IconContainer>
-              <Icon src={withdrawSuccess} alt="pig success" />
+              <Icon src={withdrawSuccess as any} alt="pig success" />
             </IconContainer>
             <ThemedText.Main fontWeight={400}>Transaction Submitted</ThemedText.Main>
             <BlockExplorer href={getExplorerUrl(info.hash)}>

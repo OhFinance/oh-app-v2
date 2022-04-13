@@ -13,7 +13,7 @@ import traderJoe from '~/assets/img/trader-joe.png';
 import { SupportedChainId } from './chains';
 
 export interface Bank {
-  image: string;
+  image: any;
   name: string;
   description: string;
   symbol: string;

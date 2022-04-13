@@ -25,7 +25,7 @@ import { switchToNetwork } from '../../../utilities/switchToNetwork';
 import DepositCard from './DepositCard';
 
 // nextjs bullies us if we don't do this
-const Chart = dynamic(() => import('./Chart'), { ssr: false });
+const Chart: any = dynamic(() => import('./Chart'), { ssr: false });
 
 const Grid = styled.div({
   display: 'grid',

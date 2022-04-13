@@ -1,7 +1,6 @@
 import '@reach/dialog/styles.css';
 import { Web3ReactProvider } from '@web3-react/core';
 import BigNumber from 'bignumber.js';
-import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -27,7 +26,7 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 });
 
-const Web3ProviderNetwork = dynamic(() => import('~/components/Web3ProviderNetwork'), {
+const Web3ProviderNetwork: any = dynamic(() => import('~/components/Web3ProviderNetwork'), {
   ssr: false,
 });
 
@@ -58,7 +57,7 @@ function Updaters() {
   );
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: any) {
   const setTheme = useThemeStore(selectSetTheme);
 
   useEffect(() => {
