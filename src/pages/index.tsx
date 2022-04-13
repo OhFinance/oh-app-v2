@@ -5,9 +5,11 @@ import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import React, { useEffect, useMemo } from 'react';
+import { Flex } from 'rebass';
 import { useBankAPYData } from 'state/banks/hooks';
 import styled from 'styled-components';
 import { ThemedText } from 'theme';
+import Skeleton from '~/components/Skeleton';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { useChartStore } from '~/stores/useChartStore';
 import { useCirculatingSupplyStore } from '~/stores/useCirculatingSupplyStore';
@@ -49,7 +51,7 @@ const Wrapper = styled.div`
 `;
 
 const SubHeading = styled(ThemedText.Subhead1)(({ theme }) => ({
-  color: theme.grey,
+  color: 'rgba(255, 255, 255, 0.67  )',
   paddingTop: 8,
   fontSize: '20px',
 }));
@@ -74,17 +76,28 @@ const BankContent = styled.div(({ theme }) => ({
   cursor: 'pointer',
 }));
 
-const HeaderImage = styled.div<{ contract: string; extension?: string }>(
-  ({ theme, contract, extension }) => ({
-    width: '100%',
-    aspectRatio: '16/9',
-    // backgroundImage: `url(/img/headers/${contract}.${extension || 'png'})`,
-    backgroundImage: 'url(/img/headers/placeholder.jpeg)',
-    backgroundSize: 'cover',
+const HeaderImage = styled.div<{ image: string }>(({ theme, image }) => ({
+  width: '100%',
+  aspectRatio: '16/9',
+  // backgroundImage: `url(/img/headers/${contract}.${extension || 'png'})`,
+  backgroundImage: `url(${image})`,
+  backgroundSize: 'cover',
 
-    backgroundPosition: 'center center',
-  })
-);
+  backgroundPosition: 'center center',
+}));
+
+const Banner = styled.div(({ theme }) => ({
+  color: theme.white,
+  width: '100%',
+  padding: '32px 32px',
+  fontWeight: 700,
+  fontSize: '2rem',
+  backgroundColor: 'rgb(72,138,221)',
+  background:
+    'linear-gradient(90deg, rgba(72,138,221,1) 0%, rgba(141,94,184,1) 35%, rgba(171,37,117,1) 100%)',
+  borderRadius: 20,
+  boxShadow: '0px 12px 24px 0px rgba(255, 255, 255, 0.26)',
+}));
 
 const BankText = styled.div(({ theme }) => ({
   width: '100%',
@@ -131,6 +144,11 @@ const BankLogo = styled.div(({ theme }) => ({
   },
 }));
 
+const ChainLogo = styled.img({
+  height: 28,
+  width: 'auto',
+  marginLeft: 4,
+});
 function Bank({ bank }: { bank: Bank }) {
   // Start Statistics (TVL, Share Price, APY)
   const totalValueLocked = useVirtualBalance(bank.ohToken);
@@ -143,7 +161,7 @@ function Bank({ bank }: { bank: Bank }) {
         minimumFractionDigits: 2,
       })}%`;
     }
-    return 'loading...';
+    return <Skeleton width="100%" height="100%" />;
   }, [apys]);
   // END STATISTICS
 
@@ -151,7 +169,7 @@ function Bank({ bank }: { bank: Bank }) {
     <BankWrapper>
       <Link href={`/bank/${bank.contractAddress}`}>
         <BankContent>
-          <HeaderImage contract={bank.contractAddress} />
+          <HeaderImage image={bank.header} />
           <BankText>
             <BankLogo>
               <img src={bank.image} alt={bank.name} />
@@ -162,19 +180,26 @@ function Bank({ bank }: { bank: Bank }) {
             </ProtocolLabel>
             <Stat>
               TVL{' '}
-              <span>
-                ${totalValueLocked ? totalValueLocked.toFixed(2, { groupSeparator: ',' }) : '---'}
-              </span>
+              {totalValueLocked ? (
+                <span>${totalValueLocked.toFixed(2, { groupSeparator: ',' })}</span>
+              ) : (
+                <Skeleton width={30} style={{ display: 'inline-block' }} />
+              )}
             </Stat>
             <Stat>
               Share Price{' '}
-              <span>${sharePrice ? sharePrice.toFixed(3, { groupSeperator: ',' }) : '---'}</span>
+              {sharePrice ? (
+                <span>${sharePrice.toFixed(3, { groupSeperator: ',' })}</span>
+              ) : (
+                <Skeleton width={30} style={{ display: 'inline-block' }} />
+              )}
             </Stat>
             <APRContainer>
               <APRTitle>
                 <span style={{ fontSize: '14px' }}>Earning Rate</span>
                 <br /> APY
               </APRTitle>
+
               <APRValue>{apyString}</APRValue>
             </APRContainer>
           </BankText>
@@ -216,8 +241,14 @@ const Home: NextPage = React.forwardRef(function Home() {
   }
   return (
     <Wrapper>
-      <ThemedText.H1 fontWeight={500}>Banks</ThemedText.H1>
-      <SubHeading fontSize="20px">All banks available on {chain.label}</SubHeading>
+      <Banner>
+        <ThemedText.H1 fontWeight={500}>Banks</ThemedText.H1>
+        <Flex alignItems="center" flexWrap="nowrap">
+          <SubHeading fontSize="20px">All banks available on {chain.label}</SubHeading>
+          <ChainLogo src={chain.logoUrl} alt={chain.label} />
+        </Flex>
+      </Banner>
+
       <BanksGrid>
         {chainBanks.map((bank, i) => (
           <Bank bank={bank} key={`bank-${bank.contractAddress}-${i}`} />

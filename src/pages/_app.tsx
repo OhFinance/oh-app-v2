@@ -3,7 +3,6 @@ import { Web3ReactProvider } from '@web3-react/core';
 import BigNumber from 'bignumber.js';
 import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
-import 'react-loading-skeleton/dist/skeleton.css';
 import { Provider } from 'react-redux';
 import { useCirculatingSupplyStore } from 'stores/useCirculatingSupplyStore';
 import { useMarketCapStore } from 'stores/useMarketCapStore';

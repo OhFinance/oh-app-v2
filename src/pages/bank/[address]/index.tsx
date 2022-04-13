@@ -1,3 +1,4 @@
+import Skeleton from 'components/Skeleton';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -76,6 +77,8 @@ const ChartContainer = styled.div(({ theme }) => ({
   borderRadius: 20,
   boxSizing: 'border-box',
   flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const StatsContainer = styled.div(({ theme }) => ({
@@ -277,16 +280,24 @@ export default function BankPage() {
             Balance
           </PortfolioTitle>
           <PortfolioBalance>
-            ${' '}
-            {portfolioValue?.toLocaleString('en-US', {
-              minimumFractionDigits: 3,
-              maximumFractionDigits: 3,
-            })}
+            {portfolioValue !== undefined ? (
+              '$ ' +
+              portfolioValue.toLocaleString('en-US', {
+                minimumFractionDigits: 3,
+                maximumFractionDigits: 3,
+              })
+            ) : (
+              <Skeleton width={60} />
+            )}
           </PortfolioBalance>
           <Flex marginLeft="auto">
             <Logo src={bank.image} alt={bank.name} size="small" />
             <DepositBalance>
-              {balance ? balance.toFixed(3, { groupSeperator: ',' }) : '0.000'}{' '}
+              {balance ? (
+                balance.toFixed(3, { groupSeperator: ',' })
+              ) : (
+                <Skeleton width={60} style={{ display: 'inline-block' }} />
+              )}{' '}
               {bank.ohToken.symbol} (Deposited {bank.underlyingToken.symbol})
             </DepositBalance>
           </Flex>

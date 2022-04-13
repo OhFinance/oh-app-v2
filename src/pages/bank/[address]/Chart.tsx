@@ -1,3 +1,4 @@
+import Skeleton from 'components/Skeleton';
 import { BarPrice, CandlestickData, createChart } from 'lightweight-charts';
 import React, { useEffect, useRef } from 'react';
 import { ChartTimeRange } from 'state/application/reducer';
@@ -72,7 +73,17 @@ export default React.memo(function Chart({
     }
   }, [node, data, timeframe]);
   if (data === null) {
-    return <h1>Loading...</h1>;
+    return (
+      <Skeleton
+        width="100%"
+        height="100%"
+        style={{
+          marginTop: '1rem',
+        }}
+        variant="rect"
+        animation="wave"
+      />
+    );
   }
   return <Container ref={node}></Container>;
 });

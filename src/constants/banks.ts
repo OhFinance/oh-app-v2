@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core';
+import mfam from 'assets/img/mfam.png';
 import aave from '~/assets/img/aave.svg';
-import benqi from '~/assets/img/benqi.png';
+import { Aave, Moonwell } from '~/assets/img/bank_headers';
 import comp from '~/assets/img/comp.svg';
 import crv from '~/assets/img/crv.svg';
 import ohDaie from '~/assets/img/oh-dai-e.png';
@@ -9,11 +10,11 @@ import ohUsdcMoonriver from '~/assets/img/oh-usdc-moonriver.png';
 import ohUsdc from '~/assets/img/oh-usdc.svg';
 import ohUsdte from '~/assets/img/oh-usdt-e.svg';
 import ohUsdtMoonriver from '~/assets/img/oh-usdt-moonriver.png';
-import traderJoe from '~/assets/img/trader-joe.png';
 import { SupportedChainId } from './chains';
 
 export interface Bank {
   image: any;
+  header: string;
   name: string;
   description: string;
   symbol: string;
@@ -27,6 +28,7 @@ export const banks: { [chainId: number]: Bank[] } = {
   [SupportedChainId.ETHEREUM_MAINNET]: [
     {
       image: ohUsdc,
+      header: Aave,
       name: 'Oh! USDC',
       symbol: 'OH-USDC',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -55,6 +57,7 @@ export const banks: { [chainId: number]: Bank[] } = {
   [SupportedChainId.AVALANCHE]: [
     {
       image: ohUsdce,
+      header: Aave,
       name: 'Oh! USDC.e',
       symbol: 'OH-USDC.e',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -75,13 +78,12 @@ export const banks: { [chainId: number]: Bank[] } = {
       ),
       strategies: [
         { protocol: 'Aave V2', image: aave },
-        { protocol: 'Benqi', image: benqi },
-        { protocol: 'Banker Joe', image: traderJoe },
         { protocol: 'Curve', image: crv },
       ],
     },
     {
       image: ohUsdte,
+      header: Aave,
       name: 'Oh! USDT.e',
       symbol: 'OH-USDT.e',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -102,13 +104,12 @@ export const banks: { [chainId: number]: Bank[] } = {
       ),
       strategies: [
         { protocol: 'Aave V2', image: aave },
-        { protocol: 'Benqi', image: benqi },
-        { protocol: 'Banker Joe', image: traderJoe },
         { protocol: 'Curve', image: crv },
       ],
     },
     {
       image: ohDaie,
+      header: Aave,
       name: 'Oh! DAI.e',
       symbol: 'OH-DAI.e',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -129,8 +130,6 @@ export const banks: { [chainId: number]: Bank[] } = {
       ),
       strategies: [
         { protocol: 'Aave V2', image: aave },
-        { protocol: 'Benqi', image: benqi },
-        { protocol: 'Banker Joe', image: traderJoe },
         { protocol: 'Curve', image: crv },
       ],
     },
@@ -138,7 +137,8 @@ export const banks: { [chainId: number]: Bank[] } = {
   [SupportedChainId.MOONRIVER]: [
     {
       image: ohUsdcMoonriver,
-      name: 'Oh! Moonwell USDC',
+      header: Moonwell,
+      name: 'Oh! USDC',
       symbol: 'OH-USDC',
       description: 'Risk-Optimized Lending and Yield Farming',
       contractAddress: '0x4C211F45876d8EC7bAb54CAc0e32AAD15095358A',
@@ -156,16 +156,12 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDC',
         'USDC'
       ),
-      strategies: [
-        { protocol: 'Aave V2', image: aave },
-        { protocol: 'Benqi', image: benqi },
-        { protocol: 'Banker Joe', image: traderJoe },
-        { protocol: 'Curve', image: crv },
-      ],
+      strategies: [{ protocol: 'Moonwell', image: mfam }],
     },
     {
       image: ohUsdtMoonriver,
-      name: 'Oh! Moonwell USDT',
+      header: Moonwell,
+      name: 'Oh! USDT',
       symbol: 'OH-USDT',
       description: 'Risk-Optimized Lending and Yield Farming',
       contractAddress: '0xdeA7Ff1D84B7E54587b434C1A585718857CF61d1',
@@ -183,12 +179,7 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDT',
         'USDT'
       ),
-      strategies: [
-        { protocol: 'Aave V2', image: aave },
-        { protocol: 'Benqi', image: benqi },
-        { protocol: 'Banker Joe', image: traderJoe },
-        { protocol: 'Curve', image: crv },
-      ],
+      strategies: [{ protocol: 'Moonwell', image: mfam }],
     },
   ],
 };

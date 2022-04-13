@@ -7,7 +7,6 @@ import { useVirtualBalance } from 'hooks/calls/bank/useVirtualBalance';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import { ApprovalState, useApproveCallback } from 'hooks/transactionCallbacks/useApproveCallback';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import { Flex } from 'rebass';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
@@ -15,6 +14,7 @@ import { useBankAPYData } from 'state/banks/hooks';
 import { useDerivedStakeInfo, useStakeActionHandlers, useStakeState } from 'state/stake/hooks';
 import { Field } from 'state/stake/reducer';
 import styled from 'styled-components';
+import Skeleton from '~/components/Skeleton';
 import { useActiveWeb3React } from '~/hooks/web3';
 
 const ContainerBase = styled.div(({ theme }) => ({
@@ -185,7 +185,7 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
         minimumFractionDigits: 2,
       })}%`;
     }
-    return <Skeleton />;
+    return <Skeleton height="100%" />;
   }, [apys]);
   // END STATISTICS
 
@@ -236,20 +236,19 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
             </APRContainer>
             <Stat>
               TVL{' '}
-              <span>
-                $
-                {totalValueLocked ? (
-                  totalValueLocked.toFixed(2, { groupSeparator: ',' })
-                ) : (
-                  <Skeleton />
-                )}
-              </span>
+              {totalValueLocked ? (
+                <span>${totalValueLocked.toFixed(2, { groupSeparator: ',' })}</span>
+              ) : (
+                <Skeleton width={60} style={{ display: 'inline-block' }} />
+              )}
             </Stat>
             <Stat>
               Share Price{' '}
-              <span>
-                ${sharePrice ? sharePrice.toFixed(3, { groupSeperator: ',' }) : <Skeleton />}
-              </span>
+              {sharePrice ? (
+                <span>${sharePrice.toFixed(3, { groupSeperator: ',' })}</span>
+              ) : (
+                <Skeleton width={60} style={{ display: 'inline-block' }} />
+              )}
             </Stat>
           </>
         )}
