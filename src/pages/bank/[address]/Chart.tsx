@@ -46,26 +46,16 @@ export default React.memo(function Chart({
           borderColor: '#0071B5',
         },
       });
-      if (timeframe === 'hour') {
-        let lineData = data.map((v) => ({ time: v.time, value: v.open }));
-        const lineSeries = chart.addAreaSeries({
-          priceFormat: {
-            type: 'custom',
-            formatter: (price: BarPrice) =>
-              price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-          },
-        });
-        lineSeries.setData(lineData);
-      } else {
-        const candleSeries = chart.addCandlestickSeries({
-          priceFormat: {
-            type: 'custom',
-            formatter: (price: BarPrice) =>
-              price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-          },
-        });
-        candleSeries.setData(data);
-      }
+
+      let lineData = data.map((v) => ({ time: v.time, value: v.high }));
+      const lineSeries = chart.addAreaSeries({
+        priceFormat: {
+          type: 'custom',
+          formatter: (price: BarPrice) =>
+            price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        },
+      });
+      lineSeries.setData(lineData);
 
       return () => {
         chart.remove();
