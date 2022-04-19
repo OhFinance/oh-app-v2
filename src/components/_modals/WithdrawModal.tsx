@@ -154,7 +154,7 @@ export default function WithdrawModal({ bank }: { bank: Bank }) {
         method((parsedAmount as CurrencyAmount<Token>).quotient.toString(), {
           gasLimit:
             chainId === SupportedChainId.MOONRIVER
-              ? 5000000
+              ? 7500000
               : calculateGasMargin(estimatedGasLimit),
         }).then((response) => {
           setAttemptingTx(false);
