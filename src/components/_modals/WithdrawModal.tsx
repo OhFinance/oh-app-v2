@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import Button from 'components/Button';
 import { Bank } from 'constants/banks';
 import { SupportedChainId } from 'constants/chains';
+import { BigNumber } from 'ethers';
 import { useVirtualBalance } from 'hooks/calls/bank/useVirtualBalance';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import { useTotalSupply } from 'hooks/calls/token/useTotalSupply';
@@ -145,13 +146,16 @@ export default function WithdrawModal({ bank }: { bank: Bank }) {
 
     if (!chainId || !library || !account || !bankContract || !parsedAmount || !currency) return;
 
-    let estimate = bankContract.estimateGas.withdraw;
+    let estimate =
+      chainId === SupportedChainId.MOONRIVER
+        ? async (...args: any[]) => BigNumber.from(0)
+        : bankContract.estimateGas.withdraw;
 
     let method = bankContract.withdraw;
     setAttemptingTx(true);
     estimate(parsedAmount.quotient.toString())
-      .then((estimatedGasLimit) =>
-        method((parsedAmount as CurrencyAmount<Token>).quotient.toString(), {
+      .then((estimatedGasLimit) => {
+        return method((parsedAmount as CurrencyAmount<Token>).quotient.toString(), {
           gasLimit:
             chainId === SupportedChainId.MOONRIVER
               ? 7500000
@@ -164,8 +168,8 @@ export default function WithdrawModal({ bank }: { bank: Bank }) {
             currencyId: currencyId(currency as Currency),
             amountRaw: (parsedAmount as CurrencyAmount<Token>).quotient.toString(),
           });
-        })
-      )
+        });
+      })
       .catch((error) => {
         setAttemptingTx(false);
 
