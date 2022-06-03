@@ -23,7 +23,8 @@ const NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.MOONRIVER]: `https://rpc.api.moonriver.moonbeam.network`,
   // TODO: INFURA ALTERNATIVE
-  [SupportedChainId.AVALANCHE]: ``,
+  [SupportedChainId.AVALANCHE]: 'https://api.avax.network/ext/bc/C/rpc',
+  [SupportedChainId.METIS]: 'https://andromeda.metis.io/?owner=1088',
 };
 
 export const network = new NetworkConnector({
