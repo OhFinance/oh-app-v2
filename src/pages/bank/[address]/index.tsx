@@ -20,7 +20,7 @@ import PigPic from '~/components/_modals/common/animations/pig.svg';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { ThemedText } from '~/theme';
 import UnstyledButton from '../../../components/UnstyledButton';
-import { banksByContract } from '../../../constants/banks';
+import { banksByChainContract } from '../../../constants/banks';
 import { SupportedChainId } from '../../../constants/chains';
 import { switchToNetwork } from '../../../utilities/switchToNetwork';
 import DepositCard from './DepositCard';
@@ -209,8 +209,8 @@ export default function BankPage() {
   const router = useRouter();
   const { address } = router.query;
   const bank = useMemo(
-    () => (typeof address === 'string' ? banksByContract[address] : null),
-    [address]
+    () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
+    [address, chainId]
   );
 
   const [selectedRange, setSelectedRange] = useState<ChartTimeRange>('hour');

@@ -1,11 +1,13 @@
 const ethereumLogoUrl = '/img/chains/ethereum.png';
 const avalancheLogoUrl = '/img/chains/avalanche.png';
+const metisLogoUrl = '/img/chains/metis.png';
 const moonriverLogoUrl = '/img/chains/moonriver.svg';
 
 export enum SupportedChainId {
   ETHEREUM_MAINNET = 1,
   RINKEBY = 4,
   KOVAN = 42,
+  METIS = 1088,
   MOONRIVER = 1285,
   AVALANCHE = 43114,
 }
@@ -14,6 +16,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.ETHEREUM_MAINNET,
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
+  SupportedChainId.METIS,
   SupportedChainId.MOONRIVER,
   SupportedChainId.AVALANCHE,
 ];
@@ -22,6 +25,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.ETHEREUM_MAINNET,
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
+  SupportedChainId.METIS,
   SupportedChainId.MOONRIVER,
   SupportedChainId.AVALANCHE,
 ] as const;
@@ -55,6 +59,15 @@ export const CHAIN_INFO: ChainInfo = {
     logoUrl: avalancheLogoUrl,
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
     rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+  },
+  [SupportedChainId.METIS]: {
+    blockWaitMsBeforeWarning: 600000,
+    docs: 'https://docs.metis.io/',
+    explorer: 'https://andromeda-explorer.metis.io/',
+    label: 'Metis',
+    logoUrl: metisLogoUrl,
+    nativeCurrency: { name: 'METIS', symbol: 'METIS', decimals: 18 },
+    rpcUrls: ['https://andromeda.metis.io/?owner=1088'],
   },
   [SupportedChainId.MOONRIVER]: {
     blockWaitMsBeforeWarning: 600000,

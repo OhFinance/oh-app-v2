@@ -5,6 +5,8 @@ const EXPLORER_URLS: { [chainId: number]: string } = {
   [SupportedChainId.RINKEBY]: 'rinkeby.etherscan.io',
   [SupportedChainId.KOVAN]: 'kovan.etherscan.io',
   [SupportedChainId.AVALANCHE]: 'snowtrace.io',
+  [SupportedChainId.MOONRIVER]: 'moonriver.moonscan.io',
+  [SupportedChainId.METIS]: 'andromeda-explorer.metis.io',
 };
 
 export enum ExplorerDataType {

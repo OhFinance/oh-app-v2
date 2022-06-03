@@ -173,6 +173,8 @@ const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.AVALANCHE:
       return <>Snowtrace</>;
+    case SupportedChainId.METIS:
+      return <>Andromeda Explorer</>;
     case SupportedChainId.MOONRIVER:
       return <>Moonscan</>;
     default:
@@ -306,6 +308,7 @@ export default function NetworkSelector() {
                 />
                 <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.AVALANCHE} />
                 <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MOONRIVER} />
+                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.METIS} />
               </FlyoutMenuContents>
             </FlyoutMenu>
           )}

@@ -1,7 +1,8 @@
 import { Token } from '@uniswap/sdk-core';
+import hum from 'assets/img/hum.svg';
 import mfam from 'assets/img/mfam.png';
 import aave from '~/assets/img/aave.svg';
-import { Aave, Moonwell } from '~/assets/img/bank_headers';
+import { Aave, Hummus, Moonwell } from '~/assets/img/bank_headers';
 import comp from '~/assets/img/comp.svg';
 import crv from '~/assets/img/crv.svg';
 import ohDaie from '~/assets/img/oh-dai-e.png';
@@ -10,6 +11,7 @@ import ohUsdcMoonriver from '~/assets/img/oh-usdc-moonriver.png';
 import ohUsdc from '~/assets/img/oh-usdc.svg';
 import ohUsdte from '~/assets/img/oh-usdt-e.svg';
 import ohUsdtMoonriver from '~/assets/img/oh-usdt-moonriver.png';
+import ohUsdt from '~/assets/img/oh-usdt.svg';
 import { SupportedChainId } from './chains';
 
 export interface Bank {
@@ -134,6 +136,54 @@ export const banks: { [chainId: number]: Bank[] } = {
       ],
     },
   ],
+  [SupportedChainId.METIS]: [
+    {
+      image: ohUsdc,
+      header: Hummus,
+      name: 'Oh! m.USDC',
+      symbol: 'OH-m.USDC',
+      description: 'Optimized Compounding and Boosted Yield Farming',
+      contractAddress: '0x4C211F45876d8EC7bAb54CAc0e32AAD15095358A',
+      ohToken: new Token(
+        SupportedChainId.METIS,
+        '0x4C211F45876d8EC7bAb54CAc0e32AAD15095358A',
+        6,
+        'OH-m.USDC',
+        'Oh! m.USDC'
+      ),
+      underlyingToken: new Token(
+        SupportedChainId.METIS,
+        '0xEA32A96608495e54156Ae48931A7c20f0dcc1a21',
+        6,
+        'm.USDC',
+        'm.USDC'
+      ),
+      strategies: [{ protocol: 'Hummus', image: hum }],
+    },
+    {
+      image: ohUsdt,
+      header: Hummus,
+      name: 'Oh! m.USDT',
+      symbol: 'OH-m.USDT',
+      description: 'Optimized Compounding and Boosted Yield Farming',
+      contractAddress: '0xc53bC2517Fceff56308b492AFad4A53d96d16ed8',
+      ohToken: new Token(
+        SupportedChainId.METIS,
+        '0xc53bC2517Fceff56308b492AFad4A53d96d16ed8',
+        6,
+        'OH-m.USDT',
+        'Oh! m.USDT'
+      ),
+      underlyingToken: new Token(
+        SupportedChainId.METIS,
+        '0xbB06DCA3AE6887fAbF931640f67cab3e3a16F4dC',
+        6,
+        'm.USDT',
+        'm.USDT'
+      ),
+      strategies: [{ protocol: 'Hummus', image: hum }],
+    },
+  ],
   [SupportedChainId.MOONRIVER]: [
     {
       image: ohUsdcMoonriver,
@@ -192,3 +242,14 @@ export const banksByContract: { [address: string]: Bank } = Object.values(banks)
   },
   {} as { [address: string]: Bank }
 );
+
+export const banksByChainContract: { [chainId: string]: { [address: string]: Bank } } =
+  Object.values(banks).reduce((prev, curr) => {
+    curr.forEach((bank) => {
+      if (!prev[bank.ohToken.chainId]) {
+        prev[bank.ohToken.chainId] = {};
+      }
+      prev[bank.ohToken.chainId][bank.contractAddress] = bank;
+    });
+    return prev;
+  }, {});
