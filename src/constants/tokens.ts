@@ -1,6 +1,14 @@
-import { Token } from '@uniswap/sdk-core';
+import { Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core';
 import { OH_ADDRESS, USDC_ADDRESS } from './addresses';
 import { SupportedChainId } from './chains';
+
+export const USDC_MAINNET = new Token(
+  SupportedChainId.ETHEREUM_MAINNET,
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  6,
+  'USDC',
+  'USD//C'
+);
 
 export const OH: { [chainId: number]: Token } = {
   [SupportedChainId.ETHEREUM_MAINNET]: new Token(
@@ -63,3 +71,36 @@ export const USDC: { [chainId: number]: Token } = {
     'USD Coin'
   ),
 };
+
+export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
+  ...(WETH9 as Record<SupportedChainId, Token>),
+};
+
+export class ExtendedEther extends Ether {
+  public get wrapped(): Token {
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId];
+    if (wrapped) return wrapped;
+    throw new Error('Unsupported chain ID');
+  }
+
+  private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {};
+
+  public static onChain(chainId: number): ExtendedEther {
+    return (
+      this._cachedExtendedEther[chainId] ??
+      (this._cachedExtendedEther[chainId] = new ExtendedEther(chainId))
+    );
+  }
+}
+
+const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {};
+export function nativeOnChain(chainId: number): NativeCurrency {
+  return cachedNativeCurrency[chainId] || ExtendedEther.onChain(chainId);
+}
+
+export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } =
+  {
+    USDC: {
+      [SupportedChainId.ETHEREUM_MAINNET]: USDC_MAINNET.address,
+    },
+  };

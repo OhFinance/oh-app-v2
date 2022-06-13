@@ -1,3 +1,4 @@
+import { constructSameAddressMap } from 'utilities/constructSameAddressMap';
 import { SupportedChainId } from './chains';
 type AddressMap = { [chainId: number]: string };
 
@@ -33,3 +34,7 @@ export const OH_USDC_BANK = {
   [SupportedChainId.KOVAN]: '0xa528639AAe2E765351dcd1e0C2dD299D6279dB52', // compound usdc
   [SupportedChainId.AVALANCHE]: '0x8B1Be96dc17875ee01cC1984e389507Bb227CaAB', // usdc.e
 };
+
+const V2_FACTORY_ADDRESS = '';
+
+export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS);
