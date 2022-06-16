@@ -9,6 +9,7 @@ import { escapeRegExp } from '~/utilities';
 
 const Container = styled.div(({ theme }) => ({
   position: 'relative',
+  width: '100%',
 }));
 const Balance = styled.p(({ theme }) => ({
   margin: 0,
@@ -29,23 +30,26 @@ const InputContainer = styled.div(({ theme }) => ({
   borderRadius: '20px',
   backgroundColor: theme.inputBG,
   boxSizing: 'border-box',
-  width: '100%',
 }));
 
 const Content = styled.div(({ theme }) => ({
   display: 'flex',
   ...theme.flexRowNoWrap,
   padding: '16px 20px 17px 20px',
+  width: '100%',
 }));
 
 const Input = styled.input(({ theme }) => ({
+  boxSizing: 'content-box',
   border: 'none',
   outline: 'none',
   background: 'none',
   color: '#A4AADF',
   fontSize: '20px',
   flex: '0 1 auto',
-  maxWidth: '220px',
+  minWidth: '220px',
+  width: '100%',
+  paddingRight: '60px',
 }));
 
 const Symbol = styled.img(({ theme }) => ({
@@ -57,6 +61,8 @@ const Symbol = styled.img(({ theme }) => ({
 }));
 
 const MaxButton = styled(Button)(({ theme }) => ({
+  position: 'absolute',
+  right: 0,
   marginRight: -8,
   alignSelf: 'center',
   padding: '12px 17px 13px 17px',
@@ -73,6 +79,7 @@ interface CurrencyInputProps {
   id: string;
   logoUrl?: string;
   style?: React.CSSProperties;
+  hideAvailableBalance?: boolean;
 }
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." characters via in a non-capturing group
@@ -86,6 +93,7 @@ export function CurrencyInput({
   id,
   logoUrl,
   style,
+  hideAvailableBalance,
 }: CurrencyInputProps) {
   const { account } = useActiveWeb3React();
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined);
@@ -98,9 +106,11 @@ export function CurrencyInput({
   };
   return (
     <Container style={style}>
-      <Balance>
-        Available Balance <span>{formatCurrencyAmount(selectedCurrencyBalance, 4)}</span>
-      </Balance>
+      {hideAvailableBalance || (
+        <Balance>
+          Available Balance <span>{formatCurrencyAmount(selectedCurrencyBalance, 4)}</span>
+        </Balance>
+      )}
       <InputContainer>
         <Content>
           {logoUrl && <Symbol src={logoUrl} alt="placeholder" />}

@@ -6,7 +6,7 @@ import { Bank } from 'constants/banks';
 import { useVirtualBalance } from 'hooks/calls/bank/useVirtualBalance';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import { ApprovalState, useApproveCallback } from 'hooks/transactionCallbacks/useApproveCallback';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Flex } from 'rebass';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
