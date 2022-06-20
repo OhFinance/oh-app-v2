@@ -76,10 +76,11 @@ interface CurrencyInputProps {
   onMax?: () => void;
   showMaxButton?: boolean;
   currency?: Currency | null;
-  id: string;
+  id?: string;
   logoUrl?: string;
   style?: React.CSSProperties;
   hideAvailableBalance?: boolean;
+  onReset?: () => void;
 }
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." characters via in a non-capturing group
@@ -90,10 +91,10 @@ export function CurrencyInput({
   onMax,
   showMaxButton,
   currency,
-  id,
   logoUrl,
   style,
   hideAvailableBalance,
+  onReset,
 }: CurrencyInputProps) {
   const { account } = useActiveWeb3React();
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined);
@@ -130,10 +131,15 @@ export function CurrencyInput({
             spellCheck="false"
           />
         </Content>
-        {showMaxButton && selectedCurrencyBalance && (
-          <MaxButton size="small" onClick={onMax}>
-            MAX
-          </MaxButton>
+        {onReset ? (
+          <MaxButton onClick={onReset}>RESET</MaxButton>
+        ) : (
+          showMaxButton &&
+          selectedCurrencyBalance && (
+            <MaxButton size="small" onClick={onMax}>
+              MAX
+            </MaxButton>
+          )
         )}
       </InputContainer>
       {/* <div ref={inputRef} className="w-full bg-inputBG rounded-lg w-full flex flex-row">

@@ -7,7 +7,7 @@ import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import { useTotalSupply } from 'hooks/calls/token/useTotalSupply';
 import { useBankContract } from 'hooks/contracts/useBankContract';
 import { useActiveWeb3React } from 'hooks/web3';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Flex, Text } from 'rebass';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
@@ -25,6 +25,7 @@ import { ModalView } from './modalViews';
 const Wrapper = styled.div({
   position: 'relative',
   overflow: 'show',
+  marginBottom: '40px',
 });
 
 const StatLabel = styled(Text)(({ theme }) => ({

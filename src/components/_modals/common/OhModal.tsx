@@ -5,11 +5,12 @@ import styled from 'styled-components';
 import { ThemedText } from 'theme';
 
 const Wrapper = styled.div(({ theme }) => ({
-  padding: '20px 30px 60px 30px',
-
+  padding: '20px 30px 15px 30px',
   position: 'relative',
   boxSizing: 'border-box',
   width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const Title = styled(ThemedText.H2)(({ theme }) => ({

@@ -29,7 +29,6 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
   overflow: visible;
 
   &[data-reach-dialog-content] {
-    margin: 0 0 2rem 0;
     background-color: ${({ theme }) => theme.bg3};
     border-radius: 20px;
     position: relative;
@@ -86,7 +85,7 @@ export default function Modal({
   isOpen,
   onDismiss,
   minHeight = false,
-  maxHeight = 90,
+  maxHeight = 95,
   initialFocusRef,
   children,
 }: ModalProps) {

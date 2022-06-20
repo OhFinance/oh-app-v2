@@ -7,22 +7,6 @@ interface NavType {
   active?: boolean;
 }
 
-const navs: NavType[] = [
-  {
-    title: 'Swap',
-    url: '/',
-  },
-  {
-    title: 'Pool',
-    url: '/pool',
-  },
-  {
-    title: 'OH! Boost',
-    url: '/stake',
-    active: true,
-  },
-];
-
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
@@ -62,11 +46,7 @@ const NavBar = () => {
   return (
     <Container>
       <List>
-        {navs.map((nav: NavType, index: number) => (
-          <ListItem key={index} active={nav.active}>
-            {nav.title}
-          </ListItem>
-        ))}
+        <ListItem active>OH! Boost</ListItem>
       </List>
       <SettingsButton>
         <Image src="/img/settings.svg" width={20} height={20} alt="settings" />
