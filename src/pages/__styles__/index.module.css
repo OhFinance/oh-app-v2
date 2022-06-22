@@ -143,3 +143,8 @@
     @apply pb-6;
   }
 }
+
+.tippy-popper .tippy-tooltip {
+  text-align: left;
+  background-color: rgba(231, 1, 140, 1);
+}

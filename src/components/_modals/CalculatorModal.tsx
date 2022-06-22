@@ -1,5 +1,6 @@
 import { CurrencyInput } from 'components/CurrencyInput';
 import Dropdown from 'components/Dropdown';
+import InfoBox from 'components/InfoBox';
 import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import { Scrollable } from 'components/_containers/Scrollable';
 import SpacedRow from 'components/_containers/SpacedRow';
@@ -64,6 +65,12 @@ const Stats = styled(SpacedRow)({
   fontSize: '14px',
   fontWeight: 400,
 });
+
+const LabelFlex = styled.div`
+  display: flex;
+  align-items: center;
+  column-gap: 0.2rem;
+`;
 
 const SubSectionHeading = styled.p({
   width: '100%',
@@ -143,7 +150,11 @@ export const CalculatorModal = () => {
             />
           </InputWrapper>
           <Stats>
-            Pool Share<span>0.0%</span>
+            <LabelFlex>
+              Pool Share <InfoBox text="Percentage of the pool you would own." />
+            </LabelFlex>
+
+            <span>0.0%</span>
           </Stats>
         </FullWidthColumn>
         <Container>
@@ -188,16 +199,32 @@ export const CalculatorModal = () => {
       </Wrapper>
       <FullWidthColumn gap={5} py="10px">
         <Stats>
-          vOH! Share<span>0.0%</span>
+          <LabelFlex>
+            vOH! Share
+            <InfoBox text="Percentage of vOH Supply you would own." />
+          </LabelFlex>
+          <span>0.0%</span>
         </Stats>
         <Stats>
-          Base APR<span>0.0%</span>
+          <LabelFlex>
+            Base APR
+            <InfoBox text="Base APR is independent of vOH balance." />
+          </LabelFlex>
+          <span>0.0%</span>
         </Stats>
         <Stats>
-          Current Boosted APR<span>0.0%</span>
+          <LabelFlex>
+            Current Boosted APR{' '}
+            <InfoBox text="Current Boosted APR of OH emissions you am earning." />
+          </LabelFlex>
+          <span>0.0%</span>
         </Stats>
         <Stats color="#E7018C">
-          Estimated APR<span>0.0%</span>
+          <LabelFlex>
+            Estimated APR{' '}
+            <InfoBox text="Projected Boosted APR of OH emissions you would earn. Actual value affected by vOH distribution." />
+          </LabelFlex>
+          <span>0.0%</span>
         </Stats>
       </FullWidthColumn>
     </OhModal>

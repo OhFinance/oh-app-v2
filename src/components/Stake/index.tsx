@@ -1,10 +1,12 @@
 import Button from 'components/Button';
+import InfoBox from 'components/InfoBox';
 import CenteredRow from 'components/_containers/CenteredRow';
 import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
 import CalculatorModal from 'components/_modals/CalculatorModal';
 import Image from 'next/image';
+import { AiOutlineCalculator } from 'react-icons/ai';
 import { useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
 import styled from 'styled-components';
@@ -45,6 +47,9 @@ const StakeButton = styled(Button)({
 
 const CalculatorButton = styled(StatsLabel)({
   cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  columnGap: '0.2rem',
   '&:hover': {
     textDecoration: 'underline',
   },
@@ -96,7 +101,9 @@ export const Stake: React.FC<IProps> = ({ onStake }) => {
             <Image src="/img/oh_token_logo.png" width={40} height={40} alt="token" />
           </div>
           <CalculatorButton onClick={toggleModal}>
-            OH! Boost APR (Booster Calculator)
+            OH! Boost APR
+            <InfoBox text="Your veOH balance contributes to your Boosted APR." />
+            (Booster Calculator <AiOutlineCalculator />)
           </CalculatorButton>
         </CenteredRow>
         <OverFlowButtons>
