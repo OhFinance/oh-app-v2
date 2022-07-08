@@ -184,6 +184,31 @@ export const banks: { [chainId: number]: Bank[] } = {
       strategies: [{ protocol: 'Hummus', image: hum }],
     },
   ],
+  [SupportedChainId.MOONBEAM]: [
+    {
+      image: ohUsdcMoonriver,
+      header: Moonwell,
+      name: 'Oh! USDC',
+      symbol: 'OH-USDC',
+      description: 'Risk-Optimized Lending and Yield Farming',
+      contractAddress: '0x76e67Ac1DFBEC19C75aE4705d69c26c69EB77B97',
+      ohToken: new Token(
+        SupportedChainId.MOONBEAM,
+        '0x76e67Ac1DFBEC19C75aE4705d69c26c69EB77B97',
+        6,
+        'OH-USDC',
+        'Oh! USDC'
+      ),
+      underlyingToken: new Token(
+        SupportedChainId.MOONBEAM,
+        '0x8f552a71EFE5eeFc207Bf75485b356A0b3f01eC9',
+        6,
+        'USDC',
+        'USDC'
+      ),
+      strategies: [{ protocol: 'Moonwell', image: mfam }],
+    },
+  ],
   [SupportedChainId.MOONRIVER]: [
     {
       image: ohUsdcMoonriver,

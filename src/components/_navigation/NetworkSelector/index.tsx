@@ -1,7 +1,7 @@
 import UnstyledButton from 'components/UnstyledButton';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
 import { useActiveWeb3React } from 'hooks/web3';
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { ArrowDownCircle } from 'react-feather';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
@@ -175,6 +175,8 @@ const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
       return <>Snowtrace</>;
     case SupportedChainId.METIS:
       return <>Andromeda Explorer</>;
+    case SupportedChainId.MOONBEAM:
+      return <>Moonscan</>;
     case SupportedChainId.MOONRIVER:
       return <>Moonscan</>;
     default:
@@ -307,6 +309,7 @@ export default function NetworkSelector() {
                   targetChain={SupportedChainId.ETHEREUM_MAINNET}
                 />
                 <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.AVALANCHE} />
+                <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MOONBEAM} />
                 <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MOONRIVER} />
                 <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.METIS} />
               </FlyoutMenuContents>

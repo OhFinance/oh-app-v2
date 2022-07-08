@@ -1,6 +1,7 @@
 const ethereumLogoUrl = '/img/chains/ethereum.png';
 const avalancheLogoUrl = '/img/chains/avalanche.png';
 const metisLogoUrl = '/img/chains/metis.png';
+const moonbeamLogoUrl = '/img/chains/moonbeam.png';
 const moonriverLogoUrl = '/img/chains/moonriver.svg';
 
 export enum SupportedChainId {
@@ -8,6 +9,7 @@ export enum SupportedChainId {
   RINKEBY = 4,
   KOVAN = 42,
   METIS = 1088,
+  MOONBEAM = 1284,
   MOONRIVER = 1285,
   AVALANCHE = 43114,
 }
@@ -17,6 +19,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
   SupportedChainId.METIS,
+  SupportedChainId.MOONBEAM,
   SupportedChainId.MOONRIVER,
   SupportedChainId.AVALANCHE,
 ];
@@ -26,6 +29,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
   SupportedChainId.METIS,
+  SupportedChainId.MOONBEAM,
   SupportedChainId.MOONRIVER,
   SupportedChainId.AVALANCHE,
 ] as const;
@@ -69,10 +73,19 @@ export const CHAIN_INFO: ChainInfo = {
     nativeCurrency: { name: 'METIS', symbol: 'METIS', decimals: 18 },
     rpcUrls: ['https://andromeda.metis.io/?owner=1088'],
   },
+  [SupportedChainId.MOONBEAM]: {
+    blockWaitMsBeforeWarning: 600000,
+    docs: 'https://docs.moonbeam.network/builders/get-started/networks/moonbeam/',
+    explorer: 'https://moonbeam.moonscan.io/',
+    label: 'Moonbeam',
+    logoUrl: moonbeamLogoUrl,
+    nativeCurrency: { name: 'GLMR', symbol: 'GLMR', decimals: 18 },
+    rpcUrls: ['https://rpc.api.moonbeam.network/'],
+  },
   [SupportedChainId.MOONRIVER]: {
     blockWaitMsBeforeWarning: 600000,
     docs: 'https://docs.moonbeam.network/builders/get-started/networks/moonriver/',
-    explorer: 'https://blockscout.moonriver.moonbeam.network/',
+    explorer: 'https://moonriver.moonscan.io/',
     label: 'Moonriver',
     logoUrl: moonriverLogoUrl,
     nativeCurrency: { name: 'MOVR', symbol: 'MOVR', decimals: 18 },
