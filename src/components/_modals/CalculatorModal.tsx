@@ -4,8 +4,15 @@ import InfoBox from 'components/InfoBox';
 import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import { Scrollable } from 'components/_containers/Scrollable';
 import SpacedRow from 'components/_containers/SpacedRow';
-import { useAllTokens } from 'hooks/Tokens';
-import { useMemo, useState } from 'react';
+import { VeOH_TOKENS } from 'constants/tokens';
+import {
+  useInvestedBalance,
+  useOHBalance,
+  useOHBoostStats,
+  useProxyTokenBalance,
+  useVeOHBalance,
+} from 'hooks/stake';
+import { useEffect, useMemo, useState } from 'react';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
 import styled from 'styled-components';
@@ -108,16 +115,49 @@ const stakePeriods = ['2 months', '5 months', '8 months', '10 months'];
 export const CalculatorModal = () => {
   const isOpen = useModalOpen(ApplicationModal.STAKE_CALCULATOR);
   const toggle = useToggleModal(ApplicationModal.STAKE_CALCULATOR);
-  const tokens = useAllTokens();
-  const allTokens = useMemo(() => Object.values(tokens), [tokens]);
-  const [selectedToken, setSelectedToken] = useState(allTokens[0]);
+
+  // Random token used as prop for currency input
+  const dummyToken = VeOH_TOKENS[0].token;
+
+  const [selectedToken, setSelectedToken] = useState(VeOH_TOKENS[0]);
   const [activeTab, setActiveTab] = useState(0);
-  const [totalStaked, setTotalStaked] = useState('0.0');
-  const [selectedTokenAmount, setSelectedTokenAmount] = useState('0.0');
-  const [ohAmount, setOhAmount] = useState('0.0');
-  const [ohSupply, setOhSupply] = useState('0.0');
+  const [totalStaked, setTotalStaked] = useState('0.00');
+  const [selectedTokenAmount, setSelectedTokenAmount] = useState('0.00');
+  const [ohAmount, setOhAmount] = useState('0.00');
+  const [ohSupply, setOhSupply] = useState('0.00');
   const periodOptions = stakePeriods.map((period) => ({ name: period }));
   const [selectedPeriod, setSelectedPeriod] = useState(periodOptions[0]);
+
+  const ohBalance = useOHBalance();
+  const veOHBalance = useVeOHBalance();
+  const { veOHSupply, veOHRate } = useOHBoostStats();
+  const tokenBalance = useProxyTokenBalance(selectedToken.token);
+  const tokenSupply = useInvestedBalance(selectedToken.token);
+
+  useEffect(() => {
+    activeTab ? setOhAmount(ohBalance.toFixed(2)) : setOhAmount(veOHBalance.toFixed(2));
+  }, [activeTab, ohBalance, veOHBalance]);
+
+  useEffect(() => {
+    setOhSupply(veOHSupply.toFixed(2));
+  }, [veOHSupply]);
+
+  useEffect(() => {
+    setTotalStaked(tokenSupply.toFixed(2));
+  }, [tokenSupply]);
+
+  useEffect(() => {
+    setSelectedTokenAmount(tokenBalance.toFixed(2));
+  }, [tokenBalance, tokenSupply]);
+
+  const estimatedVeHum = useMemo(
+    () => veOHRate * 2592000 * +ohAmount * +selectedPeriod.name.split(' ')[0],
+    [ohAmount, selectedPeriod.name, veOHRate]
+  );
+
+  const veOHShare = (
+    100 * (activeTab ? estimatedVeHum / +ohSupply : +ohAmount / +ohSupply)
+  ).toFixed(2);
 
   return (
     <OhModal title="Boost Calculator" isOpen={isOpen} onDismiss={toggle}>
@@ -127,26 +167,26 @@ export const CalculatorModal = () => {
           <InputWrapper>
             <Dropdown
               selected={selectedToken}
-              onChange={(token) => setSelectedToken(token)}
-              options={allTokens}
+              onChange={setSelectedToken}
+              options={VeOH_TOKENS}
               optionsHeader="Select Token"
             />
             <CurrencyInput
-              currency={selectedToken}
+              currency={dummyToken}
               value={selectedTokenAmount}
               onUserInput={setSelectedTokenAmount}
               hideAvailableBalance
-              onReset={() => setSelectedTokenAmount('0.0')}
+              onReset={() => setSelectedTokenAmount(tokenBalance.toFixed(2))}
             />
           </InputWrapper>
           <InputWrapper>
             <SubSectionHeading>Total Staked</SubSectionHeading>
             <CurrencyInput
-              currency={selectedToken}
+              currency={dummyToken}
               value={totalStaked}
               onUserInput={setTotalStaked}
               hideAvailableBalance
-              onReset={() => setTotalStaked('0.0')}
+              onReset={() => setTotalStaked(tokenSupply.toFixed(2))}
             />
           </InputWrapper>
           <Stats>
@@ -154,13 +194,15 @@ export const CalculatorModal = () => {
               Pool Share <InfoBox text="Percentage of the pool you would own." />
             </LabelFlex>
 
-            <span>0.0%</span>
+            <span>
+              {(totalStaked ? (100 * +selectedTokenAmount) / +totalStaked : 0).toFixed(2)}%
+            </span>
           </Stats>
         </FullWidthColumn>
         <Container>
           <List>
             <ListItem active={activeTab === 0} onClick={() => setActiveTab(0)}>
-              vOH!
+              veOH!
             </ListItem>
             <ListItem active={activeTab === 1} onClick={() => setActiveTab(1)}>
               OH!
@@ -168,14 +210,16 @@ export const CalculatorModal = () => {
           </List>
         </Container>
         <FullWidthColumn gap={10}>
-          <SectionHeading>{activeTab ? 'My Stacked OH!' : 'My vOH!'}</SectionHeading>
+          <SectionHeading>{activeTab ? 'My Stacked OH!' : 'My veOH!'}</SectionHeading>
           <InputWrapper>
             <CurrencyInput
-              currency={allTokens[0]}
+              currency={dummyToken}
               value={ohAmount}
               onUserInput={setOhAmount}
               hideAvailableBalance
-              onReset={() => setOhAmount('0.0')}
+              onReset={() =>
+                activeTab ? setOhAmount(ohBalance.toFixed(2)) : setOhAmount(veOHBalance.toFixed(2))
+              }
             />
             {activeTab ? (
               <Dropdown
@@ -186,13 +230,13 @@ export const CalculatorModal = () => {
             ) : null}
           </InputWrapper>
           <InputWrapper>
-            <SubSectionHeading>Total OH! Supply</SubSectionHeading>
+            <SubSectionHeading>Total veOH! Supply</SubSectionHeading>
             <CurrencyInput
-              currency={allTokens[0]}
+              currency={dummyToken}
               value={ohSupply}
               onUserInput={setOhSupply}
               hideAvailableBalance
-              onReset={() => setOhSupply('0.0')}
+              onReset={() => setOhSupply(veOHSupply.toFixed(2))}
             />
           </InputWrapper>
         </FullWidthColumn>
@@ -200,29 +244,29 @@ export const CalculatorModal = () => {
       <FullWidthColumn gap={5} py="10px">
         <Stats>
           <LabelFlex>
-            vOH! Share
-            <InfoBox text="Percentage of vOH Supply you would own." />
+            veOH! Share
+            <InfoBox text="Percentage of veOH Supply you would own." />
           </LabelFlex>
-          <span>0.0%</span>
+          <span>{veOHShare}%</span>
         </Stats>
         <Stats>
           <LabelFlex>
             Base APR
-            <InfoBox text="Base APR is independent of vOH balance." />
+            <InfoBox text="Base APR is independent of veOH balance." />
           </LabelFlex>
           <span>0.0%</span>
         </Stats>
         <Stats>
           <LabelFlex>
             Current Boosted APR{' '}
-            <InfoBox text="Current Boosted APR of OH emissions you am earning." />
+            <InfoBox text="Current Boosted APR of OH emissions you are earning." />
           </LabelFlex>
           <span>0.0%</span>
         </Stats>
         <Stats color="#E7018C">
           <LabelFlex>
-            Estimated APR{' '}
-            <InfoBox text="Projected Boosted APR of OH emissions you would earn. Actual value affected by vOH distribution." />
+            Estimated Boosted APR{' '}
+            <InfoBox text="Projected Boosted APR of OH emissions you would earn. Actual value affected by veOH distribution." />
           </LabelFlex>
           <span>0.0%</span>
         </Stats>

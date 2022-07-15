@@ -39,3 +39,9 @@ export function formatPrice(
 
   return formatLocaleNumber({ number: price, locale, sigFigs });
 }
+
+export const formatShortAmount = (num: number) => {
+  return Math.abs(num) > 999999
+    ? (Math.sign(num) * (Math.abs(num) / 1000000)).toFixed(2) + 'M'
+    : (Math.sign(num) * Math.abs(num)).toFixed(2);
+};

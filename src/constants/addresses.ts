@@ -2,6 +2,14 @@ import { constructSameAddressMap } from 'utilities/constructSameAddressMap';
 import { SupportedChainId } from './chains';
 type AddressMap = { [chainId: number]: string };
 
+export const MASTER_OH_ADDRESS: AddressMap = {
+  [SupportedChainId.RINKEBY]: '0x7585eCC8267f1b32F3E4D057C1eE9016f043D4a9',
+};
+
+export const VEOH_ADDRESS: AddressMap = {
+  [SupportedChainId.RINKEBY]: '0xee661c2ab32bacb90418ad2ccf413e11994f5072',
+};
+
 export const OH_ADDRESS: AddressMap = {
   [SupportedChainId.ETHEREUM_MAINNET]: '0x16ba8Efe847EBDFef99d399902ec29397D403C30',
   [SupportedChainId.RINKEBY]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',

@@ -104,3 +104,25 @@ export function useCurrency(currencyId: string | null | undefined): Currency | n
   if (currencyId === null || currencyId === undefined) return undefined;
   return token;
 }
+
+// export const useBaseAPR = (pid: number, token: Token) => {
+//   const { dilutingPartition, ohPerSecond, totalAlloc, poolAllocPoints } = usePoolInfo(pid);
+//   const totalStaked = useInvestedBalance(token);
+//   const { price } = usePriceStore();
+//   try {
+//     const apr = ohPerSecond
+//       .mul(poolAllocPoints)
+//       .div(totalAlloc)
+//       .mul(dilutingPartition)
+//       .div(1000)
+//       .div(totalStaked)
+//       .mul(60 * 60 * 24 * 365)
+//       .mul(price)
+//       .div(ethers.utils.parseUnits('1', 36 - token.decimals))
+//       .mul(100)
+//       .toString();
+//     return apr;
+//   } catch {
+//     return 0;
+//   }
+// };

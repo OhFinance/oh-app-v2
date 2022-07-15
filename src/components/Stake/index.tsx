@@ -5,11 +5,13 @@ import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
 import CalculatorModal from 'components/_modals/CalculatorModal';
+import { useOHBoostStats } from 'hooks/stake';
 import Image from 'next/image';
 import { AiOutlineCalculator } from 'react-icons/ai';
 import { useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
 import styled from 'styled-components';
+import { formatShortAmount } from 'utilities/formatCurrencyAmount';
 
 const Heading = styled.h1`
   display: flex;
@@ -61,6 +63,8 @@ interface IProps {
 
 export const Stake: React.FC<IProps> = ({ onStake }) => {
   const toggleModal = useToggleModal(ApplicationModal.STAKE_CALCULATOR);
+
+  const { ohStaked, ohSupply, veOHSupply } = useOHBoostStats();
   return (
     <>
       <CalculatorModal />
@@ -75,23 +79,23 @@ export const Stake: React.FC<IProps> = ({ onStake }) => {
               <Image src="/img/oh-token.svg" width={50} height={50} alt="token" />
             </div>
             <div>
-              <StatsValue>0.0</StatsValue>
-              <StatsLabel>Stake OH! Boost</StatsLabel>
+              <StatsValue>{formatShortAmount(ohSupply)}</StatsValue>
+              <StatsLabel>OH! Supply</StatsLabel>
             </div>
           </CenteredRow>
           <CenteredRow>
             <div>
               <div>
-                <StatsValue>0.0 </StatsValue>
-                <span>OH! Boost</span>
+                <StatsValue>{ohStaked}</StatsValue>
+                <span> OH!</span>
               </div>
-              <StatsLabel>Stake OH! Boost</StatsLabel>
+              <StatsLabel>OH! Supply Staked</StatsLabel>
             </div>
           </CenteredRow>
           <VSeperator />
           <CenteredRow>
             <div>
-              <StatsValue>0.0</StatsValue>
+              <StatsValue>{formatShortAmount(veOHSupply)}</StatsValue>
               <StatsLabel>OH! Boost Mined</StatsLabel>
             </div>
           </CenteredRow>

@@ -1,5 +1,5 @@
 import { Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core';
-import { OH_ADDRESS, USDC_ADDRESS } from './addresses';
+import { OH_ADDRESS, USDC_ADDRESS, VEOH_ADDRESS } from './addresses';
 import { SupportedChainId } from './chains';
 
 export const USDC_MAINNET = new Token(
@@ -9,6 +9,24 @@ export const USDC_MAINNET = new Token(
   'USDC',
   'USD//C'
 );
+
+export const USDC_RINKEBY = new Token(
+  SupportedChainId.RINKEBY,
+  '0xCEe95f9Aa3248eC712c001483439A10B180faC9e',
+  6,
+  'USDC',
+  'USDC'
+);
+
+export const VeOH: { [chainId: number]: Token } = {
+  [SupportedChainId.RINKEBY]: new Token(
+    SupportedChainId.RINKEBY,
+    VEOH_ADDRESS[SupportedChainId.RINKEBY],
+    18,
+    'veOH',
+    'veOH! Finance'
+  ),
+};
 
 export const OH: { [chainId: number]: Token } = {
   [SupportedChainId.ETHEREUM_MAINNET]: new Token(
@@ -104,3 +122,5 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
       [SupportedChainId.ETHEREUM_MAINNET]: USDC_MAINNET.address,
     },
   };
+
+export const VeOH_TOKENS = [{ pid: 0, token: USDC_RINKEBY, name: 'USDC' }];

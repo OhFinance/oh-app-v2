@@ -3,10 +3,13 @@ import { CurrencyInput } from 'components/CurrencyInput';
 import { FullWidthColumn } from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
-import { banks } from 'constants/banks';
+import { OH } from 'constants/tokens';
+import { useConfirmOHStake, useOHBalance, useOHStaked } from 'hooks/stake';
+import { useActiveWeb3React } from 'hooks/web3';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Flex } from 'rebass';
+import { usePriceStore } from 'stores/usePriceStore';
 import styled from 'styled-components';
 
 const Stats = styled.p(({ theme }) => ({
@@ -39,7 +42,15 @@ interface IProps {
 }
 
 export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
+  const { chainId } = useActiveWeb3React();
+  const ohToken = OH[chainId];
+  const ohAmount = useOHBalance();
+  const stacked = useOHStaked();
+  const { price } = usePriceStore();
+
   const [value, setValue] = useState('0.0');
+
+  const { confirmStake, loading } = useConfirmOHStake();
   return (
     <FullWidthColumn gap={20} padding="15px 0 45px 0 ">
       <Flex alignItems={'center'} flexDirection="column">
@@ -49,30 +60,36 @@ export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
         </Heading>
       </Flex>
       <SpacedRow>
-        <Stats>Staked: 0.00 OH! Boost</Stats>
-        <Stats>Stakeable: 0.00 OH! Boost</Stats>
+        <Stats>Staked: {stacked.toFixed(2)} OH!</Stats>
+        <Stats>Stakeable: {ohAmount?.toFixed(2) || '0.00'} OH!</Stats>
       </SpacedRow>
       <CurrencyInput
-        id="lol"
-        currency={banks[1][0].underlyingToken}
+        currency={ohToken}
         value={value}
         onUserInput={(value) => setValue(value)}
+        onMax={() => setValue(ohAmount?.toString() || '0.00')}
         showMaxButton
         hideAvailableBalance
       />
       <FullWidthColumn gap={15}>
         <SpacedRow>
-          Token Price<span>$ 0.439147</span>
+          Token Price<span>$ {price.toFixed(6)}</span>
         </SpacedRow>
         <SpacedRow>
-          Token Stake<span>0.00 OH! Boost</span>
+          Token Stake<span>{stacked.toFixed(2)} OH! Boost</span>
         </SpacedRow>
       </FullWidthColumn>
       <OverFlowButtons>
         <CancelButton size="large" onClick={onCancel}>
           Cancel
         </CancelButton>
-        <ConfirmButton size="large">Confirm</ConfirmButton>
+        <ConfirmButton
+          size="large"
+          disabled={!value || +value === 0 || loading}
+          onClick={() => confirmStake(value)}
+        >
+          Confirm
+        </ConfirmButton>
       </OverFlowButtons>
     </FullWidthColumn>
   );

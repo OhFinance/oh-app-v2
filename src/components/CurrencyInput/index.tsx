@@ -134,8 +134,7 @@ export function CurrencyInput({
         {onReset ? (
           <MaxButton onClick={onReset}>RESET</MaxButton>
         ) : (
-          showMaxButton &&
-          selectedCurrencyBalance && (
+          showMaxButton && (
             <MaxButton size="small" onClick={onMax}>
               MAX
             </MaxButton>
