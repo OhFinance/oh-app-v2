@@ -1,5 +1,6 @@
 import Button from 'components/Button';
 import { CurrencyInput } from 'components/CurrencyInput';
+import Spinner from 'components/Spinner';
 import { FullWidthColumn } from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
@@ -34,6 +35,7 @@ const CancelButton = styled(Button)({
 });
 
 const ConfirmButton = styled(Button)({
+  position: 'relative',
   width: '100%',
 });
 
@@ -45,12 +47,12 @@ export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
   const { chainId } = useActiveWeb3React();
   const ohToken = OH[chainId];
   const ohAmount = useOHBalance();
-  const stacked = useOHStaked();
+  const { staked, getStaked } = useOHStaked();
   const { price } = usePriceStore();
 
   const [value, setValue] = useState('0.0');
 
-  const { confirmStake, loading } = useConfirmOHStake();
+  const { confirmStake, loading, approveStake, approved } = useConfirmOHStake();
   return (
     <FullWidthColumn gap={20} padding="15px 0 45px 0 ">
       <Flex alignItems={'center'} flexDirection="column">
@@ -60,14 +62,15 @@ export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
         </Heading>
       </Flex>
       <SpacedRow>
-        <Stats>Staked: {stacked.toFixed(2)} OH!</Stats>
+        <Stats>Staked: {staked.toFixed(2)} OH!</Stats>
         <Stats>Stakeable: {ohAmount?.toFixed(2) || '0.00'} OH!</Stats>
       </SpacedRow>
       <CurrencyInput
         currency={ohToken}
         value={value}
         onUserInput={(value) => setValue(value)}
-        onMax={() => setValue(ohAmount?.toString() || '0.00')}
+        onMax={() => loading || approved || setValue(ohAmount?.toString() || '0.00')}
+        disabled={loading || approved}
         showMaxButton
         hideAvailableBalance
       />
@@ -76,19 +79,20 @@ export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
           Token Price<span>$ {price.toFixed(6)}</span>
         </SpacedRow>
         <SpacedRow>
-          Token Stake<span>{stacked.toFixed(2)} OH! Boost</span>
+          Token Stake<span>{staked.toFixed(2)} OH! Boost</span>
         </SpacedRow>
       </FullWidthColumn>
       <OverFlowButtons>
-        <CancelButton size="large" onClick={onCancel}>
+        <CancelButton size="large" onClick={onCancel} disabled={loading}>
           Cancel
         </CancelButton>
         <ConfirmButton
           size="large"
           disabled={!value || +value === 0 || loading}
-          onClick={() => confirmStake(value)}
+          onClick={() => (approved ? confirmStake().then(getStaked) : approveStake(value))}
         >
-          Confirm
+          {loading ? <Spinner /> : null}
+          <span style={{ opacity: loading ? 0 : 1 }}>{approved ? 'Confirm' : 'Approve'}</span>
         </ConfirmButton>
       </OverFlowButtons>
     </FullWidthColumn>

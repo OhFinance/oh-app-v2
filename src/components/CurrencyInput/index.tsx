@@ -81,6 +81,7 @@ interface CurrencyInputProps {
   style?: React.CSSProperties;
   hideAvailableBalance?: boolean;
   onReset?: () => void;
+  disabled?: boolean;
 }
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." characters via in a non-capturing group
@@ -95,6 +96,7 @@ export function CurrencyInput({
   style,
   hideAvailableBalance,
   onReset,
+  disabled,
 }: CurrencyInputProps) {
   const { account } = useActiveWeb3React();
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined);
@@ -129,6 +131,7 @@ export function CurrencyInput({
             minLength={1}
             maxLength={79}
             spellCheck="false"
+            disabled={disabled}
           />
         </Content>
         {onReset ? (

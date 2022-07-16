@@ -15,11 +15,19 @@ export const useOHBalance = () => {
   const [balance, setBalance] = useState<number>(0);
   const ohToken = OH[chainId];
   const ohContract = useContract(ohToken.address, ohABI);
-  useEffect(() => {
+  const getBalance = useCallback(() => {
     ohContract?.functions
       .balanceOf(account)
       .then(([balance]) => setBalance(+ethers.utils.formatEther(balance)));
   }, [account, ohContract]);
+  useEffect(getBalance, [getBalance]);
+  useEffect(() => {
+    ohContract?.removeAllListeners();
+    ohContract?.on('Transfer', getBalance);
+    return () => {
+      ohContract?.removeAllListeners();
+    };
+  }, [getBalance, ohContract]);
   return balance;
 };
 
@@ -37,16 +45,18 @@ export const useVeOHBalance = () => {
 };
 
 export const useOHStaked = () => {
-  const { account, chainId } = useActiveWeb3React();
-  const [balance, setBalance] = useState<number>(0);
+  const { account, chainId = 4 } = useActiveWeb3React();
+  const [staked, setStaked] = useState<number>(0);
   const veOH = VeOH[chainId];
   const veOHContract = useContract(veOH.address, veOHABI);
-  useEffect(() => {
-    veOHContract.functions
+  const getStaked = useCallback(() => {
+    veOHContract?.functions
       .getStakedOh(account)
-      .then(([balance]) => setBalance(+ethers.utils.formatEther(balance)));
+      .then(([balance]) => setStaked(+ethers.utils.formatEther(balance)));
   }, [account, veOHContract]);
-  return balance;
+
+  useEffect(getStaked, [getStaked]);
+  return { staked, getStaked };
 };
 
 export const useInvestedBalance = (token: Token) => {
@@ -67,24 +77,38 @@ export const useConfirmOHStake = () => {
   const veOHContract = useContract(veOH.address, veOHABI);
   const ohToken = OH[chainId];
   const ohContract = useContract(ohToken.address, ohABI);
+  const [approved, setApproved] = useState<boolean>(false);
+  const [value, setValue] = useState<BigNumber>(ethers.utils.parseEther('0'));
 
   const [loading, setLoading] = useState(false);
-  const confirmStake = useCallback(
+  const confirmStake = useCallback(async () => {
+    setLoading(true);
+    try {
+      const tx = await veOHContract.functions.deposit(value);
+      await tx.wait();
+      setApproved(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [value, veOHContract]);
+
+  const approveStake = useCallback(
     async (amount: string) => {
       setLoading(true);
       try {
         const value = ethers.utils.parseEther(amount);
         const tx = await ohContract.functions.approve(veOH.address, value);
         await tx.wait();
-        await veOHContract.functions.deposit(value);
+        setApproved(true);
+        setValue(value);
       } finally {
         setLoading(false);
       }
     },
-    [ohContract, veOH.address, veOHContract]
+    [ohContract, veOH]
   );
 
-  return { loading, confirmStake };
+  return { loading, confirmStake, approveStake, approved };
 };
 
 export const useOHBoostStats = () => {
