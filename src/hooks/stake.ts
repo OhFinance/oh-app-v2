@@ -36,12 +36,48 @@ export const useVeOHBalance = () => {
   const [balance, setBalance] = useState<number>(0);
   const veOHToken = VeOH[chainId];
   const veOHContract = useContract(veOHToken.address, veOHABI);
-  useEffect(() => {
+
+  const getBalance = useCallback(() => {
     veOHContract?.functions
       .balanceOf(account)
       .then(([balance]) => setBalance(+ethers.utils.formatEther(balance)));
-  }, [account, veOHContract]);
-  return balance;
+  }, [account, veOHContract?.functions]);
+  useEffect(getBalance, [getBalance]);
+  return { veOHBalance: balance, getBalance };
+};
+
+export const useVeOHClaimable = () => {
+  const { chainId = 4, account } = useActiveWeb3React();
+  const [balance, setBalance] = useState<number>(0);
+  const veOHToken = VeOH[chainId];
+  const veOHContract = useContract(veOHToken.address, veOHABI);
+
+  const getClaimable = useCallback(() => {
+    veOHContract?.functions
+      .claimable(account)
+      .then(([balance]) => setBalance(+ethers.utils.formatEther(balance)));
+  }, [account, veOHContract?.functions]);
+  useEffect(getClaimable, [getClaimable]);
+  return { veOHClaimable: balance, getClaimable };
+};
+
+export const useClaimVeOH = () => {
+  const { chainId = 4, account } = useActiveWeb3React();
+  const veOHToken = VeOH[chainId];
+  const veOHContract = useContract(veOHToken.address, veOHABI);
+
+  const [loading, setLoading] = useState(false);
+
+  const claimVeOH = useCallback(async () => {
+    setLoading(true);
+    try {
+      const tx = await veOHContract?.functions.claim();
+      await tx.wait();
+    } finally {
+      setLoading(false);
+    }
+  }, [veOHContract]);
+  return { claimVeOH, loading };
 };
 
 export const useOHStaked = () => {
@@ -109,6 +145,28 @@ export const useConfirmOHStake = () => {
   );
 
   return { loading, confirmStake, approveStake, approved };
+};
+
+export const useWithdrawOHStake = () => {
+  const { chainId } = useActiveWeb3React();
+  const veOH = VeOH[chainId];
+  const veOHContract = useContract(veOH.address, veOHABI);
+
+  const [loading, setLoading] = useState(false);
+  const withdrawStake = useCallback(
+    async (amount: string) => {
+      setLoading(true);
+      try {
+        const tx = await veOHContract.functions.withdraw(ethers.utils.parseEther(amount));
+        await tx.wait();
+      } finally {
+        setLoading(false);
+      }
+    },
+    [veOHContract]
+  );
+
+  return { loading, withdrawStake };
 };
 
 export const useOHBoostStats = () => {

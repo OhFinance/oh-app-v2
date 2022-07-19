@@ -1,11 +1,13 @@
 import Button from 'components/Button';
+import { ColumnCenter } from 'components/Column';
 import InfoBox from 'components/InfoBox';
+import Spinner from 'components/Spinner';
 import CenteredRow from 'components/_containers/CenteredRow';
 import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
 import CalculatorModal from 'components/_modals/CalculatorModal';
-import { useOHBoostStats } from 'hooks/stake';
+import { useClaimVeOH, useOHBoostStats, useVeOHBalance, useVeOHClaimable } from 'hooks/stake';
 import Image from 'next/image';
 import { AiOutlineCalculator } from 'react-icons/ai';
 import { useToggleModal } from 'state/application/hooks';
@@ -20,6 +22,23 @@ const Heading = styled.h1`
   max-width: 250px;
   text-align: center;
 `;
+
+const ClaimContainer = styled(SpacedRow)(({ theme }) => ({
+  padding: '15px 30px',
+  backgroundColor: theme.bg3,
+  borderRadius: 10,
+}));
+
+const InfoContainer = styled(SpacedRow)({
+  gap: 4,
+  justifyContent: 'center',
+});
+
+const BalanceHeadContainer = styled(SpacedRow)({
+  padding: '0 20px',
+});
+
+const ClaimButton = styled(Button)({ padding: '15px 70px', position: 'relative' });
 
 const StatsLabel = styled.p(({ theme }) => ({
   fontSize: '13px',
@@ -59,12 +78,23 @@ const CalculatorButton = styled(StatsLabel)({
 
 interface IProps {
   onStake: () => void;
+  onUnStake: () => void;
 }
 
-export const Stake: React.FC<IProps> = ({ onStake }) => {
+export const Stake: React.FC<IProps> = ({ onStake, onUnStake }) => {
   const toggleModal = useToggleModal(ApplicationModal.STAKE_CALCULATOR);
 
   const { ohStaked, ohSupply, veOHSupply } = useOHBoostStats();
+  const { veOHBalance, getBalance } = useVeOHBalance();
+  const { veOHClaimable, getClaimable } = useVeOHClaimable();
+  const { claimVeOH, loading } = useClaimVeOH();
+
+  const onClaim = () => {
+    claimVeOH().then(() => {
+      getBalance();
+      getClaimable();
+    });
+  };
   return (
     <>
       <CalculatorModal />
@@ -110,8 +140,30 @@ export const Stake: React.FC<IProps> = ({ onStake }) => {
             (Booster Calculator <AiOutlineCalculator />)
           </CalculatorButton>
         </CenteredRow>
+        <ColumnCenter>
+          <BalanceHeadContainer>
+            <Heading>My Balance</Heading>
+            <StatsValue>{veOHBalance.toFixed(2)} veOH</StatsValue>
+          </BalanceHeadContainer>
+          <ClaimContainer>
+            <ColumnCenter>
+              <InfoContainer>
+                Claimable veOH
+                <InfoBox text="Amount of veOH that can be claimed now." />
+              </InfoContainer>
+              <StatsValue>{veOHClaimable.toFixed(2)}</StatsValue>
+            </ColumnCenter>
+            <ClaimButton size="medium" disabled={loading || veOHClaimable <= 0} onClick={onClaim}>
+              <div style={{ opacity: loading ? 0 : 1 }}>Claim</div>
+              {loading && <Spinner />}
+            </ClaimButton>
+          </ClaimContainer>
+        </ColumnCenter>
         <OverFlowButtons>
-          <StakeButton size="large" onClick={onStake}>
+          <StakeButton size="large" disabled={loading} onClick={onUnStake}>
+            Unstake
+          </StakeButton>
+          <StakeButton size="large" disabled={loading} onClick={onStake}>
             Stake
           </StakeButton>
         </OverFlowButtons>

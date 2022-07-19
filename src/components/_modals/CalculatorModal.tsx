@@ -129,7 +129,7 @@ export const CalculatorModal = () => {
   const [selectedPeriod, setSelectedPeriod] = useState(periodOptions[0]);
 
   const ohBalance = useOHBalance();
-  const veOHBalance = useVeOHBalance();
+  const { veOHBalance } = useVeOHBalance();
   const { veOHSupply, veOHRate } = useOHBoostStats();
   const tokenBalance = useProxyTokenBalance(selectedToken.token);
   const tokenSupply = useInvestedBalance(selectedToken.token);

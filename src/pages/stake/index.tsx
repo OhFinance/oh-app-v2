@@ -1,6 +1,6 @@
-import ConfirmStake from 'components/ConfirmStake';
 import NavBar from 'components/NavBar';
 import Stake from 'components/Stake';
+import StakeAction from 'components/StakeAction';
 import StyledCloseButton from 'components/StyledCloseButton';
 import { FullWidthColumn } from 'components/_containers/FullWidthColumn';
 import SpacedRow from 'components/_containers/SpacedRow';
@@ -48,7 +48,7 @@ const Shadow = styled.div({
 });
 
 export const StakePage = () => {
-  const [isDeposit, setIsDeposit] = useState(false);
+  const [actionType, setActionType] = useState<'withdraw' | 'deposit'>();
 
   return (
     <FullWidthColumn flexGrow={1}>
@@ -62,10 +62,13 @@ export const StakePage = () => {
             </LogoContainer>
             <StyledCloseButton color="#009CE2" />
           </HeaderContainer>
-          {isDeposit ? (
-            <ConfirmStake onCancel={() => setIsDeposit(false)} />
+          {actionType ? (
+            <StakeAction type={actionType} onCancel={() => setActionType(undefined)} />
           ) : (
-            <Stake onStake={() => setIsDeposit(true)} />
+            <Stake
+              onStake={() => setActionType('deposit')}
+              onUnStake={() => setActionType('withdraw')}
+            />
           )}
         </Container>
       </Wrapper>

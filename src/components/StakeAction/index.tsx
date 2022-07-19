@@ -5,7 +5,7 @@ import { FullWidthColumn } from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
 import { OH } from 'constants/tokens';
-import { useConfirmOHStake, useOHBalance, useOHStaked } from 'hooks/stake';
+import { useConfirmOHStake, useOHBalance, useOHStaked, useWithdrawOHStake } from 'hooks/stake';
 import { useActiveWeb3React } from 'hooks/web3';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -40,10 +40,11 @@ const ConfirmButton = styled(Button)({
 });
 
 interface IProps {
+  type: 'withdraw' | 'deposit';
   onCancel: () => void;
 }
 
-export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
+export const StakeAction: React.FC<IProps> = ({ type, onCancel }) => {
   const { chainId } = useActiveWeb3React();
   const ohToken = OH[chainId];
   const ohAmount = useOHBalance();
@@ -52,13 +53,31 @@ export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
 
   const [value, setValue] = useState('0.0');
 
-  const { confirmStake, loading, approveStake, approved } = useConfirmOHStake();
+  const { confirmStake, loading: confirmLoading, approveStake, approved } = useConfirmOHStake();
+  const { withdrawStake, loading: withdrawLoading } = useWithdrawOHStake();
+
+  const disabled =
+    (+value || Infinity) > (type === 'withdraw' ? staked : ohAmount) || (+value || 0) <= 0;
+
+  const loading = confirmLoading || withdrawLoading;
+  const onConfirm = () => {
+    type === 'withdraw'
+      ? withdrawStake(value).then(getStaked)
+      : approved
+      ? confirmStake().then(getStaked)
+      : approveStake(value);
+  };
+  const onMax = () => {
+    const amount = type === 'withdraw' ? staked : ohAmount;
+    loading || approved || setValue(amount?.toString() || '0.00');
+  };
+
   return (
     <FullWidthColumn gap={20} padding="15px 0 45px 0 ">
       <Flex alignItems={'center'} flexDirection="column">
         <Heading>
-          Confirm Stake <Image src="/img/oh-token.png" width={60} height={66} alt="token" /> OH!
-          Boost
+          Confirm {type === 'withdraw' ? 'Withdraw' : 'Stake'}{' '}
+          <Image src="/img/oh-token.png" width={60} height={66} alt="token" /> OH! Boost
         </Heading>
       </Flex>
       <SpacedRow>
@@ -69,7 +88,7 @@ export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
         currency={ohToken}
         value={value}
         onUserInput={(value) => setValue(value)}
-        onMax={() => loading || approved || setValue(ohAmount?.toString() || '0.00')}
+        onMax={onMax}
         disabled={loading || approved}
         showMaxButton
         hideAvailableBalance
@@ -86,17 +105,15 @@ export const ConfirmStake: React.FC<IProps> = ({ onCancel }) => {
         <CancelButton size="large" onClick={onCancel} disabled={loading}>
           Cancel
         </CancelButton>
-        <ConfirmButton
-          size="large"
-          disabled={!value || +value === 0 || loading}
-          onClick={() => (approved ? confirmStake().then(getStaked) : approveStake(value))}
-        >
+        <ConfirmButton size="large" disabled={disabled || loading} onClick={onConfirm}>
           {loading ? <Spinner /> : null}
-          <span style={{ opacity: loading ? 0 : 1 }}>{approved ? 'Confirm' : 'Approve'}</span>
+          <span style={{ opacity: loading ? 0 : 1 }}>
+            {type === 'withdraw' ? 'Withdraw' : approved ? 'Confirm' : 'Approve'}
+          </span>
         </ConfirmButton>
       </OverFlowButtons>
     </FullWidthColumn>
   );
 };
 
-export default ConfirmStake;
+export default StakeAction;
