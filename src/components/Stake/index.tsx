@@ -7,7 +7,13 @@ import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
 import CalculatorModal from 'components/_modals/CalculatorModal';
-import { useClaimVeOH, useOHBoostStats, useVeOHBalance, useVeOHClaimable } from 'hooks/stake';
+import {
+  useClaimVeOH,
+  useOHBoostStats,
+  useOHStaked,
+  useVeOHBalance,
+  useVeOHClaimable,
+} from 'hooks/stake';
 import Image from 'next/image';
 import { AiOutlineCalculator } from 'react-icons/ai';
 import { useToggleModal } from 'state/application/hooks';
@@ -24,7 +30,8 @@ const Heading = styled.h1`
 `;
 
 const ClaimContainer = styled(SpacedRow)(({ theme }) => ({
-  padding: '15px 30px',
+  padding: '30px',
+  margin: '0 0 20px',
   backgroundColor: theme.bg3,
   borderRadius: 10,
 }));
@@ -32,6 +39,13 @@ const ClaimContainer = styled(SpacedRow)(({ theme }) => ({
 const InfoContainer = styled(SpacedRow)({
   gap: 4,
   justifyContent: 'center',
+  paddingBottom: '10px',
+});
+
+const StakedContainer = styled(SpacedRow)({
+  padding: '30px',
+  margin: '30px 0',
+  justifyContent: 'space-between',
 });
 
 const BalanceHeadContainer = styled(SpacedRow)({
@@ -84,10 +98,11 @@ interface IProps {
 export const Stake: React.FC<IProps> = ({ onStake, onUnStake }) => {
   const toggleModal = useToggleModal(ApplicationModal.STAKE_CALCULATOR);
 
-  const { ohStaked, ohSupply, veOHSupply } = useOHBoostStats();
+  const { ohStaked, ohSupply, veOHSupply, veOHRate } = useOHBoostStats();
   const { veOHBalance, getBalance } = useVeOHBalance();
   const { veOHClaimable, getClaimable } = useVeOHClaimable();
   const { claimVeOH, loading } = useClaimVeOH();
+  const { staked, getStaked } = useOHStaked();
 
   const onClaim = () => {
     claimVeOH().then(() => {
@@ -158,6 +173,32 @@ export const Stake: React.FC<IProps> = ({ onStake, onUnStake }) => {
               {loading && <Spinner />}
             </ClaimButton>
           </ClaimContainer>
+          <StakedContainer>
+            <CenteredRow>
+              <div style={{ marginRight: 10 }}>
+                <Image src="/img/oh-token.svg" width={50} height={50} alt="token" />
+              </div>
+              <div>
+                <StatsValue>{formatShortAmount(staked)}</StatsValue>
+                <StatsLabel>Staked OH</StatsLabel>
+              </div>
+            </CenteredRow>
+
+            <CenteredRow>
+              <div>
+                {/* <StatsValue>{veOHRate? * (staked || 0)} veOH / hour</StatsValue> */}
+                <StatsValue>
+                  {formatShortAmount(veOHRate * (staked || 0) * 3600)} veOH / hour
+                </StatsValue>
+                <StatsLabel>
+                  <CenteredRow>
+                    veOH Mine Rate
+                    <InfoBox text="Amount of veOH taht your OH stake produces per hour." />
+                  </CenteredRow>
+                </StatsLabel>
+              </div>
+            </CenteredRow>
+          </StakedContainer>
         </ColumnCenter>
         <OverFlowButtons>
           <StakeButton size="large" disabled={loading} onClick={onUnStake}>
