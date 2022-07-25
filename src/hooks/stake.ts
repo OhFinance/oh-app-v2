@@ -1,12 +1,15 @@
 import { Token } from '@uniswap/sdk-core';
 import { MASTER_OH_ADDRESS } from 'constants/addresses';
 import { OH, VeOH } from 'constants/tokens';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
+import { formatEther, formatUnits, parseEther, parseUnits } from 'ethers/lib/utils';
 import { useCallback, useEffect, useState } from 'react';
+import { scalePrice, sqrt } from 'utilities/numberUtilities';
 import ERC20_ABI from '~/abis/erc20.json';
 import MASTER_OH_ABI from '../abis/master_oh.json';
 import ohABI from '../abis/oh_token.json';
 import veOHABI from '../abis/ve_oh.json';
+import { usePriceStore } from '../stores/usePriceStore';
 import { useContract } from './contracts/useContract';
 import { useActiveWeb3React } from './web3';
 
@@ -16,9 +19,7 @@ export const useOHBalance = () => {
   const ohToken = OH[chainId];
   const ohContract = useContract(ohToken.address, ohABI);
   const getBalance = useCallback(() => {
-    ohContract?.functions
-      .balanceOf(account)
-      .then(([balance]) => setBalance(+ethers.utils.formatEther(balance)));
+    ohContract?.functions.balanceOf(account).then(([balance]) => setBalance(+formatEther(balance)));
   }, [account, ohContract]);
   useEffect(getBalance, [getBalance]);
   useEffect(() => {
@@ -40,7 +41,7 @@ export const useVeOHBalance = () => {
   const getBalance = useCallback(() => {
     veOHContract?.functions
       .balanceOf(account)
-      .then(([balance]) => setBalance(+ethers.utils.formatEther(balance)));
+      .then(([balance]) => setBalance(+formatEther(balance)));
   }, [account, veOHContract?.functions]);
   useEffect(getBalance, [getBalance]);
   return { veOHBalance: balance, getBalance };
@@ -55,7 +56,7 @@ export const useVeOHClaimable = () => {
   const getClaimable = useCallback(() => {
     veOHContract?.functions
       .claimable(account)
-      .then(([balance]) => setBalance(+ethers.utils.formatEther(balance)));
+      .then(([balance]) => setBalance(+formatEther(balance)));
   }, [account, veOHContract?.functions]);
   useEffect(getClaimable, [getClaimable]);
   return { veOHClaimable: balance, getClaimable };
@@ -88,7 +89,7 @@ export const useOHStaked = () => {
   const getStaked = useCallback(() => {
     veOHContract?.functions
       .getStakedOh(account)
-      .then(([balance]) => setStaked(+ethers.utils.formatEther(balance)));
+      .then(([balance]) => setStaked(+formatEther(balance)));
   }, [account, veOHContract]);
 
   useEffect(getStaked, [getStaked]);
@@ -102,7 +103,7 @@ export const useInvestedBalance = (token: Token) => {
   useEffect(() => {
     tokenContract?.functions
       .balanceOf(MASTER_OH_ADDRESS[chainId])
-      .then(([supply]) => setSupply(+ethers.utils.formatUnits(supply, token.decimals)));
+      .then(([supply]) => setSupply(+formatUnits(supply, token.decimals)));
   }, [chainId, token, tokenContract]);
   return supply;
 };
@@ -114,7 +115,7 @@ export const useConfirmOHStake = () => {
   const ohToken = OH[chainId];
   const ohContract = useContract(ohToken.address, ohABI);
   const [approved, setApproved] = useState<boolean>(false);
-  const [value, setValue] = useState<BigNumber>(ethers.utils.parseEther('0'));
+  const [value, setValue] = useState<BigNumber>(parseEther('0'));
 
   const [loading, setLoading] = useState(false);
   const confirmStake = useCallback(async () => {
@@ -132,7 +133,7 @@ export const useConfirmOHStake = () => {
     async (amount: string) => {
       setLoading(true);
       try {
-        const value = ethers.utils.parseEther(amount);
+        const value = parseEther(amount);
         const tx = await ohContract.functions.approve(veOH.address, value);
         await tx.wait();
         setApproved(true);
@@ -157,7 +158,7 @@ export const useWithdrawOHStake = () => {
     async (amount: string) => {
       setLoading(true);
       try {
-        const tx = await veOHContract.functions.withdraw(ethers.utils.parseEther(amount));
+        const tx = await veOHContract.functions.withdraw(parseEther(amount));
         await tx.wait();
       } finally {
         setLoading(false);
@@ -174,7 +175,7 @@ export const useOHBoostStats = () => {
   const [veOHSupply, setVeOHSupply] = useState<number>(0);
   const [ohSupply, setOHSupply] = useState<number>(0);
   const [ohStaked, setOHStaked] = useState<number>(0);
-  const [veOHRate, setVeOHRate] = useState<number>(0);
+  const [veOHRate, setVeOHRate] = useState<BigNumber>(BigNumber.from(0));
   const veOH = VeOH[chainId];
   const veOHContract = useContract(veOH.address, veOHABI);
   const ohToken = OH[chainId];
@@ -183,16 +184,14 @@ export const useOHBoostStats = () => {
   useEffect(() => {
     ohContract?.functions
       .totalSupply()
-      .then(([totalSupply]) => setOHSupply(+ethers.utils.formatEther(totalSupply)));
+      .then(([totalSupply]) => setOHSupply(+formatEther(totalSupply)));
     ohContract?.functions
       .balanceOf(veOH.address)
-      .then(([balance]) => setOHStaked(+ethers.utils.formatEther(balance)));
+      .then(([balance]) => setOHStaked(+formatEther(balance)));
     veOHContract?.functions
       .totalSupply()
-      .then(([totalSupply]) => setVeOHSupply(+ethers.utils.formatEther(totalSupply)));
-    veOHContract?.functions
-      .generationRate()
-      .then(([rate]) => setVeOHRate(+ethers.utils.formatEther(rate)));
+      .then(([totalSupply]) => setVeOHSupply(+formatEther(totalSupply)));
+    veOHContract?.functions.generationRate().then(([rate]) => setVeOHRate(rate));
   }, [veOHContract, ohContract, veOH.address]);
   return { veOHSupply, ohSupply, ohStaked, veOHRate };
 };
@@ -204,7 +203,7 @@ export const useProxyTokenBalance = (token: Token) => {
   useEffect(() => {
     tokenContract?.functions
       .balanceOf(account)
-      .then(([balance]) => setBalance(+ethers.utils.formatUnits(balance, token.decimals)));
+      .then(([balance]) => setBalance(+formatUnits(balance, token.decimals)));
   }, [account, token, tokenContract]);
   return balance;
 };
@@ -217,17 +216,141 @@ export const usePoolInfo = (pid: number) => {
   const [ohPerSecond, setOhPerSecond] = useState(zero);
   const [totalAlloc, setTotalAlloc] = useState(zero);
   const [poolAllocPoints, setPoolAllocPoints] = useState(zero);
+  const [poolInfo, setPoolInfo] = useState({});
+  const [sumOfFactors, setsumOfFactors] = useState(zero);
+
   useEffect(() => {
     masterContract?.functions
       .dilutingPartition()
       .then(([partition]) => setDilutingPartition(partition));
     masterContract?.functions.ohPerSec().then(([rate]) => setOhPerSecond(rate));
     masterContract?.functions.totalAllocPoint().then(([point]) => setTotalAlloc(point));
-    masterContract?.functions.poolInfo(pid).then(console.log);
+    masterContract?.functions.poolInfo([pid]).then(([info]) => setPoolInfo(info));
     masterContract?.functions
-      .poolInfo(pid)
+      .poolInfo([pid])
+      .then(({ sumOfFactors }) => setsumOfFactors(sumOfFactors));
+    masterContract?.functions
+      .poolInfo([pid])
       .then(({ allocPoint }) => setPoolAllocPoints(allocPoint));
   }, [masterContract, pid]);
 
-  return { dilutingPartition, ohPerSecond, totalAlloc, poolAllocPoints };
+  return { dilutingPartition, ohPerSecond, totalAlloc, poolAllocPoints, poolInfo, sumOfFactors };
+};
+
+export const useUserInfo = (pid: Number, account?: string) => {
+  const [userInfo, setUserInfo] = useState({
+    amount: BigNumber.from(0),
+    factor: BigNumber.from(0),
+  });
+  const { chainId = 4 } = useActiveWeb3React();
+  const masterContract = useContract(MASTER_OH_ADDRESS[chainId], MASTER_OH_ABI);
+  useEffect(() => {
+    masterContract?.functions
+      .userInfo(pid, account)
+      .then(({ amount, factor }) => setUserInfo({ amount, factor }));
+  }, [masterContract, pid, account]);
+  return userInfo;
+};
+
+export const useBaseAPR = (pid: number, token: Token) => {
+  const { dilutingPartition, ohPerSecond, totalAlloc, poolAllocPoints } = usePoolInfo(pid);
+  const totalStaked = useInvestedBalance(token);
+  const { price } = usePriceStore();
+  // Token USD Price scaled to token decimals
+  const scaledPrice = scalePrice(price, token.decimals);
+  try {
+    const annualOH = ohPerSecond.mul(60 * 60 * 24 * 365);
+    const annualUSDEstimate = annualOH.mul(scaledPrice);
+    const apr = annualUSDEstimate
+      // OH allocation Ratio for this pool
+      .mul(poolAllocPoints)
+      .div(totalAlloc)
+      // Diluting Ratio (dedicated for token based APY)
+      .mul(dilutingPartition)
+      .div(1000)
+      // Generated OH to be distributed equally to total staked tokens
+      // Division will also remove scale factor from the price
+      .div(parseUnits(totalStaked.toString(), token.decimals))
+      // Convert to %age (WEI Units)
+      .mul(100);
+    return apr;
+  } catch {
+    return BigNumber.from(0);
+  }
+};
+
+export const useBoostedAPR = (pid: number, token: Token) => {
+  const { dilutingPartition, ohPerSecond, sumOfFactors, poolAllocPoints, totalAlloc } =
+    usePoolInfo(pid);
+  const { account } = useActiveWeb3React();
+  const userInfo = useUserInfo(pid, account);
+
+  const { price } = usePriceStore();
+  // Token USD Price scaled to token decimals
+  const scaledPrice = scalePrice(price, token.decimals);
+
+  try {
+    const annualOH = ohPerSecond.mul(60 * 60 * 24 * 365);
+    const annualUSDEstimate = annualOH.mul(scaledPrice);
+    const apr = annualUSDEstimate
+      // OH allocation Ratio for this pool
+      .mul(poolAllocPoints)
+      .div(totalAlloc)
+      // Non-Diluting Ratio (dedicated for veOH based APY)
+      .mul(BigNumber.from(1_000).sub(dilutingPartition))
+      .div(1000)
+      // Current user ratio for this pool
+      .mul(userInfo.factor)
+      .div(sumOfFactors)
+      // User deposited tokens
+      // Division will also remove scale factor from the price
+      .div(userInfo.amount)
+      // Convert to %age (WEI Units)
+      .mul(100);
+    return apr;
+  } catch {
+    return BigNumber.from(0);
+  }
+};
+
+export const useEstimatedAPR = (
+  pid: number,
+  token: Token,
+  stakedAmount: string,
+  veOhAmount: BigNumber
+) => {
+  const { dilutingPartition, ohPerSecond, sumOfFactors, poolAllocPoints, totalAlloc } =
+    usePoolInfo(pid);
+  const { account } = useActiveWeb3React();
+  const userInfo = useUserInfo(pid, account);
+  const { price } = usePriceStore();
+  // Token USD Price scaled to token decimals
+  const scaledPrice = scalePrice(price, token.decimals);
+
+  try {
+    // Estimate user factor for these amounts
+    const estimatedFactor = sqrt(parseUnits(stakedAmount || '0', token.decimals).mul(veOhAmount));
+    // Estimate total distribution factor after user stake
+    const estimatedSumOfFactors = sumOfFactors.sub(userInfo.factor).add(estimatedFactor);
+    const annualOH = ohPerSecond.mul(60 * 60 * 24 * 365);
+    const annualUSDEstimate = annualOH.mul(scaledPrice);
+    const apr = annualUSDEstimate
+      // OH allocation Ratio for this pool
+      .mul(poolAllocPoints)
+      .div(totalAlloc)
+      // Non-Diluting Ratio (dedicated for veOH based APY)
+      .mul(BigNumber.from(1_000).sub(dilutingPartition))
+      .div(1000)
+      // estimated user ratio for this pool
+      .mul(estimatedFactor)
+      .div(estimatedSumOfFactors)
+      // User deposited tokens
+      // Division will also remove scale factor from the price
+      .div(stakedAmount)
+      // Convert to %age (WEI Units)
+      .mul(100);
+    return apr;
+  } catch {
+    return BigNumber.from(0);
+  }
 };

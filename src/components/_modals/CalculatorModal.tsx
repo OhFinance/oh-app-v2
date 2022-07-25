@@ -5,17 +5,23 @@ import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import { Scrollable } from 'components/_containers/Scrollable';
 import SpacedRow from 'components/_containers/SpacedRow';
 import { VeOH_TOKENS } from 'constants/tokens';
+import { BigNumber } from 'ethers';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 import {
+  useBaseAPR,
+  useBoostedAPR,
+  useEstimatedAPR,
   useInvestedBalance,
   useOHBalance,
   useOHBoostStats,
   useProxyTokenBalance,
   useVeOHBalance,
 } from 'hooks/stake';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
 import styled from 'styled-components';
+import { formatBigNumberToFixed } from 'utilities/numberUtilities';
 import OhModal from './common/OhModal';
 
 const InputWrapper = styled(FullWidthColumn)({
@@ -134,6 +140,16 @@ export const CalculatorModal = () => {
   const tokenBalance = useProxyTokenBalance(selectedToken.token);
   const tokenSupply = useInvestedBalance(selectedToken.token);
 
+  const baseAPR = useBaseAPR(selectedToken.pid, selectedToken.token);
+  const boostedApr = useBoostedAPR(selectedToken.pid, selectedToken.token);
+  const [estimatedVeOh, setEstimatedVeOh] = useState(BigNumber.from(0));
+  const estimatedApr = useEstimatedAPR(
+    selectedToken.pid,
+    selectedToken.token,
+    selectedTokenAmount,
+    estimatedVeOh
+  );
+
   useEffect(() => {
     activeTab ? setOhAmount(ohBalance.toFixed(2)) : setOhAmount(veOHBalance.toFixed(2));
   }, [activeTab, ohBalance, veOHBalance]);
@@ -150,15 +166,20 @@ export const CalculatorModal = () => {
     setSelectedTokenAmount(tokenBalance.toFixed(2));
   }, [tokenBalance, tokenSupply]);
 
-  const estimatedVeHum = useMemo(
-    () => veOHRate * 2592000 * +ohAmount * +selectedPeriod.name.split(' ')[0],
-    [ohAmount, selectedPeriod.name, veOHRate]
-  );
+  useEffect(() => {
+    const estimatedVeOh = activeTab
+      ? parseEther(ohAmount || '0')
+          .mul(veOHRate)
+          .mul(3600)
+          .mul(24)
+          .mul(30)
+          .mul(selectedPeriod.name.split(' ')[0])
+          .div(parseEther('1'))
+      : parseEther(ohAmount || '0');
+    setEstimatedVeOh(estimatedVeOh);
+  }, [selectedPeriod, ohAmount, veOHRate, activeTab]);
 
-  const veOHShare = (
-    100 * (activeTab ? estimatedVeHum / +ohSupply : +ohAmount / +ohSupply)
-  ).toFixed(2);
-
+  const veOHShare = (100 * (+formatEther(estimatedVeOh) / +ohSupply) || 0).toFixed(2);
   return (
     <OhModal title="Boost Calculator" isOpen={isOpen} onDismiss={toggle}>
       <Wrapper>
@@ -229,6 +250,12 @@ export const CalculatorModal = () => {
               />
             ) : null}
           </InputWrapper>
+          {activeTab ? (
+            <Stats>
+              <LabelFlex>Estimated veOH</LabelFlex>
+              <span>{(+formatEther(estimatedVeOh)).toFixed(2)} veOH</span>
+            </Stats>
+          ) : null}
           <InputWrapper>
             <SubSectionHeading>Total veOH! Supply</SubSectionHeading>
             <CurrencyInput
@@ -254,21 +281,21 @@ export const CalculatorModal = () => {
             Base APR
             <InfoBox text="Base APR is independent of veOH balance." />
           </LabelFlex>
-          <span>0.0%</span>
+          <span>{formatBigNumberToFixed(baseAPR)}%</span>
         </Stats>
         <Stats>
           <LabelFlex>
             Current Boosted APR{' '}
             <InfoBox text="Current Boosted APR of OH emissions you are earning." />
           </LabelFlex>
-          <span>0.0%</span>
+          <span>{formatBigNumberToFixed(boostedApr)}%</span>
         </Stats>
         <Stats color="#E7018C">
           <LabelFlex>
             Estimated Boosted APR{' '}
             <InfoBox text="Projected Boosted APR of OH emissions you would earn. Actual value affected by veOH distribution." />
           </LabelFlex>
-          <span>0.0%</span>
+          <span>{formatBigNumberToFixed(estimatedApr)}%</span>
         </Stats>
       </FullWidthColumn>
     </OhModal>

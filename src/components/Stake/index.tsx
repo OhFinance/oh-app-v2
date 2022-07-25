@@ -7,6 +7,7 @@ import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
 import CalculatorModal from 'components/_modals/CalculatorModal';
+import { formatEther } from 'ethers/lib/utils';
 import {
   useClaimVeOH,
   useOHBoostStats,
@@ -188,7 +189,7 @@ export const Stake: React.FC<IProps> = ({ onStake, onUnStake }) => {
               <div>
                 {/* <StatsValue>{veOHRate? * (staked || 0)} veOH / hour</StatsValue> */}
                 <StatsValue>
-                  {formatShortAmount(veOHRate * (staked || 0) * 3600)} veOH / hour
+                  {formatShortAmount(+formatEther(veOHRate) * (staked || 0) * 3600)} veOH / hour
                 </StatsValue>
                 <StatsLabel>
                   <CenteredRow>
