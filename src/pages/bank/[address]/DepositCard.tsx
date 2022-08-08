@@ -6,7 +6,7 @@ import { Bank } from 'constants/banks';
 import { useVirtualBalance } from 'hooks/calls/bank/useVirtualBalance';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import { ApprovalState, useApproveCallback } from 'hooks/transactionCallbacks/useApproveCallback';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Flex } from 'rebass';
 import { useModalOpen, useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
@@ -163,14 +163,14 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
     if (approvalState === ApprovalState.PENDING) {
       setApprovalSubmitted(true);
     }
-  }, [approvalState, approvalSubmitted]);
+  }, [approvalState]);
 
   const showApproveFlow =
     !inputError?.[Field.DEPOSIT] &&
     field !== Field.WITHDRAW &&
     (approvalState === ApprovalState.NOT_APPROVED ||
       approvalState === ApprovalState.PENDING ||
-      (approvalSubmitted && approvalState === ApprovalState.APPROVED));
+      approvalSubmitted);
 
   // END APPROVAL
 
@@ -294,7 +294,10 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
             ref={buttonRef}
             size="large"
             fullWidth
-            disabled={approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+            disabled={
+              approvalState === ApprovalState.PENDING ||
+              (approvalSubmitted && approvalState === ApprovalState.UNKNOWN)
+            }
             style={
               buttonHeight !== undefined
                 ? {
@@ -302,7 +305,9 @@ export default function DepositCard({ bank, field }: { bank: Bank; field: Field 
                   }
                 : undefined
             }
-            onClick={approveCallback}
+            onClick={
+              approvalState === ApprovalState.APPROVED && isValid ? toggleModal : approveCallback
+            }
             confirmed={approvalState === ApprovalState.APPROVED}
           >
             {approvalState === ApprovalState.APPROVED
