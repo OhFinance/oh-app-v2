@@ -207,7 +207,20 @@ const ranges: {
 export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
-  const { address } = router.query;
+
+  const [address, setAddress] = useState('');
+  useEffect(() => {
+    // router.query MAY be empty on load because of nextJs so we can't run it
+    if (router.query.address) {
+      // either string or string[]
+      if (typeof router.query.address == 'string') {
+        setAddress(router.query.address);
+      } else {
+        setAddress(router.query.address[0]);
+      }
+    }
+  }, [router.query]);
+
   const bank = useMemo(
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
     [address, chainId]
