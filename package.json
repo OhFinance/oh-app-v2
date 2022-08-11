@@ -24,7 +24,8 @@
     "format": "npx prettier src scripts ./*.js ./*.json --check",
     "format:fix": "npx prettier src scripts ./*.js ./*.json --write",
     "prepare": "npx husky install",
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\""
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "react-start": "react-scripts start"
   },
   "dependencies": {
     "@ethersproject/abi": "^5.5.0",
@@ -54,6 +55,7 @@
     "react-feather": "^2.0.9",
     "react-popper": "^2.2.5",
     "react-redux": "^7.2.6",
+    "react-scripts": "^5.0.1",
     "rebass": "^4.0.7",
     "recharts": "^2.1.6",
     "redux-localstorage-simple": "^2.4.1",
