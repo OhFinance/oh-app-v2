@@ -3,9 +3,9 @@ import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { transparentize } from 'polished';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Flex } from 'rebass';
-import { useChart } from 'state/application/hooks';
+import { useChart, useFetchChartCallback } from 'state/application/hooks';
 import { ChartTimeRange } from 'state/application/reducer';
 import { Field } from 'state/stake/reducer';
 import { useTokenBalance } from 'state/wallet/hooks';
@@ -227,6 +227,23 @@ export default function BankPage() {
   );
 
   const [selectedRange, setSelectedRange] = useState<ChartTimeRange>('hour');
+  const fetchTvlChart = useFetchChartCallback();
+
+  const fetchTvlChartCallback: (tries?: number) => Promise<boolean> = useCallback(
+    async (tries: number = 0): Promise<boolean> => {
+      return fetchTvlChart(chainId, bank?.contractAddress)
+        .then(() => true)
+        .catch((err) => {
+          if (tries >= 5) {
+            console.error(err);
+            return false;
+          }
+          console.debug('Error fetch TVL chart, retrying...', err.message);
+          return fetchTvlChartCallback(tries + 1);
+        });
+    },
+    [fetchTvlChart, chainId, bank]
+  );
 
   const chart = useChart(selectedRange);
 
@@ -250,6 +267,10 @@ export default function BankPage() {
       switchToNetwork({ library, chainId: bank.ohToken.chainId });
     }
   }, [chainId, bank, library]);
+
+  useEffect(() => {
+    fetchTvlChartCallback();
+  }, [fetchTvlChartCallback]);
 
   if (!bank) {
     const handleClick = () => {
