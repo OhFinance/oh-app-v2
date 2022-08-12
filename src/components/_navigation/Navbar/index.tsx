@@ -1,4 +1,5 @@
-import React from 'react';
+import NetworkModal from 'components/_modals/NetworkModal';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CHAIN_INFO } from '~/constants/chains';
 import { useActiveWeb3React } from '~/hooks/web3';
@@ -53,6 +54,23 @@ export function Navbar() {
   const { chainId, library } = useActiveWeb3React();
   const info = chainId ? CHAIN_INFO[chainId] : undefined;
 
+  const [walletNetwork, setWalletNetwork] = useState(undefined);
+  const [networkModalOpen, setNetworkModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (window.ethereum.networkVersion === walletNetwork) {
+      setWalletNetwork(window.ethereum.networkVersion);
+    }
+  });
+
+  if (window.ethereum.networkVersion !== walletNetwork) {
+    setWalletNetwork(window.ethereum.networkVersion);
+  }
+
+  useEffect(() => {
+    setNetworkModalOpen(parseInt(walletNetwork) !== chainId);
+  }, [walletNetwork, chainId]);
+
   if (!chainId || !info || !library) {
     return null;
   }
@@ -98,6 +116,7 @@ export function Navbar() {
         <NavLink href="https://docs.oh.finance/" target="_blank">
           Docs
         </NavLink>
+        <NetworkModal isOpen={networkModalOpen} />
         <NetworkSelector />
 
         <Web3Status />
