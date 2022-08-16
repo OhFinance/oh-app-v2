@@ -205,9 +205,13 @@ const ranges: {
 ];
 
 export default function BankPage() {
+  console.log('Breakpoint 1');
   const { account, library, chainId } = useActiveWeb3React();
+  console.log('Breakpoint 2');
   const router = useRouter();
+  console.log('Breakpoint 3');
   const { address } = router.query;
+  console.log('Breakpoint 4');
   console.log('address: ', address);
   console.log('address type: ', typeof address);
 
