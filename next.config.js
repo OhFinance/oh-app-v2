@@ -70,3 +70,7 @@ module.exports = withPlugins([
   ],
   [withTranspiledModules],
 ]);
+
+module.exports = {
+  trailingSlash: true,
+};

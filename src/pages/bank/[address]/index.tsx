@@ -208,8 +208,6 @@ export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
   const { address } = router.query;
-  console.log('address: ', address);
-  console.log('address type: ', typeof address);
 
   // NOTE: possible solution. Remove if not needed
   // const [address, setAddress] = useState('');
@@ -229,8 +227,6 @@ export default function BankPage() {
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
     [address, chainId]
   );
-  // note: remove console log
-  console.log('bank: ', bank);
 
   const [selectedRange, setSelectedRange] = useState<ChartTimeRange>('hour');
   const fetchTvlChart = useFetchChartCallback();
@@ -280,8 +276,6 @@ export default function BankPage() {
 
   if (!bank) {
     const handleClick = () => {
-      // note: remove
-      console.log('no bank handleClick');
       router.push('/');
     };
     return (
