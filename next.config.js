@@ -72,5 +72,12 @@ module.exports = withPlugins([
 ]);
 
 module.exports = {
-  trailingSlash: true,
+  async rewrites() {
+    return [
+      {
+        source: '/bank/:address*',
+        destination: '/bank',
+      },
+    ];
+  },
 };
