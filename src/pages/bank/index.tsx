@@ -207,7 +207,7 @@ const ranges: {
 export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
-  const address = router.query.address[0];
+  const address = router?.query?.address ? router?.query?.address[0] : undefined;
 
   const bank = useMemo(
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
