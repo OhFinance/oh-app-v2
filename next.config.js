@@ -55,6 +55,33 @@ module.exports = withPlugins([
       },
     },
   ],
+  [
+    {
+      typescript: {
+        // !! WARN !!
+        // Dangerously allow production builds to successfully complete even if
+        // your project has type errors.
+        // !! WARN !!
+        ignoreBuildErrors: true,
+      },
+      reactStrictMode: true,
+      images: {
+        domains: ['raw.githubusercontent.com'],
+      },
+    },
+  ],
+  [
+    {
+      async rewrites() {
+        return [
+          {
+            source: '/bank/:address*',
+            destination: '/bank',
+          },
+        ];
+      },
+    },
+  ],
   [withBundleAnalyzer],
   [
     {
@@ -70,32 +97,3 @@ module.exports = withPlugins([
   ],
   [withTranspiledModules],
 ]);
-
-module.exports = {
-  async rewrites() {
-    return [
-      {
-        source: '/bank/:address*',
-        destination: '/bank',
-      },
-    ];
-  },
-};
-
-// note: remove if unnecessary
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
-  },
-  reactStrictMode: true,
-  images: {
-    domains: ['raw.githubusercontent.com'],
-  },
-};
-
-module.exports = nextConfig;
