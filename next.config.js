@@ -81,3 +81,21 @@ module.exports = {
     ];
   },
 };
+
+// note: remove if unnecessary
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
+  reactStrictMode: true,
+  images: {
+    domains: ['raw.githubusercontent.com'],
+  },
+};
+
+module.exports = nextConfig;
