@@ -167,7 +167,7 @@ function Bank({ bank }: { bank: Bank }) {
 
   return (
     <BankWrapper>
-      <Link href={`/bank/${bank.contractAddress}`}>
+      <Link href={`/bank?address=${bank.contractAddress}`}>
         <BankContent>
           <HeaderImage image={bank.header} />
           <BankText>
