@@ -70,18 +70,6 @@ module.exports = withPlugins([
       },
     },
   ],
-  [
-    {
-      async rewrites() {
-        return [
-          {
-            source: '/bank/:address*',
-            destination: '/bank',
-          },
-        ];
-      },
-    },
-  ],
   [withBundleAnalyzer],
   [
     {

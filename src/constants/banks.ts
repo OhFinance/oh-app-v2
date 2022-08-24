@@ -1,7 +1,8 @@
 import { Token } from '@uniswap/sdk-core';
 import hum from 'assets/img/hum.svg';
+import mfam from 'assets/img/mfam.png';
 import aave from '~/assets/img/aave.svg';
-import { Hummus } from '~/assets/img/bank_headers';
+import { Aave, Hummus, Moonwell, Yeti } from '~/assets/img/bank_headers';
 import comp from '~/assets/img/comp.svg';
 import crv from '~/assets/img/crv.svg';
 import ohDaie from '~/assets/img/oh-dai-e.png';
@@ -29,9 +30,7 @@ export const banks: { [chainId: number]: Bank[] } = {
   [SupportedChainId.ETHEREUM_MAINNET]: [
     {
       image: ohUsdc,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      // header: Aave,
-      header: 'Aave',
+      header: Aave,
       name: 'Oh! USDC',
       symbol: 'OH-USDC',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -60,9 +59,7 @@ export const banks: { [chainId: number]: Bank[] } = {
   [SupportedChainId.AVALANCHE]: [
     {
       image: ohUsdce,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      header: 'Yeti',
-      // header: Yeti,
+      header: Yeti,
       name: 'Oh! USDC',
       symbol: 'OH-USDC',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -88,9 +85,7 @@ export const banks: { [chainId: number]: Bank[] } = {
     },
     {
       image: ohUsdte,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      header: 'Yeti',
-      // header: Yeti,
+      header: Yeti,
       name: 'Oh! USDT',
       symbol: 'OH-USDT',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -116,9 +111,7 @@ export const banks: { [chainId: number]: Bank[] } = {
     },
     {
       image: ohUsdce,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      header: 'Aave',
-      // header: Aave,
+      header: Aave,
       name: 'Oh! USDC.e',
       symbol: 'OH-USDC.e',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -144,9 +137,7 @@ export const banks: { [chainId: number]: Bank[] } = {
     },
     {
       image: ohUsdte,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      header: 'Aave',
-      // header: Aave,
+      header: Aave,
       name: 'Oh! USDT.e',
       symbol: 'OH-USDT.e',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -172,9 +163,7 @@ export const banks: { [chainId: number]: Bank[] } = {
     },
     {
       image: ohDaie,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      header: 'Aave',
-      // header: Aave,
+      header: Aave,
       name: 'Oh! DAI.e',
       symbol: 'OH-DAI.e',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -250,9 +239,7 @@ export const banks: { [chainId: number]: Bank[] } = {
   [SupportedChainId.MOONRIVER]: [
     {
       image: ohUsdcMoonriver,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      header: 'Moonwell',
-      // header: Moonwell,
+      header: Moonwell,
       name: 'Oh! USDC',
       symbol: 'OH-USDC',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -271,15 +258,11 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDC',
         'USDC'
       ),
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      // strategies: [{ protocol: 'Moonwell', image: mfam }],
-      strategies: [{ protocol: 'Moonwell', image: 'mfam' }],
+      strategies: [{ protocol: 'Moonwell', image: mfam }],
     },
     {
       image: ohUsdtMoonriver,
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      header: 'Moonwell',
-      // header: Moonwell,
+      header: Moonwell,
       name: 'Oh! USDT',
       symbol: 'OH-USDT',
       description: 'Risk-Optimized Lending and Yield Farming',
@@ -298,9 +281,7 @@ export const banks: { [chainId: number]: Bank[] } = {
         'USDT',
         'USDT'
       ),
-      // note: this was causing an issue so commented it out temporarily for testing purposes
-      // strategies: [{ protocol: 'Moonwell', image: mfam }],
-      strategies: [{ protocol: 'Moonwell', image: 'mfam' }],
+      strategies: [{ protocol: 'Moonwell', image: mfam }],
     },
   ],
 };

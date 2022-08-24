@@ -24,8 +24,7 @@
     "format": "npx prettier src scripts ./*.js ./*.json --check",
     "format:fix": "npx prettier src scripts ./*.js ./*.json --write",
     "prepare": "npx husky install",
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
-    "react-start": "react-scripts start"
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\""
   },
   "dependencies": {
     "@ethersproject/abi": "^5.5.0",

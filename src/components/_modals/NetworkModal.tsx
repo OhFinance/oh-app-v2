@@ -297,7 +297,6 @@ export default function NetworkModal({ isOpen, setModalOpen }: NetworkModalProps
       title={title}
       isOpen={isOpen}
       onDismiss={() => {
-        // should not be able to dismiss
         setModalOpen(false);
       }}
     >

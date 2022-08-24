@@ -215,8 +215,6 @@ export default function BankPage() {
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
     [address, chainId]
   );
-  // note: remove console log
-  console.log('bank: ', bank);
 
   const [selectedRange, setSelectedRange] = useState<ChartTimeRange>('hour');
   const fetchTvlChart = useFetchChartCallback();
@@ -266,8 +264,6 @@ export default function BankPage() {
 
   if (!bank) {
     const handleClick = () => {
-      // note: remove
-      console.log('no bank handleClick');
       router.push('/');
     };
     return (
