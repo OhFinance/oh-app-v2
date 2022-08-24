@@ -207,7 +207,6 @@ const ranges: {
 export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
-  // const address = router?.query?.address ? router?.query?.address[0] : undefined;
   const params = new URLSearchParams(window.location.search);
   const address = params.has('address') ? params.get('address') : undefined;
 
