@@ -54,22 +54,27 @@ export function Navbar() {
   const { chainId, library } = useActiveWeb3React();
   const info = chainId ? CHAIN_INFO[chainId] : undefined;
 
-  const [walletNetwork, setWalletNetwork] = useState(undefined);
+  const [walletNetwork, setWalletNetwork] = useState(window.ethereum?.networkVersion);
   const [networkModalOpen, setNetworkModalOpen] = useState(false);
+  const [walletConnected, setWalletConnected] = useState(undefined);
 
-  useEffect(() => {
-    if (window.ethereum.networkVersion === walletNetwork) {
-      setWalletNetwork(window.ethereum.networkVersion);
-    }
-  });
-
-  if (window.ethereum.networkVersion !== walletNetwork) {
-    setWalletNetwork(window.ethereum.networkVersion);
+  if (window.ethereum && window.ethereum?.networkVersion !== walletNetwork) {
+    setWalletNetwork(window.ethereum?.networkVersion);
+  }
+  if (window.ethereum && window.ethereum?.selectedAddress !== walletConnected) {
+    setWalletConnected(window.ethereum.selectedAddress);
   }
 
   useEffect(() => {
-    setNetworkModalOpen(parseInt(walletNetwork) !== chainId);
-  }, [walletNetwork, chainId]);
+    setNetworkModalOpen(
+      // wallet exists
+      walletNetwork !== undefined &&
+        // user is connected
+        walletConnected &&
+        // wallet id matches chain id
+        parseInt(walletNetwork) !== chainId
+    );
+  }, [walletNetwork, walletConnected, chainId]);
 
   if (!chainId || !info || !library) {
     return null;
@@ -116,7 +121,7 @@ export function Navbar() {
         <NavLink href="https://docs.oh.finance/" target="_blank">
           Docs
         </NavLink>
-        <NetworkModal isOpen={networkModalOpen} />
+        <NetworkModal isOpen={networkModalOpen} setModalOpen={setNetworkModalOpen} />
         <NetworkSelector />
 
         <Web3Status />

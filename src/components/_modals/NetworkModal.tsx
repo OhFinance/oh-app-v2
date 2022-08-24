@@ -273,13 +273,15 @@ const handleNetworkSwitch = async (chainId) => {
   });
 };
 
+type setModalOpen = (setOpen: boolean) => void;
 export interface NetworkModalProps {
   isOpen: boolean;
+  setModalOpen: setModalOpen;
 }
 
 const title = 'Unsupported Network';
 
-export default function NetworkModal({ isOpen }: NetworkModalProps) {
+export default function NetworkModal({ isOpen, setModalOpen }: NetworkModalProps) {
   const { chainId, library } = useActiveWeb3React();
   const node = useRef<HTMLDivElement>();
   const [open, setOpen] = useState(false);
@@ -290,12 +292,13 @@ export default function NetworkModal({ isOpen }: NetworkModalProps) {
     return null;
   }
 
-  return isOpen ? (
+  return (
     <OhModal
       title={title}
       isOpen={isOpen}
       onDismiss={() => {
         // should not be able to dismiss
+        setModalOpen(false);
       }}
     >
       <p>Please Connect to a whitelisted network</p>
@@ -361,7 +364,5 @@ export default function NetworkModal({ isOpen }: NetworkModalProps) {
         </NetworksContainer>
       </SelectorWrapper>
     </OhModal>
-  ) : (
-    <></>
   );
 }
