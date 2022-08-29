@@ -3,6 +3,7 @@ import { CHAIN_INFO } from 'constants/chains';
 import { useVirtualBalance } from 'hooks/calls/bank/useVirtualBalance';
 import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import type { NextPage } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import { Flex } from 'rebass';
@@ -168,14 +169,7 @@ function Bank({ bank }: { bank: Bank }) {
 
   return (
     <BankWrapper>
-      <div
-        onClick={() => {
-          router.push({
-            pathname: '/bank/[address]',
-            query: { address: bank.contractAddress },
-          });
-        }}
-      >
+      <Link href={'/bank/[address]'} as={`/bank/${bank.contractAddress}`}>
         <BankContent>
           <HeaderImage image={bank.header} />
           <BankText>
@@ -212,7 +206,7 @@ function Bank({ bank }: { bank: Bank }) {
             </APRContainer>
           </BankText>
         </BankContent>
-      </div>
+      </Link>
     </BankWrapper>
   );
 }
