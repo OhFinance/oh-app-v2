@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core';
-import { OH_ADDRESS, USDC_ADDRESS } from './addresses';
+import { DAI_ADDRESS, OH_ADDRESS, USDC_ADDRESS, USDT_ADDRESS } from './addresses';
 import { SupportedChainId } from './chains';
 
 export const OH: { [chainId: number]: Token } = {
@@ -61,5 +61,74 @@ export const USDC: { [chainId: number]: Token } = {
     6,
     'USDC.e',
     'USD Coin'
+  ),
+  [SupportedChainId.METIS]: new Token(
+    SupportedChainId.METIS,
+    USDC_ADDRESS[SupportedChainId.METIS],
+    6,
+    'USDC.e',
+    'USD Coin'
+  ),
+};
+
+export const DAI: { [chainId: number]: Token } = {
+  [SupportedChainId.ETHEREUM_MAINNET]: new Token(
+    SupportedChainId.ETHEREUM_MAINNET,
+    DAI_ADDRESS[1],
+    18,
+    'DAI',
+    'Dai'
+  ),
+  [SupportedChainId.AVALANCHE]: new Token(
+    SupportedChainId.AVALANCHE,
+    DAI_ADDRESS[43114],
+    18,
+    'DAI',
+    'Dai'
+  ),
+  [SupportedChainId.METIS]: new Token(
+    SupportedChainId.METIS,
+    DAI_ADDRESS[SupportedChainId.METIS],
+    18,
+    'DAI',
+    'Dai'
+  ),
+  [SupportedChainId.MOONRIVER]: new Token(
+    SupportedChainId.MOONRIVER,
+    DAI_ADDRESS[SupportedChainId.MOONRIVER],
+    18,
+    'DAI',
+    'Dai'
+  ),
+};
+
+export const USDT: { [chainId: number]: Token } = {
+  [SupportedChainId.ETHEREUM_MAINNET]: new Token(
+    SupportedChainId.ETHEREUM_MAINNET,
+    USDT_ADDRESS[SupportedChainId.ETHEREUM_MAINNET],
+    6,
+    'USDT',
+    'Tether'
+  ),
+  [SupportedChainId.AVALANCHE]: new Token(
+    SupportedChainId.AVALANCHE,
+    USDT_ADDRESS[SupportedChainId.AVALANCHE],
+    6,
+    'USDT',
+    'Tether'
+  ),
+  [SupportedChainId.METIS]: new Token(
+    SupportedChainId.METIS,
+    USDT_ADDRESS[SupportedChainId.METIS],
+    6,
+    'USDT',
+    'Tether'
+  ),
+  [SupportedChainId.MOONRIVER]: new Token(
+    SupportedChainId.MOONRIVER,
+    USDT_ADDRESS[SupportedChainId.MOONRIVER],
+    6,
+    'USDT',
+    'Tether'
   ),
 };

@@ -24,6 +24,7 @@ export const USDC_ADDRESS: AddressMap = {
   [SupportedChainId.MOONRIVER]: '0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d',
   [SupportedChainId.KOVAN]: '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', // compound usdc
   [SupportedChainId.AVALANCHE]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664', // usdc.e
+  [SupportedChainId.METIS]: '0xea32a96608495e54156ae48931a7c20f0dcc1a21',
 };
 
 export const OH_USDC_BANK = {
@@ -32,4 +33,18 @@ export const OH_USDC_BANK = {
   [SupportedChainId.MOONRIVER]: '0x4C211F45876d8EC7bAb54CAc0e32AAD15095358A',
   [SupportedChainId.KOVAN]: '0xa528639AAe2E765351dcd1e0C2dD299D6279dB52', // compound usdc
   [SupportedChainId.AVALANCHE]: '0x8B1Be96dc17875ee01cC1984e389507Bb227CaAB', // usdc.e
+};
+
+export const USDT_ADDRESS: AddressMap = {
+  [SupportedChainId.ETHEREUM_MAINNET]: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+  [SupportedChainId.MOONRIVER]: '0xb44a9b6905af7c801311e8f4e76932ee959c663c',
+  [SupportedChainId.METIS]: '0xbb06dca3ae6887fabf931640f67cab3e3a16f4dc',
+  [SupportedChainId.AVALANCHE]: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7',
+};
+
+export const DAI_ADDRESS: AddressMap = {
+  [SupportedChainId.ETHEREUM_MAINNET]: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  [SupportedChainId.MOONRIVER]: '0x80a16016cc4a2e6a2caca8a4a498b1699ff0f844',
+  [SupportedChainId.METIS]: '0x4651b38e7ec14bb3db731369bfe5b08f2466bd0a',
+  [SupportedChainId.AVALANCHE]: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70',
 };

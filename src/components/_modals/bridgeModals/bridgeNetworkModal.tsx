@@ -1,22 +1,29 @@
 import OhModal from 'components/_modals/common/OhModal';
 
-import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO, L1ChainInfo } from 'constants/chains';
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
 
 interface Props {
   title: string;
   isOpen: boolean;
   setModalOpen: (isOpen: boolean) => void;
-  chooseNetwork: (ChainInfo: L1ChainInfo) => void;
+  // chooseNetwork: (ChainInfo: L1ChainInfo) => void;
+  chooseNetwork: (ChainInfo: number) => void;
 }
+// ETH, METIS, AVAX, MOVR
+const bridgeSupportedChains = [
+  SupportedChainId.ETHEREUM_MAINNET,
+  SupportedChainId.METIS,
+  SupportedChainId.AVALANCHE,
+  SupportedChainId.MOONRIVER,
+];
 
-const handleNetworkSelect = (network: string) => {};
 export default function BridgeNetworkModal(props: Props) {
-  const networks = ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {
+  const networks = bridgeSupportedChains.map((chainId) => {
     return (
       <p
         key={chainId}
         onClick={() => {
-          props.chooseNetwork(CHAIN_INFO[chainId]);
+          props.chooseNetwork(chainId);
           props.setModalOpen(false);
         }}
       >

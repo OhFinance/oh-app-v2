@@ -1,8 +1,7 @@
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
+import BridgeHistory from 'components/Bridge/BridgeHistory';
 import { useState } from 'react';
 import styled from 'styled-components';
-import BridgeNetworkModal from './bridgeNetworkModal';
-import ToFromBox from './ToFromBox';
+import Bridge from '../../components/Bridge/Bridge';
 
 const PageContainer = styled.div({
   display: 'flex',
@@ -21,114 +20,79 @@ const BridgeBox = styled.div(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   width: '600px',
-  height: '650px',
+  padding: '30px',
   borderRadius: '20px',
   margin: '20px',
 }));
 
-const ToFromContainer = styled.div({
+const TaskSelector = styled.div({
+  width: '60%',
+  height: '60px',
   display: 'flex',
   flexDirection: 'row',
-  width: '100%',
+  backgroundColor: '#262626',
+  borderRadius: '20px',
+  margin: '10px',
   justifyContent: 'space-around',
   alignItems: 'center',
 });
 
-const BridgeTokenContainer = styled.div(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-around',
-  backgroundColor: theme.bg2,
-  flexDirection: 'row',
-  alignItems: 'center',
-  width: '90%',
-  height: '100px',
-  borderRadius: '20px',
-  marginTop: '20px',
-}));
-const BridgeAmount = styled.div({});
-const BridgeToken = styled.div({
-  height: '80%',
-  aspectRatio: '1/1',
-});
-const BridgeTokenText = styled.div({
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  width: '100px',
-  fontSize: '12px',
-  textAlign: 'center',
-});
+interface TaskProp {
+  selected: boolean;
+}
+const Task = styled.div<TaskProp>`
+  background-color: ${(props) => (props.selected ? '#8c8c8c' : '#262626')};
+  color: #5c5c5c;
+  border-radius: 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-const BridgeTokenButton = styled.div({
-  width: '90%',
-  border: '2px solid grey',
-  display: 'flex',
-  justifyContent: 'center',
-  padding: '5px',
-  borderRadius: '20px',
-  textAlign: 'center',
-  fontSize: '12px',
-  '&:hover': {
-    backgroundColor: 'grey',
-  },
-});
+  &:hover {
+    color: ${(props) => (props.selected ? '#5c5c5c' : '#f5f5f5')};
+    cursor: pointer;
+  }
+`;
 
+const BRIDGE = 'BRIDGE';
+const HISTORY = 'HISTORY';
 export default function BridgePage() {
-  const [bridgeFromModalOpen, setBridgeFromModalOpen] = useState(false);
-  const [bridgeToModalOpen, setBridgeToModalOpen] = useState(false);
-  const [fromNetwork, setFromNetwork] = useState(CHAIN_INFO[SupportedChainId.ETHEREUM_MAINNET]);
-  const [toNetwork, setToNetwork] = useState(CHAIN_INFO[SupportedChainId.AVALANCHE]);
+  const [selectedTask, setSelectedTask] = useState(BRIDGE);
 
-  const tempImage =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/NewTux.svg/640px-NewTux.svg.png';
+  let pageContent;
+  switch (selectedTask) {
+    case HISTORY:
+      pageContent = <BridgeHistory />;
+      break;
+    // by default show bridge content
+    default:
+      pageContent = <Bridge />;
+  }
 
-  console.log('toNetwork: ', toNetwork);
-  console.log('fromNetwork: ', fromNetwork);
   return (
     <PageContainer>
-      <BridgeNetworkModal
-        title="From Networks"
-        isOpen={bridgeFromModalOpen}
-        setModalOpen={setBridgeFromModalOpen}
-        chooseNetwork={setFromNetwork}
-      />
-      <BridgeNetworkModal
-        title="To Networks"
-        isOpen={bridgeToModalOpen}
-        setModalOpen={setBridgeToModalOpen}
-        chooseNetwork={setToNetwork}
-      />
       <BridgeBox>
-        Bridge Page
-        <ToFromContainer>
-          <ToFromBox
-            icon={tempImage}
-            networkName={fromNetwork.label}
-            openModal={setBridgeFromModalOpen}
+        <TaskSelector>
+          <Task
+            selected={selectedTask == BRIDGE}
+            onClick={() => {
+              setSelectedTask(BRIDGE);
+            }}
           >
-            From
-          </ToFromBox>
-          <ToFromBox
-            icon={tempImage}
-            networkName={toNetwork.label}
-            openModal={setBridgeToModalOpen}
+            Bridge
+          </Task>
+          <Task
+            selected={selectedTask == HISTORY}
+            onClick={() => {
+              setSelectedTask(HISTORY);
+            }}
           >
-            To
-          </ToFromBox>
-        </ToFromContainer>
-        <BridgeTokenContainer>
-          <BridgeToken>
-            {/* <img src={tempImage} alt="tokenIcon" width="50px" height="50px" /> */}
-            <img src={tempImage} alt="tokenIcon" width="100%" height="100%" />
-          </BridgeToken>
-          <BridgeTokenText>
-            <p>Token to Bridge</p>
-            <BridgeTokenButton>Select a token</BridgeTokenButton>
-          </BridgeTokenText>
-          <BridgeAmount>
-            <input type="text" width={'100%'} height={'80%'}></input>
-          </BridgeAmount>
-        </BridgeTokenContainer>
+            History
+          </Task>
+        </TaskSelector>
+        {pageContent}
       </BridgeBox>
     </PageContainer>
   );

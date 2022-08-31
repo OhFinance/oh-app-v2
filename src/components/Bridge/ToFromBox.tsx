@@ -12,6 +12,8 @@ const ToFromBox = styled.div(({ theme }) => ({
     backgroundColor: theme.bg1,
   },
   borderRadius: '20px',
+  padding: '20px',
+  margin: '20px',
 }));
 
 interface ToFromBoxProps {
