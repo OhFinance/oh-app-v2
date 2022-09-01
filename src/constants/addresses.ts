@@ -48,3 +48,7 @@ export const DAI_ADDRESS: AddressMap = {
   [SupportedChainId.METIS]: '0x4651b38e7ec14bb3db731369bfe5b08f2466bd0a',
   [SupportedChainId.AVALANCHE]: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70',
 };
+
+export const MULTICHAIN_ROUTER_ADDRESS: AddressMap = {
+  [SupportedChainId.ETHEREUM_MAINNET]: '0x6b7a87899490EcE95443e979cA9485CBE7E71522',
+};
