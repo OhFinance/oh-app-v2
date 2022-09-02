@@ -1,4 +1,9 @@
 import { Token } from '@uniswap/sdk-core';
+import daiIcon from '../assets/img/tokens/dai-logo.png';
+import ohIcon from '../assets/img/tokens/ohfinance_32.png';
+import questionmarkImage from '../assets/img/tokens/questionmarkCircle.png';
+import usdtIcon from '../assets/img/tokens/tether-usdt-logo.svg';
+import usdcIcon from '../assets/img/tokens/usd-coin-usdc-logo.svg';
 import { DAI_ADDRESS, OH_ADDRESS, USDC_ADDRESS, USDT_ADDRESS } from './addresses';
 import { SupportedChainId } from './chains';
 
@@ -59,14 +64,14 @@ export const USDC: { [chainId: number]: Token } = {
     SupportedChainId.AVALANCHE,
     USDC_ADDRESS[43114],
     6,
-    'USDC.e',
+    'USDC',
     'USD Coin'
   ),
   [SupportedChainId.METIS]: new Token(
     SupportedChainId.METIS,
     USDC_ADDRESS[SupportedChainId.METIS],
     6,
-    'USDC.e',
+    'USDC',
     'USD Coin'
   ),
 };
@@ -131,4 +136,15 @@ export const USDT: { [chainId: number]: Token } = {
     'USDT',
     'Tether'
   ),
+};
+
+// note: Some of these token icons are low quality. Find better ones
+export const tokenLogos = {
+  [USDC[1].symbol]: usdcIcon,
+  [USDT[1].symbol]: usdtIcon,
+  [DAI[1].symbol]: daiIcon,
+  // note: get a higher quality photo
+  [OH[1].symbol]: ohIcon,
+
+  default: questionmarkImage,
 };

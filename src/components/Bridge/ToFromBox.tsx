@@ -16,6 +16,10 @@ const ToFromBox = styled.div(({ theme }) => ({
   margin: '20px',
 }));
 
+const ChainIcon = styled.img({
+  margin: '20px',
+});
+
 interface ToFromBoxProps {
   children: string;
   icon: string;
@@ -31,9 +35,9 @@ export default function BridgePage(props: ToFromBoxProps) {
           props.openModal(true);
         }}
       >
-        <img src={props.icon} alt="networkIcon" width="100px" height="100px" />
-        <p>{props.children}</p>
-        <p>{props.networkName} v</p>
+        <ChainIcon src={props.icon} alt="networkIcon" width="75px" height="75px" />
+        <div>{props.children}</div>
+        <div>{props.networkName}</div>
       </ToFromBox>
     </>
   );

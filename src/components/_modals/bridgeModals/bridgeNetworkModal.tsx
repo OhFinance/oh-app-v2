@@ -1,6 +1,16 @@
 import OhModal from 'components/_modals/common/OhModal';
 
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
+import styled from 'styled-components';
+
+const NetworkItems = styled.div({
+  margin: '10px',
+  padding: '10px',
+  borderRadius: '20px',
+  '&:hover': {
+    backgroundColor: '#000F3D',
+  },
+});
 
 interface Props {
   title: string;
@@ -20,7 +30,7 @@ const bridgeSupportedChains = [
 export default function BridgeNetworkModal(props: Props) {
   const networks = bridgeSupportedChains.map((chainId) => {
     return (
-      <p
+      <NetworkItems
         key={chainId}
         onClick={() => {
           props.chooseNetwork(chainId);
@@ -28,11 +38,9 @@ export default function BridgeNetworkModal(props: Props) {
         }}
       >
         {CHAIN_INFO[chainId].label}
-      </p>
+      </NetworkItems>
     );
   });
-
-  console.log('networks: ', networks);
 
   return (
     <OhModal

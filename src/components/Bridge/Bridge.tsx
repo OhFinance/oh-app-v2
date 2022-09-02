@@ -1,20 +1,19 @@
 import { Token } from '@uniswap/sdk-core';
 import BridgeTokenModal from 'components/_modals/bridgeModals/bridgeTokenModal';
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
-import { useState, useEffect } from 'react';
+import { CHAIN_INFO, L1ChainInfo, SupportedChainId } from 'constants/chains';
+import { tokenLogos } from 'constants/tokens';
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import { useDispatch, useStore } from 'react-redux';
+import { save } from 'redux-localstorage-simple';
 import styled from 'styled-components';
 import ToFromBox from '../../components/Bridge/ToFromBox';
 import BridgeNetworkModal from '../../components/_modals/bridgeModals/bridgeNetworkModal';
-import { ethers } from 'ethers';
 
-import { MULTICHAIN_ROUTER_ADDRESS } from '../../constants/addresses';
-import {
-  approveRouter,
-  isRouterApproved,
-  getERC20Balance,
-  anySwapOutUnderlying,
-} from '../../apis/multichain';
 import { useWeb3React } from '@web3-react/core';
+import { addHistory } from 'state/bridge/reducer';
+import { HistoryItem } from 'state/bridge/types';
+import { isRouterApproved } from '../../apis/multichain';
 
 const PageContainer = styled.div({
   display: 'flex',
@@ -102,8 +101,12 @@ export default function Bridge() {
   const [isApproved, setIsApproved] = useState(false);
   const [userBalance, setUserBalance] = useState(ethers.BigNumber.from('0'));
   const [amount, setAmount] = useState('0');
+  const [bridgeAmount, setBridgeAmount] = useState(0);
 
   const { account, chainId, library } = useWeb3React();
+
+  const store = useStore();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (fromNetwork && fromNetwork !== chainId) {
@@ -139,6 +142,26 @@ export default function Bridge() {
     if (ethers.utils.parseEther(amount).gt(userBalance)) {
       return false;
     }
+
+    const historyItem: HistoryItem = {
+      // transactionHash: 'test',
+      // fromNetwork: fromNetwork,
+      // toNetwork: toNetwork,
+      // fromNetworkToken: selectedToken[fromNetwork].address,
+      // toNetworkToken: 'TEMP',
+      // transactionTime: Date.nw(),
+
+      // note: temp values, replace with above
+      transactionHash: 'tx hash',
+      fromNetwork: 999,
+      toNetwork: 888,
+      fromNetworkToken: 'from network token',
+      toNetworkToken: 'to network token',
+      transactionTime: Date.now(),
+    };
+
+    dispatch(addHistory(historyItem));
+    save();
     return true;
   };
 
@@ -148,12 +171,8 @@ export default function Bridge() {
     }
   };
 
-  // note: placeholder image
-  const tempImage =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/NewTux.svg/640px-NewTux.svg.png';
-
-  const fromNetworkData = CHAIN_INFO[fromNetwork];
-  const toNetworkData = CHAIN_INFO[toNetwork];
+  const fromNetworkData: L1ChainInfo = CHAIN_INFO[fromNetwork];
+  const toNetworkData: L1ChainInfo = CHAIN_INFO[toNetwork];
 
   return (
     <>
@@ -172,14 +191,14 @@ export default function Bridge() {
       Bridge Page
       <ToFromContainer>
         <ToFromBox
-          icon={tempImage}
+          icon={fromNetworkData.logoUrl}
           networkName={fromNetworkData.label}
           openModal={setBridgeFromModalOpen}
         >
           From
         </ToFromBox>
         <ToFromBox
-          icon={tempImage}
+          icon={toNetworkData.logoUrl}
           networkName={toNetworkData.label}
           openModal={setBridgeToModalOpen}
         >
@@ -199,7 +218,18 @@ export default function Bridge() {
             setBridgeTokenModalOpen(true);
           }}
         >
-          <img src={tempImage} alt="tokenIcon" width="100%" height="100%" />
+          <img
+            src={
+              tokenLogos && selectedToken && fromNetwork && selectedToken[fromNetwork]?.symbol
+                ? tokenLogos[selectedToken[fromNetwork]?.symbol]
+                  ? tokenLogos[selectedToken[fromNetwork]?.symbol]
+                  : tokenLogos.default
+                : tokenLogos.default
+            }
+            alt="tokenIcon"
+            width="100%"
+            height="100%"
+          />
         </BridgeToken>
         <BridgeTokenText
           onClick={() => {

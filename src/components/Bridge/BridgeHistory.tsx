@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useStore } from 'react-redux';
 import styled from 'styled-components';
 
 const Container = styled.div({});
@@ -17,21 +17,19 @@ const HistoryContainer = styled.div({
 const HistoryContent = styled.div({});
 
 export default function BridgeHistory() {
-  // note: placeholder history
-  const [history, setHistory] = useState([
-    'History 1',
-    'History 2',
-    'History 3',
-    'History 4',
-    'History 5',
-  ]);
+  const store = useStore();
 
+  const history = store.getState().bridge.history;
   let historyContent = [];
   if (history.length == 0) {
     historyContent.push(<>Your Transactions will appear here...</>);
   } else {
     historyContent = history.map((historyContent, index) => {
-      return <HistoryContent key={index}>{historyContent}</HistoryContent>;
+      return (
+        <HistoryContent key={index}>
+          {new Date(historyContent.transactionTime).toLocaleString()}
+        </HistoryContent>
+      );
     });
   }
 

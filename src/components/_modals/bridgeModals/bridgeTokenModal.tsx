@@ -3,7 +3,14 @@ import OhModal from 'components/_modals/common/OhModal';
 import { DAI, OH, USDC, USDT } from 'constants/tokens';
 import styled from 'styled-components';
 
-const TokenItem = styled.div({});
+const TokenItem = styled.div({
+  margin: '10px',
+  padding: '10px',
+  borderRadius: '20px',
+  '&:hover': {
+    backgroundColor: '#000F3D',
+  },
+});
 
 interface Props {
   title: string;
