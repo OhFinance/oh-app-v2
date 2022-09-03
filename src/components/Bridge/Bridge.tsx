@@ -17,6 +17,7 @@ import { useWeb3React } from '@web3-react/core';
 import { addHistory } from 'state/bridge/reducer';
 import { HistoryItem } from 'state/bridge/types';
 import { approveRouter, isRouterApproved } from '../../apis/multichain';
+import { getERC20Balance } from '../../apis/erc20';
 
 const ToFromContainer = styled.div({
   display: 'flex',
@@ -70,7 +71,7 @@ const SubmitButton = styled.button(({ theme, disabled }) => ({
   borderRadius: '20px',
   height: '50px',
   width: '100%',
-  backgroundColor: '#E7018C',
+  backgroundColor: disabled ? 'grey' : '#E7018C',
   marginTop: '20px',
   color: theme.bg4,
   border: 'solid 2px #E7018C',
@@ -110,7 +111,7 @@ const BridgeAmountContainer = styled.div({
   backgroundColor: '#001553',
   borderRadius: '10px',
 });
-const MaxButton = styled.button(({ theme }) => ({
+const MaxButton = styled.button(({ theme, disabled }) => ({
   borderRadius: '10px',
   height: '70%',
   border: '2px solid grey',
@@ -119,6 +120,7 @@ const MaxButton = styled.button(({ theme }) => ({
   '&:hover': {
     backgroundColor: 'white',
   },
+  cursor: disabled ? 'default' : 'pointer',
 }));
 const SelectedTokenText = styled.p({
   display: 'flex',
@@ -165,6 +167,7 @@ export default function Bridge() {
     if (!account || !selectedToken || !fromNetwork) {
       return;
     }
+    setUserBalance(await getERC20Balance(account, selectedToken[fromNetwork].address, library));
     setIsApproved(
       await isRouterApproved(account, selectedToken[fromNetwork].address, chainId, library)
     );
@@ -179,17 +182,7 @@ export default function Bridge() {
     setIsApproved(true);
   };
 
-  const bridgePreflightCheck = () => {
-    if (!fromNetwork || !toNetwork || !selectedToken || !library) {
-      return false;
-    }
-    if (fromNetwork !== chainId) {
-      return false;
-    }
-    if (ethers.utils.parseEther(amount).gt(userBalance)) {
-      return false;
-    }
-
+  const submitBridge = async () => {
     const historyItem: HistoryItem = {
       // transactionHash: 'test',
       // fromNetwork: fromNetwork,
@@ -209,6 +202,25 @@ export default function Bridge() {
 
     dispatch(addHistory(historyItem));
     save();
+  };
+
+  const bridgePreflightCheck = () => {
+    if (!fromNetwork || !toNetwork || !selectedToken || !library || !amount) {
+      return false;
+    }
+    if (fromNetwork !== chainId) {
+      return false;
+    }
+    if (ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals).gt(userBalance)) {
+      return false;
+    }
+    if (!ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals).gt('0')) {
+      return false;
+    }
+    const _decimals = amount.split('.')[1];
+    if (_decimals && _decimals.length > selectedToken[fromNetwork].decimals) {
+      return false;
+    }
     return true;
   };
 
@@ -311,9 +323,9 @@ export default function Bridge() {
         </BridgeTokenText>
 
         <BridgeAmountContainer>
-          <BridgeAmount type="number" value={amount} onChange={handleAmount}></BridgeAmount>
+          <BridgeAmount type="string" value={amount} onChange={handleAmount}></BridgeAmount>
           <MaxButton
-            disabled={Boolean(selectedToken && fromNetwork)}
+            disabled={!Boolean(selectedToken && fromNetwork)}
             onClick={() =>
               setAmount(
                 ethers.utils
@@ -332,9 +344,13 @@ export default function Bridge() {
         </BridgeAmountContainer>
       </BridgeTokenContainer>
       {isApproved ? (
-        <SubmitButton disabled={!bridgePreflightCheck()}>Submit</SubmitButton>
+        <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
+          Submit
+        </SubmitButton>
       ) : (
-        <SubmitButton onClick={submitApprove}>Approve</SubmitButton>
+        <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitApprove}>
+          Approve
+        </SubmitButton>
       )}
     </>
   );

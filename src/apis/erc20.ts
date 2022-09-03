@@ -4,7 +4,6 @@ import ERC20_ABI from '../abis/erc20';
 export const getERC20Balance = async (
   userAddress: string,
   tokenAddress: string,
-  chainId: number,
   provider: ethers.Provider
 ) => {
   try {
