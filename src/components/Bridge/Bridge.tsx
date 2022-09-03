@@ -246,9 +246,9 @@ export default function Bridge() {
   };
 
   const bridgePreflightCheck = () => {
-    if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
-      return false;
-    }
+    // if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
+    //   return false;
+    // }
     if (loading) {
       return false;
     }
@@ -409,7 +409,7 @@ export default function Bridge() {
         <br />
         minFee: {minFee}
         <br />
-        maxFee: {maxFee}%
+        maxFee: {maxFee}
       </div>
     </>
   );
