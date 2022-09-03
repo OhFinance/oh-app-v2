@@ -16,7 +16,7 @@ import BridgeNetworkModal from '../../components/_modals/bridgeModals/bridgeNetw
 import { useWeb3React } from '@web3-react/core';
 import { addHistory } from 'state/bridge/reducer';
 import { HistoryItem } from 'state/bridge/types';
-import { approveRouter, isRouterApproved } from '../../apis/multichain';
+import { approveRouter, isRouterApproved, anySwapOutUnderlying } from '../../apis/multichain';
 import { getERC20Balance } from '../../apis/erc20';
 
 const ToFromContainer = styled.div({
@@ -151,6 +151,7 @@ export default function Bridge() {
   const [userBalance, setUserBalance] = useState(ethers.BigNumber.from('0'));
   const [amount, setAmount] = useState('0');
   const [bridgeAmount, setBridgeAmount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const { account, chainId, library } = useWeb3React();
 
@@ -178,11 +179,30 @@ export default function Bridge() {
   }, [account, selectedToken, fromNetwork, chainId, library]);
 
   const submitApprove = async () => {
-    await approveRouter(account, selectedToken[fromNetwork].address, chainId, library);
-    setIsApproved(true);
+    setLoading(true);
+    try {
+      await approveRouter(selectedToken[fromNetwork].address, chainId, library);
+      setIsApproved(true);
+    } catch (e) {}
+    setLoading(false);
   };
 
   const submitBridge = async () => {
+    setLoading(true);
+    try {
+      await anySwapOutUnderlying(
+        '0x7ea2be2df7ba6e54b1a9c70676f668455e329d29',
+        account,
+        ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals),
+        fromNetwork,
+        toNetwork,
+        library
+      );
+    } catch (e) {}
+    setLoading(false);
+
+    return;
+
     const historyItem: HistoryItem = {
       // transactionHash: 'test',
       // fromNetwork: fromNetwork,
@@ -205,6 +225,9 @@ export default function Bridge() {
   };
 
   const bridgePreflightCheck = () => {
+    if (loading) {
+      return false;
+    }
     if (!fromNetwork || !toNetwork || !selectedToken || !library || !amount) {
       return false;
     }
@@ -345,11 +368,11 @@ export default function Bridge() {
       </BridgeTokenContainer>
       {isApproved ? (
         <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
-          Submit
+          {loading ? 'Loading...' : 'Submit'}
         </SubmitButton>
       ) : (
         <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitApprove}>
-          Approve
+          {loading ? 'Loading...' : 'Approve'}
         </SubmitButton>
       )}
     </>

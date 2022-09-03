@@ -4,15 +4,15 @@ import ERC20_ABI from '../abis/erc20';
 import ROUTER_ABI from '../abis/multichain_router';
 
 export const approveRouter = async (
-  userAddress: string,
   tokenAddress: string,
   chainId: number,
   provider: ethers.Provider
 ) => {
   try {
     const TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider.getSigner());
-    const balance = await TokenContract.balanceOf(userAddress);
-    return await (await TokenContract.approve(MULTICHAIN_ROUTER_ADDRESS[chainId], balance)).wait();
+    return await (
+      await TokenContract.approve(MULTICHAIN_ROUTER_ADDRESS[chainId], ethers.constants.MaxUint256)
+    ).wait();
   } catch (e) {
     console.error(e);
   }
@@ -31,18 +31,19 @@ export const isRouterApproved = async (
       MULTICHAIN_ROUTER_ADDRESS[chainId]
     );
     const balance = await TokenContract.balanceOf(userAddress);
-    return allowance.gt(balance);
+    return allowance.gte(balance);
   } catch (e) {
     console.error(e);
   }
 };
 
 export const anySwapOutUnderlying = async (
-  fromTokenAddress: string,
-  toTokenAddress: string,
+  anyTokenAddress: string,
+  recipientAddress: string,
   amount: ethers.BigNumber,
   fromChainId: number,
-  toChainId: number
+  toChainId: number,
+  provider: ethers.Provider
 ) => {
   try {
     const RouterContract = new ethers.Contract(
@@ -51,7 +52,12 @@ export const anySwapOutUnderlying = async (
       provider.getSigner()
     );
     return (
-      await RouterContract.anySwapOutUnderlying(fromTokenAddress, toTokenAddress, amount, toChainId)
+      await RouterContract.anySwapOutUnderlying(
+        anyTokenAddress,
+        recipientAddress,
+        amount,
+        toChainId
+      )
     ).wait;
   } catch (e) {
     console.error(e);
