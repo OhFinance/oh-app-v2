@@ -152,7 +152,7 @@ export default function Bridge() {
   const [amount, setAmount] = useState('0');
   const [bridgeAmount, setBridgeAmount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [feePercentage, setFeePercentage] = useState('0');
+  const [feePercentage, setFeePercentage] = useState(0);
   const [minFee, setMinFee] = useState('0');
   const [maxFee, setMaxFee] = useState('0');
   const [min, setMin] = useState('0');
@@ -180,6 +180,11 @@ export default function Bridge() {
   };
 
   const fetchBridgeParams = async () => {
+    setMin('0');
+    setMax('0');
+    setFeePercentage(0);
+    setMinFee('0');
+    setMaxFee('0');
     if (!selectedToken || !fromNetwork || !toNetwork) {
       return;
     }
@@ -189,15 +194,11 @@ export default function Bridge() {
     const destChain = tokenInfo.destChains[toNetwork];
     const destToken = destChain[Object.keys(destChain)[0]];
     console.log(destToken);
-    setMin(
-      ethers.utils.parseUnits(destToken.MinimumSwap.toString(), tokenInfo.decimals).toString()
-    );
-    setMax(
-      ethers.utils.parseUnits(destToken.MaximumSwap.toString(), tokenInfo.decimals).toString()
-    );
-    setFeePercentage(destToken.SwapFeeRatePerMillion + '');
-    setMinFee(destToken.MinimumSwapFee + '');
-    setMaxFee(destToken.MaximumSwapFee + '');
+    setMin(destToken.MinimumSwap.toString());
+    setMax(destToken.MaximumSwap.toString());
+    setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
+    setMinFee(destToken.MinimumSwapFee.toString());
+    setMaxFee(destToken.MaximumSwapFee.toString());
   };
 
   useEffect(() => {
@@ -245,6 +246,9 @@ export default function Bridge() {
   };
 
   const bridgePreflightCheck = () => {
+    if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
+      return false;
+    }
     if (loading) {
       return false;
     }
@@ -395,6 +399,18 @@ export default function Bridge() {
           {loading ? 'Loading...' : 'Approve'}
         </SubmitButton>
       )}
+      {/*TODO: replace*/}
+      <div style={{ textAlign: 'left', width: '100%', marginTop: '10px' }}>
+        Min bridge amount: {min}
+        <br />
+        Max bridge amount: {max}
+        <br />
+        fee: {parseFloat(feePercentage).toFixed(2)}%
+        <br />
+        minFee: {minFee}
+        <br />
+        maxFee: {maxFee}%
+      </div>
     </>
   );
 }
