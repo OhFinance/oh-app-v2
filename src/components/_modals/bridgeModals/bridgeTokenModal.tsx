@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core';
 import OhModal from 'components/_modals/common/OhModal';
-import { DAI, OH, USDC, USDT } from 'constants/tokens';
+import { DAI, OH, tokenLogos, USDC, USDT } from 'constants/tokens';
 import styled from 'styled-components';
 
 const TokenItem = styled.div({
@@ -10,6 +10,14 @@ const TokenItem = styled.div({
   '&:hover': {
     backgroundColor: '#000F3D',
   },
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+});
+
+const TokenIcon = styled.img({
+  height: '1.5em',
+  marginRight: '5px',
 });
 
 interface Props {
@@ -35,6 +43,7 @@ export default function BridgeTokenModal(props: Props) {
           props.setModalOpen(false);
         }}
       >
+        <TokenIcon src={tokenLogos[OH[1].symbol]} />
         Oh
       </TokenItem>
       <TokenItem
@@ -43,6 +52,7 @@ export default function BridgeTokenModal(props: Props) {
           props.setModalOpen(false);
         }}
       >
+        <TokenIcon src={tokenLogos[USDC[1].symbol]} />
         USDC
       </TokenItem>
       <TokenItem
@@ -51,6 +61,7 @@ export default function BridgeTokenModal(props: Props) {
           props.setModalOpen(false);
         }}
       >
+        <TokenIcon src={tokenLogos[USDT[1].symbol]} />
         USDT
       </TokenItem>
       <TokenItem
@@ -59,6 +70,7 @@ export default function BridgeTokenModal(props: Props) {
           props.setModalOpen(false);
         }}
       >
+        <TokenIcon src={tokenLogos[DAI[1].symbol]} />
         DAI
       </TokenItem>
     </OhModal>

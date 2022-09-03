@@ -19,15 +19,15 @@ const BridgeBox = styled.div(({ theme }) => ({
   backgroundColor: theme.bg4,
   flexDirection: 'column',
   alignItems: 'center',
-  width: '600px',
+  width: '700px',
   padding: '30px',
   borderRadius: '20px',
   margin: '20px',
 }));
 
 const TaskSelector = styled.div({
-  width: '60%',
-  height: '60px',
+  width: '250px',
+  height: '40px',
   display: 'flex',
   flexDirection: 'row',
   backgroundColor: '#262626',
@@ -40,9 +40,10 @@ const TaskSelector = styled.div({
 interface TaskProp {
   selected: boolean;
 }
+
 const Task = styled.div<TaskProp>`
-  background-color: ${(props) => (props.selected ? '#8c8c8c' : '#262626')};
-  color: #5c5c5c;
+  background-color: ${(props) => (props.selected ? '#063d9c' : '#262626')};
+  color: ${(props) => (props.selected ? 'white' : '#5c5c5c')};
   border-radius: 20px;
   height: 100%;
   width: 100%;
