@@ -27,7 +27,9 @@ export default function BridgeHistory() {
     historyContent = history.map((historyContent, index) => {
       return (
         <HistoryContent key={index}>
-          {new Date(historyContent.transactionTime).toLocaleString()}
+          Time: {new Date(historyContent.transactionTime).toLocaleString()}
+          <br />
+          Status:
         </HistoryContent>
       );
     });

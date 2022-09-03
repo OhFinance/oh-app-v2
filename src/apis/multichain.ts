@@ -38,28 +38,29 @@ export const isRouterApproved = async (
 };
 
 export const anySwapOutUnderlying = async (
-  anyTokenAddress: string,
+  underlyingAddress: string,
   recipientAddress: string,
   amount: ethers.BigNumber,
   fromChainId: number,
   toChainId: number,
   provider: ethers.Provider
 ) => {
-  try {
-    const RouterContract = new ethers.Contract(
-      MULTICHAIN_ROUTER_ADDRESS[fromChainId],
-      ROUTER_ABI,
-      provider.getSigner()
-    );
-    return (
-      await RouterContract.anySwapOutUnderlying(
-        anyTokenAddress,
-        recipientAddress,
-        amount,
-        toChainId
-      )
-    ).wait;
-  } catch (e) {
-    console.error(e);
-  }
+  const data = await fetch('https://bridgeapi.anyswap.exchange/v4/tokenlistv4/1');
+  const tokenList = await data.json();
+  const tokenInfo = tokenList[`evm${underlyingAddress.toLowerCase()}`];
+  const destChain = tokenInfo.destChains[toChainId];
+  const destToken = destChain[Object.keys(destChain)[0]];
+  const anyTokenAddress = destToken.fromanytoken.address;
+
+  const RouterContract = new ethers.Contract(
+    MULTICHAIN_ROUTER_ADDRESS[fromChainId],
+    ROUTER_ABI,
+    provider.getSigner()
+  );
+  return await RouterContract.anySwapOutUnderlying(
+    anyTokenAddress,
+    recipientAddress,
+    amount,
+    toChainId
+  );
 };

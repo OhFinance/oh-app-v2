@@ -152,6 +152,11 @@ export default function Bridge() {
   const [amount, setAmount] = useState('0');
   const [bridgeAmount, setBridgeAmount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [feePercentage, setFeePercentage] = useState('0');
+  const [minFee, setMinFee] = useState('0');
+  const [maxFee, setMaxFee] = useState('0');
+  const [min, setMin] = useState('0');
+  const [max, setMax] = useState('0');
 
   const { account, chainId, library } = useWeb3React();
 
@@ -174,9 +179,31 @@ export default function Bridge() {
     );
   };
 
+  const fetchBridgeParams = async () => {
+    if (!selectedToken || !fromNetwork || !toNetwork) {
+      return;
+    }
+    const data = await fetch('https://bridgeapi.anyswap.exchange/v4/tokenlistv4/1');
+    const tokenList = await data.json();
+    const tokenInfo = tokenList[`evm${selectedToken[fromNetwork].address.toLowerCase()}`];
+    const destChain = tokenInfo.destChains[toNetwork];
+    const destToken = destChain[Object.keys(destChain)[0]];
+    console.log(destToken);
+    setMin(
+      ethers.utils.parseUnits(destToken.MinimumSwap.toString(), tokenInfo.decimals).toString()
+    );
+    setMax(
+      ethers.utils.parseUnits(destToken.MaximumSwap.toString(), tokenInfo.decimals).toString()
+    );
+    setFeePercentage(destToken.SwapFeeRatePerMillion + '');
+    setMinFee(destToken.MinimumSwapFee + '');
+    setMaxFee(destToken.MaximumSwapFee + '');
+  };
+
   useEffect(() => {
     fetchInfo();
-  }, [account, selectedToken, fromNetwork, chainId, library]);
+    fetchBridgeParams();
+  }, [account, selectedToken, fromNetwork, toNetwork, chainId, library]);
 
   const submitApprove = async () => {
     setLoading(true);
@@ -190,38 +217,31 @@ export default function Bridge() {
   const submitBridge = async () => {
     setLoading(true);
     try {
-      await anySwapOutUnderlying(
-        '0x7ea2be2df7ba6e54b1a9c70676f668455e329d29',
+      const tx = await anySwapOutUnderlying(
+        selectedToken[fromNetwork].address,
         account,
         ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals),
         fromNetwork,
         toNetwork,
         library
       );
-    } catch (e) {}
+      const historyItem: HistoryItem = {
+        transactionHash: tx.hash,
+        fromNetwork,
+        toNetwork,
+        fromNetworkToken: selectedToken[fromNetwork].address,
+        toNetworkToken: selectedToken[toNetwork].address,
+        transactionTime: Date.now(),
+      };
+
+      dispatch(addHistory(historyItem));
+      save();
+
+      await tx.wait();
+    } catch (e) {
+      console.error(e);
+    }
     setLoading(false);
-
-    return;
-
-    const historyItem: HistoryItem = {
-      // transactionHash: 'test',
-      // fromNetwork: fromNetwork,
-      // toNetwork: toNetwork,
-      // fromNetworkToken: selectedToken[fromNetwork].address,
-      // toNetworkToken: 'TEMP',
-      // transactionTime: Date.nw(),
-
-      // note: temp values, replace with above
-      transactionHash: 'tx hash',
-      fromNetwork: 999,
-      toNetwork: 888,
-      fromNetworkToken: 'from network token',
-      toNetworkToken: 'to network token',
-      transactionTime: Date.now(),
-    };
-
-    dispatch(addHistory(historyItem));
-    save();
   };
 
   const bridgePreflightCheck = () => {
