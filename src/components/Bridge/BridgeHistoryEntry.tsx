@@ -31,8 +31,8 @@ export default function BridgeHistoryEntry({ transaction }) {
             setStatus('Failed');
             break;
         }
-        setTimeout(fetchStatus, 5000);
       }
+      setTimeout(fetchStatus, 5000);
     } catch (e) {
       console.error(e);
     }
