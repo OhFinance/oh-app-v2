@@ -17,7 +17,7 @@ export default function BridgeHistoryEntry({ transaction }) {
             return;
           case 3:
             setStatus('Bridge amount too low');
-            break;
+            return;
           case 8:
             setStatus('Confirming');
             break;
@@ -29,7 +29,7 @@ export default function BridgeHistoryEntry({ transaction }) {
             break;
           case 14:
             setStatus('Failed');
-            break;
+            return;
         }
       }
       setTimeout(fetchStatus, 5000);
