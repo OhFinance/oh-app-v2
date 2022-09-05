@@ -157,6 +157,7 @@ export default function Bridge() {
   const [maxFee, setMaxFee] = useState('0');
   const [min, setMin] = useState('0');
   const [max, setMax] = useState('0');
+  const [routerAddress, setRouterAddress] = useState('');
 
   const { account, chainId, library } = useWeb3React();
 
@@ -170,16 +171,21 @@ export default function Bridge() {
   }, [fromNetwork]);
 
   const fetchInfo = async () => {
-    if (!account || !selectedToken || !fromNetwork || !library) {
+    if (!account || !selectedToken || !fromNetwork || !library || !routerAddress) {
       return;
     }
     setUserBalance(await getERC20Balance(account, selectedToken[fromNetwork].address, library));
     setIsApproved(
-      await isRouterApproved(account, selectedToken[fromNetwork].address, chainId, library)
+      await isRouterApproved(account, selectedToken[fromNetwork].address, routerAddress, library)
     );
   };
 
+  useEffect(() => {
+    fetchInfo();
+  }, [account, selectedToken, fromNetwork, library, routerAddress]);
+
   const fetchBridgeParams = async () => {
+    setRouterAddress('');
     setMin('0');
     setMax('0');
     setFeePercentage(0);
@@ -193,6 +199,8 @@ export default function Bridge() {
     const tokenInfo = tokenList[`evm${selectedToken[fromNetwork].address.toLowerCase()}`];
     const destChain = tokenInfo.destChains[toNetwork];
     const destToken = destChain[Object.keys(destChain)[0]];
+    setRouterAddress(destToken.router);
+    console.log(destToken.router);
     setMin(destToken.MinimumSwap.toString());
     setMax(destToken.MaximumSwap.toString());
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
@@ -201,7 +209,6 @@ export default function Bridge() {
   };
 
   useEffect(() => {
-    fetchInfo();
     fetchBridgeParams();
   }, [account, selectedToken, fromNetwork, toNetwork, chainId, library]);
 
@@ -221,7 +228,7 @@ export default function Bridge() {
         selectedToken[fromNetwork].address,
         account,
         ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals),
-        fromNetwork,
+        routerAddress,
         toNetwork,
         library
       );
@@ -245,6 +252,9 @@ export default function Bridge() {
   };
 
   const bridgePreflightCheck = () => {
+    if (!routerAddress) {
+      return false;
+    }
     if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
       return false;
     }
@@ -398,7 +408,7 @@ export default function Bridge() {
           {/* )} */}
         </BridgeAmountContainer>
       </BridgeTokenContainer>
-      {isApproved ? (
+      {routerAddress && isApproved ? (
         <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
           {loading ? 'Loading...' : 'Submit'}
         </SubmitButton>

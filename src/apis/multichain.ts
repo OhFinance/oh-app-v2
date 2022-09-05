@@ -5,14 +5,12 @@ import ROUTER_ABI from '../abis/multichain_router';
 
 export const approveRouter = async (
   tokenAddress: string,
-  chainId: number,
+  routerAddress: string,
   provider: ethers.Provider
 ) => {
   try {
     const TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider.getSigner());
-    return await (
-      await TokenContract.approve(MULTICHAIN_ROUTER_ADDRESS[chainId], ethers.constants.MaxUint256)
-    ).wait();
+    return await (await TokenContract.approve(routerAddress, ethers.constants.MaxUint256)).wait();
   } catch (e) {
     console.error(e);
   }
@@ -21,17 +19,14 @@ export const approveRouter = async (
 export const isRouterApproved = async (
   userAddress: string,
   tokenAddress: string,
-  chainId: number,
+  routerAddress: string,
   provider: ethers.Provider
 ) => {
   try {
     const TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider.getSigner());
-    const allowance = await TokenContract.allowance(
-      userAddress,
-      MULTICHAIN_ROUTER_ADDRESS[chainId]
-    );
+    const allowance = await TokenContract.allowance(userAddress, routerAddress);
     const balance = await TokenContract.balanceOf(userAddress);
-    return allowance.gte(balance);
+    return allowance.gte(balance) && allowance.gt('0');
   } catch (e) {
     console.error(e);
   }
@@ -41,7 +36,7 @@ export const anySwapOutUnderlying = async (
   underlyingAddress: string,
   recipientAddress: string,
   amount: ethers.BigNumber,
-  fromChainId: number,
+  routerAddress: string,
   toChainId: number,
   provider: ethers.Provider
 ) => {
@@ -52,11 +47,7 @@ export const anySwapOutUnderlying = async (
   const destToken = destChain[Object.keys(destChain)[0]];
   const anyTokenAddress = destToken.fromanytoken.address;
 
-  const RouterContract = new ethers.Contract(
-    MULTICHAIN_ROUTER_ADDRESS[fromChainId],
-    ROUTER_ABI,
-    provider.getSigner()
-  );
+  const RouterContract = new ethers.Contract(routerAddress, ROUTER_ABI, provider.getSigner());
   return await RouterContract.anySwapOutUnderlying(
     anyTokenAddress,
     recipientAddress,
