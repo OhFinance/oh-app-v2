@@ -197,6 +197,11 @@ export default function Bridge() {
     const data = await fetch(`https://bridgeapi.anyswap.exchange/v4/tokenlistv4/${chainId}`);
     const tokenList = await data.json();
     const tokenInfo = tokenList[`evm${selectedToken[fromNetwork].address.toLowerCase()}`];
+
+    if (!tokenInfo) {
+      return;
+    }
+
     const destChain = tokenInfo.destChains[toNetwork];
     const destToken = destChain[Object.keys(destChain)[0]];
     setRouterAddress(destToken.router);
