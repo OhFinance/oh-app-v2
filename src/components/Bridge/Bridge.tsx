@@ -170,7 +170,7 @@ export default function Bridge() {
   }, [fromNetwork]);
 
   const fetchInfo = async () => {
-    if (!account || !selectedToken || !fromNetwork) {
+    if (!account || !selectedToken || !fromNetwork || !library) {
       return;
     }
     setUserBalance(await getERC20Balance(account, selectedToken[fromNetwork].address, library));
@@ -193,7 +193,6 @@ export default function Bridge() {
     const tokenInfo = tokenList[`evm${selectedToken[fromNetwork].address.toLowerCase()}`];
     const destChain = tokenInfo.destChains[toNetwork];
     const destToken = destChain[Object.keys(destChain)[0]];
-    console.log(destToken);
     setMin(destToken.MinimumSwap.toString());
     setMax(destToken.MaximumSwap.toString());
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
@@ -246,9 +245,9 @@ export default function Bridge() {
   };
 
   const bridgePreflightCheck = () => {
-    // if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
-    //   return false;
-    // }
+    if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
+      return false;
+    }
     if (loading) {
       return false;
     }
@@ -276,6 +275,15 @@ export default function Bridge() {
       setAmount(e.target.value);
     }
   };
+
+  let feeAmount = parseFloat(feePercentage * parseFloat(amount));
+  if (!amount) {
+    feeAmount = 0;
+  } else if (feeAmount > maxFee) {
+    feeAmount = maxFee;
+  } else if (feeAmount < minFee) {
+    feeAmount = minFee;
+  }
 
   const fromNetworkData: L1ChainInfo = CHAIN_INFO[fromNetwork];
   const toNetworkData: L1ChainInfo = CHAIN_INFO[toNetwork];
@@ -400,17 +408,15 @@ export default function Bridge() {
         </SubmitButton>
       )}
       {/*TODO: replace*/}
-      <div style={{ textAlign: 'left', width: '100%', marginTop: '10px' }}>
-        Min bridge amount: {min}
-        <br />
-        Max bridge amount: {max}
-        <br />
-        fee: {parseFloat(feePercentage).toFixed(2)}%
-        <br />
-        minFee: {minFee}
-        <br />
-        maxFee: {maxFee}
-      </div>
+      {selectedToken && (
+        <div style={{ textAlign: 'left', width: '100%', marginTop: '10px' }}>
+          Min bridge amount: {min}
+          <br />
+          Max bridge amount: {max}
+          <br />
+          fee: {parseFloat(feeAmount).toFixed(2)} {selectedToken[fromNetwork].name}
+        </div>
+      )}
     </>
   );
 }
