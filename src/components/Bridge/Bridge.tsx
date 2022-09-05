@@ -191,16 +191,15 @@ export default function Bridge() {
     setFeePercentage(0);
     setMinFee('0');
     setMaxFee('0');
-    if (!selectedToken || !fromNetwork || !toNetwork) {
+    if (!selectedToken || !fromNetwork || !toNetwork || !chainId) {
       return;
     }
-    const data = await fetch('https://bridgeapi.anyswap.exchange/v4/tokenlistv4/1');
+    const data = await fetch(`https://bridgeapi.anyswap.exchange/v4/tokenlistv4/${chainId}`);
     const tokenList = await data.json();
     const tokenInfo = tokenList[`evm${selectedToken[fromNetwork].address.toLowerCase()}`];
     const destChain = tokenInfo.destChains[toNetwork];
     const destToken = destChain[Object.keys(destChain)[0]];
     setRouterAddress(destToken.router);
-    console.log(destToken.router);
     setMin(destToken.MinimumSwap.toString());
     setMax(destToken.MaximumSwap.toString());
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
