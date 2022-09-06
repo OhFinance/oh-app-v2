@@ -8,12 +8,8 @@ export const approveRouter = async (
   routerAddress: string,
   provider: ethers.Provider
 ) => {
-  try {
-    const TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider.getSigner());
-    return await (await TokenContract.approve(routerAddress, ethers.constants.MaxUint256)).wait();
-  } catch (e) {
-    console.error(e);
-  }
+  const TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider.getSigner());
+  return await (await TokenContract.approve(routerAddress, ethers.constants.MaxUint256)).wait();
 };
 
 export const isRouterApproved = async (

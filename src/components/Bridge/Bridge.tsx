@@ -336,12 +336,12 @@ export default function Bridge() {
     }
   };
 
-  let feeAmount = parseFloat(feePercentage * parseFloat(amount));
+  let feeAmount = feePercentage * parseFloat(amount);
   if (!amount) {
     feeAmount = 0;
-  } else if (feeAmount > maxFee) {
+  } else if (parseFloat(feeAmount) > parseFloat(maxFee)) {
     feeAmount = maxFee;
-  } else if (feeAmount < minFee) {
+  } else if (parseFloat(feeAmount) < parseFloat(minFee)) {
     feeAmount = minFee;
   }
 
@@ -349,7 +349,7 @@ export default function Bridge() {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: ethers.utils.hexlify(chainId) }],
+        params: [{ chainId: ethers.utils.hexStripZeros(ethers.utils.hexlify(chainId)) }],
       });
     } catch (err) {
       if (err.code === 4902) {
@@ -358,8 +358,8 @@ export default function Bridge() {
           params: [
             {
               chainName: CHAIN_INFO[chainId].name,
-              chainId: ethers.utils.hexlify(chainId),
-              nativeCurrency: CHAIN_INFO[chainId].name,
+              chainId: ethers.utils.hexStripZeros(ethers.utils.hexlify(chainId)),
+              nativeCurrency: CHAIN_INFO[chainId].nativeCurrency,
               rpcUrls: CHAIN_INFO[chainId].rpcUrls,
             },
           ],
@@ -371,7 +371,7 @@ export default function Bridge() {
   };
 
   const fromNetworkData: L1ChainInfo = CHAIN_INFO[fromNetwork];
-  const toNetworkData: L1ChainInfo = CHAIN_INFO[state.toNetwork];
+  const toNetworkData: L1ChainInfo = CHAIN_INFO[state.toNetwork || SupportedChainId.AVALANCHE];
 
   return (
     <>
