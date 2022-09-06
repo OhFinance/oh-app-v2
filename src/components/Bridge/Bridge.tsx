@@ -25,6 +25,7 @@ const ToFromContainer = styled.div({
   width: '100%',
   justifyContent: 'space-around',
   alignItems: 'center',
+  cursor: 'pointer',
 });
 
 const BridgeTokenContainer = styled.div(({ theme }) => ({
@@ -52,6 +53,7 @@ const BridgeTokenText = styled.div({
   fontSize: '12px',
   textAlign: 'center',
   color: 'grey',
+  cursor: 'pointer',
 });
 
 const BridgeTokenButton = styled.div({
@@ -120,7 +122,7 @@ const MaxButton = styled.button(({ theme, disabled }) => ({
   '&:hover': {
     backgroundColor: 'white',
   },
-  cursor: disabled ? 'default' : 'pointer',
+  cursor: 'pointer',
 }));
 const SelectedTokenText = styled.p({
   display: 'flex',

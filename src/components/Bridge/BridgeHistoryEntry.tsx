@@ -32,6 +32,7 @@ export default function BridgeHistoryEntry({ transaction }) {
             return;
         }
       }
+      setStatus('Pending');
       setTimeout(fetchStatus, 5000);
     } catch (e) {
       console.error(e);
@@ -46,7 +47,7 @@ export default function BridgeHistoryEntry({ transaction }) {
     <div>
       Time: {new Date(transaction.transactionTime).toLocaleString()}
       <br />
-      Status: {status || 'Pending'}
+      Status: {status}
     </div>
   );
 }

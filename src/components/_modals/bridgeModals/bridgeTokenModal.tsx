@@ -1,5 +1,7 @@
 import { Token } from '@uniswap/sdk-core';
 import OhModal from 'components/_modals/common/OhModal';
+import { SupportedChainId } from 'constants/chains';
+import ExternalLinkIcon from 'assets/img/external-link.svg';
 import { DAI, OH, tokenLogos, USDC, USDT } from 'constants/tokens';
 import styled from 'styled-components';
 
@@ -13,22 +15,72 @@ const TokenItem = styled.div({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
+  cursor: 'pointer',
 });
 
 const TokenIcon = styled.img({
   height: '1.5em',
   marginRight: '5px',
 });
+const Icon = styled.img({
+  height: '1.5em',
+  marginRight: '5px',
+  marginLeft: 'auto',
+  marginRight: '0',
+});
 
 interface Props {
   title: string;
   isOpen: boolean;
   fromChain: string;
+  fromChainId: number;
+  toChainId: number;
   setModalOpen: (isOpen: boolean) => void;
   chooseToken: (tokenAddress: { [chainId: number]: Token }) => void;
 }
 
 export default function BridgeTokenModal(props: Props) {
+  let allTokens = [
+    {
+      name: 'Oh',
+      logo: tokenLogos[OH[1].symbol],
+      tokenInfo: OH,
+    },
+    {
+      name: 'USDC',
+      logo: tokenLogos[USDC[1].symbol],
+      tokenInfo: USDC,
+      '1to43114': 'https://bridge.avax.network/',
+      '1to1088': 'https://bridge.metis.io/home',
+    },
+    {
+      name: 'USDT',
+      logo: tokenLogos[USDT[1].symbol],
+      tokenInfo: USDT,
+      '1to43114': 'https://bridge.avax.network/',
+      '1to1088': 'https://bridge.metis.io/home',
+    },
+    {
+      name: 'DAI',
+      logo: tokenLogos[DAI[1].symbol],
+      tokenInfo: DAI,
+      '1to43114': 'https://bridge.avax.network/',
+    },
+  ];
+
+  if (props.fromChainId === SupportedChainId.METIS) {
+    allTokens = allTokens.shift();
+  }
+
+  const handleTokenSelect = (token) => {
+    if (token[`${props.fromChainId}to${props.toChainId}`]) {
+      window.open(token[`${props.fromChainId}to${props.toChainId}`], '_blank');
+    } else {
+      props.chooseToken(token.tokenInfo);
+      props.setModalOpen(false);
+    }
+  };
+
   return (
     <OhModal
       title={props.title}
@@ -37,42 +89,16 @@ export default function BridgeTokenModal(props: Props) {
         props.setModalOpen(false);
       }}
     >
-      <TokenItem
-        onClick={() => {
-          props.chooseToken(OH);
-          props.setModalOpen(false);
-        }}
-      >
-        <TokenIcon src={tokenLogos[OH[1].symbol]} />
-        Oh
-      </TokenItem>
-      <TokenItem
-        onClick={() => {
-          props.chooseToken(USDC);
-          props.setModalOpen(false);
-        }}
-      >
-        <TokenIcon src={tokenLogos[USDC[1].symbol]} />
-        USDC
-      </TokenItem>
-      <TokenItem
-        onClick={() => {
-          props.chooseToken(USDT);
-          props.setModalOpen(false);
-        }}
-      >
-        <TokenIcon src={tokenLogos[USDT[1].symbol]} />
-        USDT
-      </TokenItem>
-      <TokenItem
-        onClick={() => {
-          props.chooseToken(DAI);
-          props.setModalOpen(false);
-        }}
-      >
-        <TokenIcon src={tokenLogos[DAI[1].symbol]} />
-        DAI
-      </TokenItem>
+      {allTokens.map((token, i) => (
+        <TokenItem key={i} onClick={() => handleTokenSelect(token)}>
+          <TokenIcon src={token.logo} />
+          {token.name}
+
+          {token[`${props.fromChainId}to${props.toChainId}`] && (
+            <Icon src={ExternalLinkIcon}></Icon>
+          )}
+        </TokenItem>
+      ))}
     </OhModal>
   );
 }
