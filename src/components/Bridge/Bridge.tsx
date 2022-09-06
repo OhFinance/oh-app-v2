@@ -143,7 +143,6 @@ const BalanceText = styled.p({
 export default function Bridge() {
   const [bridgeFromModalOpen, setBridgeFromModalOpen] = useState(false);
   const [bridgeToModalOpen, setBridgeToModalOpen] = useState(false);
-  const [fromNetwork, setFromNetwork] = useState(SupportedChainId.ETHEREUM_MAINNET);
   const [toNetwork, setToNetwork] = useState(SupportedChainId.AVALANCHE);
   const [bridgeTokenModalOpen, setBridgeTokenModalOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<{ [chainId: number]: Token }>();
@@ -161,14 +160,14 @@ export default function Bridge() {
 
   const { account, chainId, library } = useWeb3React();
 
+  const fromNetwork = chainId || SupportedChainId.ETHEREUM_MAINNET;
+
   const store = useStore();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (fromNetwork && fromNetwork !== chainId) {
-      //prompt user to switch networks
-    }
-  }, [fromNetwork]);
+    setSelectedToken(null);
+  }, [chainId, toNetwork]);
 
   const fetchInfo = async () => {
     if (!account || !selectedToken || !fromNetwork || !library || !routerAddress) {
@@ -197,16 +196,26 @@ export default function Bridge() {
     const data = await fetch(`https://bridgeapi.anyswap.exchange/v4/tokenlistv4/${chainId}`);
     const tokenList = await data.json();
     const tokenInfo = tokenList[`evm${selectedToken[fromNetwork].address.toLowerCase()}`];
-
     if (!tokenInfo) {
       return;
     }
 
     const destChain = tokenInfo.destChains[toNetwork];
+    if (!destChain) {
+      return;
+    }
+
     const destToken = destChain[Object.keys(destChain)[0]];
+    const max = await getERC20Balance(
+      destToken.anytoken.address,
+      destToken.address,
+      new ethers.providers.JsonRpcProvider(CHAIN_INFO[toNetwork].rpcUrls[0])
+    );
+
     setRouterAddress(destToken.router);
     setMin(destToken.MinimumSwap.toString());
-    setMax(destToken.MaximumSwap.toString());
+    setMax(ethers.utils.formatUnits(max, destToken.decimals));
+    //setMax(destToken.MaximumSwap.toString());
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
     setMinFee(destToken.MinimumSwapFee.toString());
     setMaxFee(destToken.MaximumSwapFee.toString());
@@ -299,6 +308,31 @@ export default function Bridge() {
     feeAmount = minFee;
   }
 
+  const changeNetwork = async (chainId) => {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: ethers.utils.hexlify(chainId) }],
+      });
+    } catch (err) {
+      if (err.code === 4902) {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainName: CHAIN_INFO[chainId].name,
+              chainId: ethers.utils.hexlify(chainId),
+              nativeCurrency: CHAIN_INFO[chainId].name,
+              rpcUrls: CHAIN_INFO[chainId].rpcUrls,
+            },
+          ],
+        });
+      } else {
+        console.error(err);
+      }
+    }
+  };
+
   const fromNetworkData: L1ChainInfo = CHAIN_INFO[fromNetwork];
   const toNetworkData: L1ChainInfo = CHAIN_INFO[toNetwork];
 
@@ -308,7 +342,7 @@ export default function Bridge() {
         title="From Networks"
         isOpen={bridgeFromModalOpen}
         setModalOpen={setBridgeFromModalOpen}
-        chooseNetwork={setFromNetwork}
+        chooseNetwork={changeNetwork}
       />
       <BridgeNetworkModal
         title="To Networks"
@@ -354,6 +388,8 @@ export default function Bridge() {
           title={'Token'}
           isOpen={bridgeTokenModalOpen}
           fromChain={fromNetworkData.label}
+          fromChainId={fromNetwork}
+          toChainId={toNetwork}
           setModalOpen={setBridgeTokenModalOpen}
           chooseToken={setSelectedToken}
         />

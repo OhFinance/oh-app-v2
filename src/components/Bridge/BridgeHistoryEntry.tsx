@@ -46,7 +46,7 @@ export default function BridgeHistoryEntry({ transaction }) {
     <div>
       Time: {new Date(transaction.transactionTime).toLocaleString()}
       <br />
-      Status: {status}
+      Status: {status || 'Pending'}
     </div>
   );
 }

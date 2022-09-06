@@ -33,6 +33,7 @@ export const L1_CHAIN_IDS = [
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number];
 
 export interface L1ChainInfo {
+  readonly name: string;
   readonly blockWaitMsBeforeWarning?: number;
   readonly docs: string;
   readonly explorer: string;
@@ -52,6 +53,7 @@ export type ChainInfo = { readonly [chainId: number]: L1ChainInfo } & {} & {
 
 export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.AVALANCHE]: {
+    name: 'Avalanche',
     blockWaitMsBeforeWarning: 600000,
     docs: 'https://docs.avax.network/',
     explorer: 'https://snowtrace.io/',
@@ -61,6 +63,7 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
   },
   [SupportedChainId.METIS]: {
+    name: 'Metis',
     blockWaitMsBeforeWarning: 600000,
     docs: 'https://docs.metis.io/',
     explorer: 'https://andromeda-explorer.metis.io/',
@@ -70,6 +73,7 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://andromeda.metis.io/?owner=1088'],
   },
   [SupportedChainId.MOONRIVER]: {
+    name: 'Moonriver',
     blockWaitMsBeforeWarning: 600000,
     docs: 'https://docs.moonbeam.network/builders/get-started/networks/moonriver/',
     explorer: 'https://blockscout.moonriver.moonbeam.network/',
@@ -79,6 +83,7 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://rpc.api.moonriver.moonbeam.network/'],
   },
   [SupportedChainId.ETHEREUM_MAINNET]: {
+    name: 'Ethereum',
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
     label: 'Ethereum',
@@ -86,6 +91,7 @@ export const CHAIN_INFO: ChainInfo = {
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
   },
   [SupportedChainId.RINKEBY]: {
+    name: 'Rinkeby',
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://rinkeby.etherscan.io/',
     label: 'Rinkeby',
@@ -94,6 +100,7 @@ export const CHAIN_INFO: ChainInfo = {
   },
 
   [SupportedChainId.KOVAN]: {
+    name: 'Kovan',
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://kovan.etherscan.io/',
     label: 'Kovan',

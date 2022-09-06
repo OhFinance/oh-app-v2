@@ -7,7 +7,7 @@ export const getERC20Balance = async (
   provider: ethers.Provider
 ) => {
   try {
-    let TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider.getSigner());
+    let TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
     return await TokenContract.balanceOf(userAddress);
   } catch (e) {
     console.error(e);
