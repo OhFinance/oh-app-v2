@@ -71,6 +71,10 @@ export default function BridgeTokenModal(props: Props) {
     allTokens.shift();
   }
 
+  if (props.fromChainId === props.toChainId) {
+    allTokens = [];
+  }
+
   const handleTokenSelect = (token) => {
     if (token[`${props.fromChainId}to${props.toChainId}`]) {
       window.open(token[`${props.fromChainId}to${props.toChainId}`], '_blank');

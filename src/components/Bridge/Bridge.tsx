@@ -173,8 +173,7 @@ export default function Bridge() {
   const fromNetwork = chainId || SupportedChainId.ETHEREUM_MAINNET;
 
   useEffect(() => {
-    //dispatch(setSelectedToken(null));
-    setSelectedToken(null);
+    dispatch(setSelectedToken(null));
   }, [chainId, state.toNetwork]);
 
   const fetchInfo = async () => {
