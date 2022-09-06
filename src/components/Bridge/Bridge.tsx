@@ -177,7 +177,14 @@ export default function Bridge() {
   }, [chainId, state.toNetwork]);
 
   const fetchInfo = async () => {
-    if (!account || !state.selectedToken || !fromNetwork || !library || !state.routerAddress) {
+    if (
+      !account ||
+      !state.selectedToken ||
+      !fromNetwork ||
+      !state.selectedToken[fromNetwork] ||
+      !library ||
+      !state.routerAddress
+    ) {
       return;
     }
     setUserBalance(
@@ -204,7 +211,14 @@ export default function Bridge() {
     setFeePercentage(0);
     setMinFee('0');
     setMaxFee('0');
-    if (!state.selectedToken || !fromNetwork || !state.toNetwork || !chainId) {
+    if (
+      !state.selectedToken ||
+      !fromNetwork ||
+      !state.selectedToken[fromNetwork] ||
+      !state.toNetwork ||
+      !chainId ||
+      CHAIN_INFO[state.toNetwork].rpcUrls
+    ) {
       return;
     }
     const data = await fetch(`https://bridgeapi.anyswap.exchange/v4/tokenlistv4/${chainId}`);
@@ -220,6 +234,10 @@ export default function Bridge() {
     }
 
     const destToken = destChain[Object.keys(destChain)[0]];
+    if (!destToken || !destToken.anytoken) {
+      return;
+    }
+
     const max = await getERC20Balance(
       destToken.anytoken.address,
       destToken.address,
@@ -418,7 +436,7 @@ export default function Bridge() {
       <BalanceText>
         {' '}
         Balance:{' '}
-        {state.selectedToken && fromNetwork
+        {state.selectedToken && fromNetwork && state.selectedToken[fromNetwork]
           ? ethers.utils
               .formatUnits(userBalance, state.selectedToken[fromNetwork].decimals)
               .toString()
@@ -501,7 +519,7 @@ export default function Bridge() {
         </SubmitButton>
       )}
       {/*TODO: replace*/}
-      {state.selectedToken && (
+      {state.selectedToken && fromNetwork && state.selectedToken[fromNetwork] && (
         <div style={{ textAlign: 'left', width: '100%', marginTop: '10px' }}>
           Min bridge amount: {min}
           <br />
