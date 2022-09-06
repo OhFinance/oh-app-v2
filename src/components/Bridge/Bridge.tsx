@@ -340,10 +340,10 @@ export default function Bridge() {
   let feeAmount = feePercentage * parseFloat(amount);
   if (!amount) {
     feeAmount = 0;
-  } else if (parseFloat(feeAmount) > parseFloat(maxFee)) {
-    feeAmount = maxFee;
-  } else if (parseFloat(feeAmount) < parseFloat(minFee)) {
-    feeAmount = minFee;
+  } else if (feeAmount > parseFloat(maxFee)) {
+    feeAmount = parseFloat(maxFee);
+  } else if (feeAmount < parseFloat(minFee)) {
+    feeAmount = parseFloat(maxFee);
   }
 
   const changeNetwork = async (chainId) => {
@@ -508,7 +508,7 @@ export default function Bridge() {
           <br />
           Max bridge amount: {max}
           <br />
-          fee: {parseFloat(feeAmount).toFixed(2)} {state.selectedToken[fromNetwork].name}
+          fee: {feeAmount.toFixed(2)} {state.selectedToken[fromNetwork].name}
         </div>
       )}
     </>

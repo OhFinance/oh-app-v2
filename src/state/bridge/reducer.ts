@@ -44,13 +44,7 @@ export const bridgeSlice = createSlice({
   },
 });
 
-export const {
-  addHistory,
-  setToNetwork,
-  setFromNetwork,
-  setSelectedToken,
-  setAmount,
-  setRouterAddress,
-} = bridgeSlice.actions;
+export const { addHistory, setToNetwork, setSelectedToken, setAmount, setRouterAddress } =
+  bridgeSlice.actions;
 
 export default bridgeSlice.reducer;
