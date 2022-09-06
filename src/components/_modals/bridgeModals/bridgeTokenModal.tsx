@@ -26,7 +26,6 @@ const Icon = styled.img({
   height: '1.5em',
   marginRight: '5px',
   marginLeft: 'auto',
-  marginRight: '0',
 });
 
 interface Props {
