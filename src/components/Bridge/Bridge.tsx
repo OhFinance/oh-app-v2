@@ -230,9 +230,11 @@ export default function Bridge() {
   const submitApprove = async () => {
     setLoading(true);
     try {
-      await approveRouter(selectedToken[fromNetwork].address, chainId, library);
+      await approveRouter(selectedToken[fromNetwork].address, routerAddress, library);
       setIsApproved(true);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
     setLoading(false);
   };
 
