@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core';
+import ExternalLinkIcon from 'assets/img/external-link.svg';
 import OhModal from 'components/_modals/common/OhModal';
 import { SupportedChainId } from 'constants/chains';
-import ExternalLinkIcon from 'assets/img/external-link.svg';
 import { DAI, OH, tokenLogos, USDC, USDT } from 'constants/tokens';
 import styled from 'styled-components';
 
@@ -69,7 +69,7 @@ export default function BridgeTokenModal(props: Props) {
   ];
 
   if (props.fromChainId === SupportedChainId.METIS) {
-    allTokens = allTokens.shift();
+    allTokens.shift();
   }
 
   const handleTokenSelect = (token) => {

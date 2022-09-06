@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk-core';
+import { useWeb3React } from '@web3-react/core';
 import BridgeTokenModal from 'components/_modals/bridgeModals/bridgeTokenModal';
 import { CHAIN_INFO, L1ChainInfo, SupportedChainId } from 'constants/chains';
 import { tokenLogos } from 'constants/tokens';
@@ -6,18 +7,22 @@ import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { BsArrowRightShort } from 'react-icons/bs';
-
 import { useDispatch, useStore } from 'react-redux';
 import { save } from 'redux-localstorage-simple';
+import {
+  addHistory,
+  BridgeState,
+  setAmount as stateSetAmount,
+  setRouterAddress,
+  setSelectedToken,
+  setToNetwork,
+} from 'state/bridge/reducer';
+import { HistoryItem } from 'state/bridge/types';
 import styled from 'styled-components';
+import { getERC20Balance } from '../../apis/erc20';
+import { anySwapOutUnderlying, approveRouter, isRouterApproved } from '../../apis/multichain';
 import ToFromBox from '../../components/Bridge/ToFromBox';
 import BridgeNetworkModal from '../../components/_modals/bridgeModals/bridgeNetworkModal';
-
-import { useWeb3React } from '@web3-react/core';
-import { addHistory } from 'state/bridge/reducer';
-import { HistoryItem } from 'state/bridge/types';
-import { approveRouter, isRouterApproved, anySwapOutUnderlying } from '../../apis/multichain';
-import { getERC20Balance } from '../../apis/erc20';
 
 const ToFromContainer = styled.div({
   display: 'flex',
@@ -76,9 +81,13 @@ const SubmitButton = styled.button(({ theme, disabled }) => ({
   backgroundColor: disabled ? 'grey' : '#E7018C',
   marginTop: '20px',
   color: theme.bg4,
-  border: 'solid 2px #E7018C',
+  border: disabled ? 'solid 2px grey' : 'solid 2px #E7018C',
   '&:-webkit-outer-spin-button': {
     opacity: '1',
+  },
+  '&:hover': {
+    backgroundColor: disabled ? 'grey' : '#f056b3',
+    borderColor: disabled ? 'grey' : '#f056b3',
   },
   cursor: disabled ? 'default' : 'pointer',
 }));
@@ -143,66 +152,69 @@ const BalanceText = styled.p({
 });
 
 export default function Bridge() {
+  const state: BridgeState = useStore().getState().bridge;
+  const dispatch = useDispatch();
+
   const [bridgeFromModalOpen, setBridgeFromModalOpen] = useState(false);
   const [bridgeToModalOpen, setBridgeToModalOpen] = useState(false);
-  const [toNetwork, setToNetwork] = useState(SupportedChainId.AVALANCHE);
   const [bridgeTokenModalOpen, setBridgeTokenModalOpen] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<{ [chainId: number]: Token }>();
   const [isApproved, setIsApproved] = useState(false);
   const [userBalance, setUserBalance] = useState(ethers.BigNumber.from('0'));
-  const [amount, setAmount] = useState('0');
-  const [bridgeAmount, setBridgeAmount] = useState(0);
+  const [amount, setAmount] = useState(state.amount);
   const [loading, setLoading] = useState(false);
   const [feePercentage, setFeePercentage] = useState(0);
   const [minFee, setMinFee] = useState('0');
   const [maxFee, setMaxFee] = useState('0');
   const [min, setMin] = useState('0');
   const [max, setMax] = useState('0');
-  const [routerAddress, setRouterAddress] = useState('');
 
   const { account, chainId, library } = useWeb3React();
 
   const fromNetwork = chainId || SupportedChainId.ETHEREUM_MAINNET;
 
-  const store = useStore();
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    setSelectedToken(null);
-  }, [chainId, toNetwork]);
+    dispatch(setSelectedToken(null));
+  }, [chainId, state.toNetwork]);
 
   const fetchInfo = async () => {
-    if (!account || !selectedToken || !fromNetwork || !library || !routerAddress) {
+    if (!account || !state.selectedToken || !fromNetwork || !library || !state.routerAddress) {
       return;
     }
-    setUserBalance(await getERC20Balance(account, selectedToken[fromNetwork].address, library));
+    setUserBalance(
+      await getERC20Balance(account, state.selectedToken[fromNetwork].address, library)
+    );
     setIsApproved(
-      await isRouterApproved(account, selectedToken[fromNetwork].address, routerAddress, library)
+      await isRouterApproved(
+        account,
+        state.selectedToken[fromNetwork].address,
+        state.routerAddress,
+        library
+      )
     );
   };
 
   useEffect(() => {
     fetchInfo();
-  }, [account, selectedToken, fromNetwork, library, routerAddress]);
+  }, [account, state.selectedToken, fromNetwork, library, state.routerAddress]);
 
   const fetchBridgeParams = async () => {
-    setRouterAddress('');
+    dispatch(setRouterAddress);
     setMin('0');
     setMax('0');
     setFeePercentage(0);
     setMinFee('0');
     setMaxFee('0');
-    if (!selectedToken || !fromNetwork || !toNetwork || !chainId) {
+    if (!state.selectedToken || !fromNetwork || !state.toNetwork || !chainId) {
       return;
     }
     const data = await fetch(`https://bridgeapi.anyswap.exchange/v4/tokenlistv4/${chainId}`);
     const tokenList = await data.json();
-    const tokenInfo = tokenList[`evm${selectedToken[fromNetwork].address.toLowerCase()}`];
+    const tokenInfo = tokenList[`evm${state.selectedToken[fromNetwork].address.toLowerCase()}`];
     if (!tokenInfo) {
       return;
     }
 
-    const destChain = tokenInfo.destChains[toNetwork];
+    const destChain = tokenInfo.destChains[state.toNetwork];
     if (!destChain) {
       return;
     }
@@ -211,13 +223,12 @@ export default function Bridge() {
     const max = await getERC20Balance(
       destToken.anytoken.address,
       destToken.address,
-      new ethers.providers.JsonRpcProvider(CHAIN_INFO[toNetwork].rpcUrls[0])
+      new ethers.providers.JsonRpcProvider(CHAIN_INFO[state.toNetwork].rpcUrls[0])
     );
 
-    setRouterAddress(destToken.router);
+    dispatch(setRouterAddress(destToken.router));
     setMin(destToken.MinimumSwap.toString());
     setMax(ethers.utils.formatUnits(max, destToken.decimals));
-    //setMax(destToken.MaximumSwap.toString());
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
     setMinFee(destToken.MinimumSwapFee.toString());
     setMaxFee(destToken.MaximumSwapFee.toString());
@@ -225,12 +236,12 @@ export default function Bridge() {
 
   useEffect(() => {
     fetchBridgeParams();
-  }, [account, selectedToken, fromNetwork, toNetwork, chainId, library]);
+  }, [account, state.selectedToken, fromNetwork, state.toNetwork, chainId, library]);
 
   const submitApprove = async () => {
     setLoading(true);
     try {
-      await approveRouter(selectedToken[fromNetwork].address, routerAddress, library);
+      await approveRouter(state.selectedToken[fromNetwork].address, state.routerAddress, library);
       setIsApproved(true);
     } catch (e) {
       console.error(e);
@@ -242,19 +253,19 @@ export default function Bridge() {
     setLoading(true);
     try {
       const tx = await anySwapOutUnderlying(
-        selectedToken[fromNetwork].address,
+        state.selectedToken[fromNetwork].address,
         account,
-        ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals),
-        routerAddress,
-        toNetwork,
+        ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals),
+        state.routerAddress,
+        state.toNetwork,
         library
       );
       const historyItem: HistoryItem = {
         transactionHash: tx.hash,
         fromNetwork,
-        toNetwork,
-        fromNetworkToken: selectedToken[fromNetwork].address,
-        toNetworkToken: selectedToken[toNetwork].address,
+        toNetwork: state.toNetwork,
+        fromNetworkToken: state.selectedToken[fromNetwork].address,
+        toNetworkToken: state.selectedToken[state.toNetwork].address,
         transactionTime: Date.now(),
       };
 
@@ -269,7 +280,7 @@ export default function Bridge() {
   };
 
   const bridgePreflightCheck = () => {
-    if (!routerAddress) {
+    if (!state.routerAddress) {
       return false;
     }
     if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
@@ -278,20 +289,41 @@ export default function Bridge() {
     if (loading) {
       return false;
     }
-    if (!fromNetwork || !toNetwork || !selectedToken || !library || !amount) {
+    if (!fromNetwork || !state.toNetwork || !state.selectedToken || !library || !amount) {
       return false;
     }
     if (fromNetwork !== chainId) {
       return false;
     }
-    if (ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals).gt(userBalance)) {
+    if (
+      ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals).gt(userBalance)
+    ) {
       return false;
     }
-    if (!ethers.utils.parseUnits(amount, selectedToken[fromNetwork].decimals).gt('0')) {
+    if (!ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals).gt('0')) {
       return false;
     }
     const _decimals = amount.split('.')[1];
-    if (_decimals && _decimals.length > selectedToken[fromNetwork].decimals) {
+    if (_decimals && _decimals.length > state.selectedToken[fromNetwork].decimals) {
+      return false;
+    }
+    return true;
+  };
+
+  const approveDisabledCheck = () => {
+    if (!state.routerAddress) {
+      return false;
+    }
+    // approval is loading loading
+    if (loading) {
+      return false;
+    }
+    // if fromNetwork, toNetwork, selectedToken, or token amount is not set, or metamask is not selected
+    if (!fromNetwork || !state.toNetwork || !state.selectedToken || !library) {
+      return false;
+    }
+    // if the fromNetwork isn't a valid network
+    if (fromNetwork !== chainId) {
       return false;
     }
     return true;
@@ -299,6 +331,7 @@ export default function Bridge() {
 
   const handleAmount = (e) => {
     if (!isNaN(e.target.value)) {
+      dispatch(stateSetAmount(e.target.value));
       setAmount(e.target.value);
     }
   };
@@ -338,7 +371,7 @@ export default function Bridge() {
   };
 
   const fromNetworkData: L1ChainInfo = CHAIN_INFO[fromNetwork];
-  const toNetworkData: L1ChainInfo = CHAIN_INFO[toNetwork];
+  const toNetworkData: L1ChainInfo = CHAIN_INFO[state.toNetwork];
 
   return (
     <>
@@ -352,7 +385,9 @@ export default function Bridge() {
         title="To Networks"
         isOpen={bridgeToModalOpen}
         setModalOpen={setBridgeToModalOpen}
-        chooseNetwork={setToNetwork}
+        chooseNetwork={(networkId: number) => {
+          dispatch(setToNetwork(networkId));
+        }}
       />
       Bridge Tokens to a different network
       <ToFromContainer>
@@ -375,16 +410,18 @@ export default function Bridge() {
           To
         </ToFromBox>
       </ToFromContainer>
-      {/* {selectedToken && fromNetwork && (
+      {/* {state.selectedToken && fromNetwork && (
           <p>
-            {ethers.utils.formatUnits(userBalance, selectedToken[fromNetwork].decimals).toString()}
+            {ethers.utils.formatUnits(userBalance, state.selectedToken[fromNetwork].decimals).toString()}
           </p>
         )} */}
       <BalanceText>
         {' '}
         Balance:{' '}
-        {selectedToken && fromNetwork
-          ? ethers.utils.formatUnits(userBalance, selectedToken[fromNetwork].decimals).toString()
+        {state.selectedToken && fromNetwork
+          ? ethers.utils
+              .formatUnits(userBalance, state.selectedToken[fromNetwork].decimals)
+              .toString()
           : 0.0}
       </BalanceText>
       <BridgeTokenContainer>
@@ -393,9 +430,11 @@ export default function Bridge() {
           isOpen={bridgeTokenModalOpen}
           fromChain={fromNetworkData.label}
           fromChainId={fromNetwork}
-          toChainId={toNetwork}
+          toChainId={state.toNetwork}
           setModalOpen={setBridgeTokenModalOpen}
-          chooseToken={setSelectedToken}
+          chooseToken={(token: { [chainId: number]: Token }) => {
+            dispatch(setSelectedToken(token));
+          }}
         />
         <BridgeToken
           onClick={() => {
@@ -404,9 +443,12 @@ export default function Bridge() {
         >
           <img
             src={
-              tokenLogos && selectedToken && fromNetwork && selectedToken[fromNetwork]?.symbol
-                ? tokenLogos[selectedToken[fromNetwork]?.symbol]
-                  ? tokenLogos[selectedToken[fromNetwork]?.symbol]
+              tokenLogos &&
+              state.selectedToken &&
+              fromNetwork &&
+              state.selectedToken[fromNetwork]?.symbol
+                ? tokenLogos[state.selectedToken[fromNetwork]?.symbol]
+                  ? tokenLogos[state.selectedToken[fromNetwork]?.symbol]
                   : tokenLogos.default
                 : tokenLogos.default
             }
@@ -421,11 +463,13 @@ export default function Bridge() {
           }}
         >
           Token to Bridge
-          {selectedToken == undefined ? (
+          {state.selectedToken == undefined ? (
             <BridgeTokenButton>Select a token</BridgeTokenButton>
           ) : (
             <SelectedTokenText>
-              {selectedToken[fromNetwork]?.symbol ? selectedToken[fromNetwork]?.symbol : 'N/A'}
+              {state.selectedToken[fromNetwork]?.symbol
+                ? state.selectedToken[fromNetwork]?.symbol
+                : 'N/A'}
               <AiFillCaretDown />
             </SelectedTokenText>
           )}
@@ -434,41 +478,36 @@ export default function Bridge() {
         <BridgeAmountContainer>
           <BridgeAmount type="string" value={amount} onChange={handleAmount}></BridgeAmount>
           <MaxButton
-            disabled={!Boolean(selectedToken && fromNetwork)}
+            disabled={!Boolean(state.selectedToken && fromNetwork)}
             onClick={() =>
               setAmount(
                 ethers.utils
-                  .formatUnits(userBalance, selectedToken[fromNetwork].decimals)
+                  .formatUnits(userBalance, state.selectedToken[fromNetwork].decimals)
                   .toString()
               )
             }
           >
             Max
-            {/* Max:{' '}
-              {ethers.utils
-                .formatUnits(userBalance, selectedToken[fromNetwork].decimals)
-                .toString()} */}
           </MaxButton>
-          {/* )} */}
         </BridgeAmountContainer>
       </BridgeTokenContainer>
-      {routerAddress && isApproved ? (
+      {state.routerAddress && isApproved ? (
         <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
           {loading ? 'Loading...' : 'Submit'}
         </SubmitButton>
       ) : (
-        <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitApprove}>
+        <SubmitButton disabled={!approveDisabledCheck()} onClick={submitApprove}>
           {loading ? 'Loading...' : 'Approve'}
         </SubmitButton>
       )}
       {/*TODO: replace*/}
-      {selectedToken && (
+      {state.selectedToken && (
         <div style={{ textAlign: 'left', width: '100%', marginTop: '10px' }}>
           Min bridge amount: {min}
           <br />
           Max bridge amount: {max}
           <br />
-          fee: {parseFloat(feeAmount).toFixed(2)} {selectedToken[fromNetwork].name}
+          fee: {parseFloat(feeAmount).toFixed(2)} {state.selectedToken[fromNetwork].name}
         </div>
       )}
     </>
