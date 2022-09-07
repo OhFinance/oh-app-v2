@@ -51,3 +51,13 @@ export const anySwapOutUnderlying = async (
     toChainId
   );
 };
+
+export const swapout = async (
+  recipientAddress: string,
+  amount: ethers.BigNumber,
+  routerAddress: string,
+  provider: ethers.Provider
+) => {
+  const RouterContract = new ethers.Contract(routerAddress, ROUTER_ABI, provider.getSigner());
+  return await RouterContract.Swapout(amount, recipientAddress);
+};

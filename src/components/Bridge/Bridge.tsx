@@ -20,7 +20,12 @@ import {
 import { HistoryItem } from 'state/bridge/types';
 import styled from 'styled-components';
 import { getERC20Balance } from '../../apis/erc20';
-import { anySwapOutUnderlying, approveRouter, isRouterApproved } from '../../apis/multichain';
+import {
+  anySwapOutUnderlying,
+  approveRouter,
+  isRouterApproved,
+  swapout,
+} from '../../apis/multichain';
 import ToFromBox from '../../components/Bridge/ToFromBox';
 import BridgeNetworkModal from '../../components/_modals/bridgeModals/bridgeNetworkModal';
 
@@ -167,6 +172,7 @@ export default function Bridge() {
   const [maxFee, setMaxFee] = useState('0');
   const [min, setMin] = useState('0');
   const [max, setMax] = useState('0');
+  const [type, setType] = useState('anySwapOutUnderlying');
 
   const { account, chainId, library } = useWeb3React();
 
@@ -211,6 +217,7 @@ export default function Bridge() {
     setFeePercentage(0);
     setMinFee('0');
     setMaxFee('0');
+    setType('');
     if (
       !state.selectedToken ||
       !fromNetwork ||
@@ -244,8 +251,10 @@ export default function Bridge() {
         new ethers.providers.JsonRpcProvider(CHAIN_INFO[state.toNetwork].rpcUrls[0])
       );
       _max = ethers.utils.formatUnits(_max, destToken.decimals);
+      setType('swapout');
+    } else {
+      setType('anySwapOutUnderlying');
     }
-
     dispatch(setRouterAddress(destToken.router));
     setMin(destToken.MinimumSwap.toString());
     setMax(_max);
@@ -272,14 +281,25 @@ export default function Bridge() {
   const submitBridge = async () => {
     setLoading(true);
     try {
-      const tx = await anySwapOutUnderlying(
-        state.selectedToken[fromNetwork].address,
-        account,
-        ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals),
-        state.routerAddress,
-        state.toNetwork,
-        library
-      );
+      let tx;
+      if (type === 'anySwapOutUnderlying') {
+        tx = await anySwapOutUnderlying(
+          state.selectedToken[fromNetwork].address,
+          account,
+          ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals),
+          state.routerAddress,
+          state.toNetwork,
+          library
+        );
+      } else {
+        tx = await swapout(
+          account,
+          ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals),
+          state.routerAddress,
+          library
+        );
+      }
+
       const historyItem: HistoryItem = {
         transactionHash: tx.hash,
         fromNetwork,
@@ -325,6 +345,9 @@ export default function Bridge() {
     }
     const _decimals = amount.split('.')[1];
     if (_decimals && _decimals.length > state.selectedToken[fromNetwork].decimals) {
+      return false;
+    }
+    if (!type) {
       return false;
     }
     return true;
@@ -528,7 +551,7 @@ export default function Bridge() {
           <br />
           Max bridge amount: {max}
           <br />
-          fee: {feeAmount.toFixed(2)} {state.selectedToken[fromNetwork].name}
+          fee: {feeAmount.toFixed(2)} {state.selectedToken[fromNetwork].symbol}
         </div>
       )}
     </>
