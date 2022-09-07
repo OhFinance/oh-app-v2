@@ -46,7 +46,7 @@ export default function BridgeTokenModal(props: Props) {
       tokenInfo: OH,
     },
     {
-      name: 'USDC',
+      name: props.fromChainId === SupportedChainId.AVALANCHE ? 'USDC.e' : 'USDC',
       logo: tokenLogos[USDC[1].symbol],
       tokenInfo: USDC,
       '1to43114': 'https://bridge.avax.network/',

@@ -298,6 +298,7 @@ export default function Bridge() {
           account,
           ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals),
           state.routerAddress,
+          chainId,
           state.toNetwork,
           library
         );
