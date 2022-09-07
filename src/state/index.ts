@@ -1,9 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
-import { load, save } from 'redux-localstorage-simple';
 import application from './application/reducer';
 import banks from './banks/reducer';
-import bridge from './bridge/reducer';
 import multicall from './multicall/slice';
 import stake from './stake/reducer';
 import transactions from './transactions/reducer';
@@ -17,14 +15,8 @@ const store = configureStore({
     multicall,
     banks,
     stake,
-    bridge,
   },
-  middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware({ thunk: true }).concat(save());
-  },
-  preloadedState: {
-    bridge: load().bridge,
-  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: true }),
 });
 
 setupListeners(store.dispatch);
