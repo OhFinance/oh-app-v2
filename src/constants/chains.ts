@@ -89,6 +89,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://rpc.ankr.com/eth'],
   },
   [SupportedChainId.RINKEBY]: {
     name: 'Rinkeby',

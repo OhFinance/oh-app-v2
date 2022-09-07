@@ -67,7 +67,7 @@ export default function BridgeTokenModal(props: Props) {
     },
   ];
 
-  if (props.fromChainId === SupportedChainId.METIS) {
+  if (props.fromChainId === SupportedChainId.METIS || props.toChainId === SupportedChainId.METIS) {
     allTokens.shift();
   }
 

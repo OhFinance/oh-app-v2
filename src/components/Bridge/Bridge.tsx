@@ -174,7 +174,7 @@ export default function Bridge() {
 
   useEffect(() => {
     dispatch(setSelectedToken(null));
-  }, [chainId, state.toNetwork]);
+  }, [chainId]);
 
   const fetchInfo = async () => {
     if (
@@ -216,8 +216,7 @@ export default function Bridge() {
       !fromNetwork ||
       !state.selectedToken[fromNetwork] ||
       !state.toNetwork ||
-      !chainId ||
-      CHAIN_INFO[state.toNetwork].rpcUrls
+      !chainId
     ) {
       return;
     }
@@ -227,26 +226,29 @@ export default function Bridge() {
     if (!tokenInfo) {
       return;
     }
-
     const destChain = tokenInfo.destChains[state.toNetwork];
     if (!destChain) {
       return;
     }
 
     const destToken = destChain[Object.keys(destChain)[0]];
-    if (!destToken || !destToken.anytoken) {
+    if (!destToken) {
       return;
     }
 
-    const max = await getERC20Balance(
-      destToken.anytoken.address,
-      destToken.address,
-      new ethers.providers.JsonRpcProvider(CHAIN_INFO[state.toNetwork].rpcUrls[0])
-    );
+    let _max = destToken.MaximumSwap.toString();
+    if (destToken.anytoken) {
+      _max = await getERC20Balance(
+        destToken.anytoken.address,
+        destToken.address,
+        new ethers.providers.JsonRpcProvider(CHAIN_INFO[state.toNetwork].rpcUrls[0])
+      );
+      _max = ethers.utils.formatUnits(_max, destToken.decimals);
+    }
 
     dispatch(setRouterAddress(destToken.router));
     setMin(destToken.MinimumSwap.toString());
-    setMax(ethers.utils.formatUnits(max, destToken.decimals));
+    setMax(_max);
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
     setMinFee(destToken.MinimumSwapFee.toString());
     setMaxFee(destToken.MaximumSwapFee.toString());
@@ -405,6 +407,7 @@ export default function Bridge() {
         setModalOpen={setBridgeToModalOpen}
         chooseNetwork={(networkId: number) => {
           dispatch(setToNetwork(networkId));
+          dispatch(setSelectedToken(null));
         }}
       />
       Bridge Tokens to a different network
