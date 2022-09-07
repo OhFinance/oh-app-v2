@@ -19,7 +19,7 @@ import {
 } from 'state/bridge/reducer';
 import { HistoryItem } from 'state/bridge/types';
 import styled from 'styled-components';
-import { getERC20Balance } from '../../apis/erc20';
+import { getERC20Balance, erc20Transfer } from '../../apis/erc20';
 import {
   anySwapOutUnderlying,
   approveRouter,
@@ -172,7 +172,7 @@ export default function Bridge() {
   const [maxFee, setMaxFee] = useState('0');
   const [min, setMin] = useState('0');
   const [max, setMax] = useState('0');
-  const [type, setType] = useState('anySwapOutUnderlying');
+  const [type, setType] = useState('');
 
   const { account, chainId, library } = useWeb3React();
 
@@ -244,6 +244,17 @@ export default function Bridge() {
     }
 
     let _max = destToken.MaximumSwap.toString();
+    if (destToken.type === 'swapout') {
+      setType('swapout');
+      dispatch(setRouterAddress(destToken.router));
+    } else if (destToken.DepositAddress) {
+      setType('transfer');
+      dispatch(setRouterAddress(destToken.DepositAddress));
+    } else {
+      setType('anySwapOutUnderlying');
+      dispatch(setRouterAddress(destToken.router));
+    }
+
     if (destToken.anytoken) {
       _max = await getERC20Balance(
         destToken.anytoken.address,
@@ -251,16 +262,14 @@ export default function Bridge() {
         new ethers.providers.JsonRpcProvider(CHAIN_INFO[state.toNetwork].rpcUrls[0])
       );
       _max = ethers.utils.formatUnits(_max, destToken.decimals);
-      setType('swapout');
-    } else {
-      setType('anySwapOutUnderlying');
     }
-    dispatch(setRouterAddress(destToken.router));
+
     setMin(destToken.MinimumSwap.toString());
     setMax(_max);
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
     setMinFee(destToken.MinimumSwapFee.toString());
     setMaxFee(destToken.MaximumSwapFee.toString());
+    fetchInfo();
   };
 
   useEffect(() => {
@@ -280,8 +289,9 @@ export default function Bridge() {
 
   const submitBridge = async () => {
     setLoading(true);
+    let autoSuccess = false;
+    let tx;
     try {
-      let tx;
       if (type === 'anySwapOutUnderlying') {
         tx = await anySwapOutUnderlying(
           state.selectedToken[fromNetwork].address,
@@ -291,13 +301,21 @@ export default function Bridge() {
           state.toNetwork,
           library
         );
-      } else {
+      } else if (type === 'swapout') {
         tx = await swapout(
           account,
           ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals),
           state.routerAddress,
           library
         );
+      } else {
+        tx = await erc20Transfer(
+          state.selectedToken[fromNetwork].address,
+          state.routerAddress,
+          ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals),
+          library
+        );
+        autoSuccess = true;
       }
 
       const historyItem: HistoryItem = {
@@ -307,12 +325,13 @@ export default function Bridge() {
         fromNetworkToken: state.selectedToken[fromNetwork].address,
         toNetworkToken: state.selectedToken[state.toNetwork].address,
         transactionTime: Date.now(),
+        autoSuccess,
       };
+
+      await tx.wait();
 
       dispatch(addHistory(historyItem));
       save();
-
-      await tx.wait();
     } catch (e) {
       console.error(e);
     }
@@ -354,7 +373,7 @@ export default function Bridge() {
   };
 
   const approveDisabledCheck = () => {
-    if (!state.routerAddress) {
+    if (!state.routerAddress || !type) {
       return false;
     }
     // approval is loading loading
@@ -535,7 +554,7 @@ export default function Bridge() {
           </MaxButton>
         </BridgeAmountContainer>
       </BridgeTokenContainer>
-      {state.routerAddress && isApproved ? (
+      {state.routerAddress && (isApproved || type === 'transfer') ? (
         <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
           {loading ? 'Loading...' : 'Submit'}
         </SubmitButton>
