@@ -121,6 +121,7 @@ export function Navbar() {
         <NavLink href="https://docs.oh.finance/" target="_blank">
           Docs
         </NavLink>
+        <NavLink href={'/bridge'}>Bridge</NavLink>
         <NetworkModal isOpen={networkModalOpen} setModalOpen={setNetworkModalOpen} />
         <NetworkSelector />
 
