@@ -276,7 +276,7 @@ export default function BankPage() {
         <FourOhFourContent>
           <img src={PigPic} alt="sad piggy" />
           <ThemedText.H1>
-            Ah <b>OH!</b> This bank was not found.
+            Uh <b>OH!</b> This bank was not found.
           </ThemedText.H1>
           <Button onClick={handleClick} size="large">
             <b>Back to banks</b>
