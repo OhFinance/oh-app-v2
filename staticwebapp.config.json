@@ -1,5 +1,0 @@
-{
-  "navigationFallback": {
-    "rewrite": "/404.tsx"
-  }
-}
