@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { BsArrowRightShort } from 'react-icons/bs';
 import { useDispatch, useStore } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 import { save } from 'redux-localstorage-simple';
 import {
   addHistory,
@@ -28,6 +29,8 @@ import {
 } from '../../apis/multichain';
 import ToFromBox from '../../components/Bridge/ToFromBox';
 import BridgeNetworkModal from '../../components/_modals/bridgeModals/bridgeNetworkModal';
+
+const OH_PINK = '#E7018C';
 
 const ToFromContainer = styled.div({
   display: 'flex',
@@ -83,10 +86,10 @@ const SubmitButton = styled.button(({ theme, disabled }) => ({
   borderRadius: '20px',
   height: '50px',
   width: '100%',
-  backgroundColor: disabled ? 'grey' : '#E7018C',
+  backgroundColor: disabled ? 'grey' : OH_PINK,
   marginTop: '20px',
   color: theme.bg4,
-  border: disabled ? 'solid 2px grey' : 'solid 2px #E7018C',
+  border: disabled ? 'solid 2px grey' : 'solid 2px ' + OH_PINK,
   '&:-webkit-outer-spin-button': {
     opacity: '1',
   },
@@ -154,6 +157,12 @@ const BalanceText = styled.p({
   margin: 0,
   color: 'grey',
   fontSize: '12px',
+});
+
+const SpinnerContainer = styled.div({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '20px',
 });
 
 export default function Bridge() {
@@ -536,12 +545,22 @@ export default function Bridge() {
         </BridgeAmountContainer>
       </BridgeTokenContainer>
       {state.routerAddress && isApproved ? (
-        <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
-          {loading ? 'Loading...' : 'Submit'}
-        </SubmitButton>
+        loading ? (
+          <SpinnerContainer>
+            <ClipLoader color={OH_PINK} />
+          </SpinnerContainer>
+        ) : (
+          <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
+            {'Submit'}
+          </SubmitButton>
+        )
+      ) : loading ? (
+        <SpinnerContainer>
+          <ClipLoader color={OH_PINK} />
+        </SpinnerContainer>
       ) : (
         <SubmitButton disabled={!approveDisabledCheck()} onClick={submitApprove}>
-          {loading ? 'Loading...' : 'Approve'}
+          {'Approve'}
         </SubmitButton>
       )}
       {/*TODO: replace*/}
