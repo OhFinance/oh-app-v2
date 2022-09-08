@@ -84,14 +84,4 @@ module.exports = withPlugins([
     },
   ],
   [withTranspiledModules],
-  [
-    {
-      routes: [
-        {
-          route: '/bank/*',
-          rewrite: '/bank',
-        },
-      ],
-    },
-  ],
 ]);
