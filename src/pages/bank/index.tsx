@@ -214,7 +214,11 @@ export default function BankPage() {
     ? params.get('address')
     : undefined;
   console.log('BANK');
-  console.log('BANK address: ', address);
+  console.log('BANK router?.query: ', router?.query);
+  console.log('BANK router?.query?.address: ', router?.query?.address);
+  console.log('BANK params has: ', params.has('address'));
+  console.log('BANK params get: ', params.get('address'));
+  console.log('window pathname: ', window.location.pathname);
 
   const bank = useMemo(
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
