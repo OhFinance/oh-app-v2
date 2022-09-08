@@ -208,17 +208,21 @@ export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
   const params = new URLSearchParams(window.location.search);
-  const address = router?.query?.address
-    ? router?.query?.address[0]
+  const address = window.location.pathname.split('/')[2]
+    ? window.location.pathname.split('/')[2]
+    : router?.query?.address
+    ? router?.query?.address
     : params.has('address')
     ? params.get('address')
     : undefined;
+
   console.log('BANK');
   console.log('BANK router?.query: ', router?.query);
   console.log('BANK router?.query?.address: ', router?.query?.address);
   console.log('BANK params has: ', params.has('address'));
   console.log('BANK params get: ', params.get('address'));
   console.log('window pathname: ', window.location.pathname);
+  console.log('window pathname: ', window.location.pathname.split('/')[2]);
 
   const bank = useMemo(
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
