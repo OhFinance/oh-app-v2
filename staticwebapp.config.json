@@ -2,7 +2,7 @@
   "routes": [
     {
       "route": "/bank/*",
-      "rewrite": "/bank"
+      "rewrite": "/bank/[address]"
     }
   ]
 }
