@@ -6,6 +6,7 @@ export interface HistoryItem {
   fromNetworkToken: string;
   toNetworkToken: string;
   transactionTime: number;
+  autoSuccess: boolean;
 }
 
 export interface AddHistoryPayload {
