@@ -4,6 +4,9 @@ export default function BridgeHistoryEntry({ transaction }) {
   const [status, setStatus] = useState('');
 
   const fetchStatus = async () => {
+    if (transaction.autoSuccess) {
+      return;
+    }
     try {
       const response = await fetch(
         `https://bridgeapi.anyswap.exchange/v2/history/details?params=${transaction.transactionHash}`
@@ -47,7 +50,7 @@ export default function BridgeHistoryEntry({ transaction }) {
     <div>
       Time: {new Date(transaction.transactionTime).toLocaleString()}
       <br />
-      Status: {status}
+      Status: {transaction.autoSuccess ? 'Success' : status}
     </div>
   );
 }

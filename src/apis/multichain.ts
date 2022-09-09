@@ -33,10 +33,11 @@ export const anySwapOutUnderlying = async (
   recipientAddress: string,
   amount: ethers.BigNumber,
   routerAddress: string,
+  fromChainId: number,
   toChainId: number,
   provider: ethers.Provider
 ) => {
-  const data = await fetch('https://bridgeapi.anyswap.exchange/v4/tokenlistv4/1');
+  const data = await fetch(`https://bridgeapi.anyswap.exchange/v4/tokenlistv4/${fromChainId}`);
   const tokenList = await data.json();
   const tokenInfo = tokenList[`evm${underlyingAddress.toLowerCase()}`];
   const destChain = tokenInfo.destChains[toChainId];

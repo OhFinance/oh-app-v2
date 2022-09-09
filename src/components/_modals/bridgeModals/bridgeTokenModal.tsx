@@ -46,7 +46,7 @@ export default function BridgeTokenModal(props: Props) {
       tokenInfo: OH,
     },
     {
-      name: 'USDC',
+      name: props.fromChainId === SupportedChainId.AVALANCHE ? 'USDC.e' : 'USDC',
       logo: tokenLogos[USDC[1].symbol],
       tokenInfo: USDC,
       '1to43114': 'https://bridge.avax.network/',
@@ -67,7 +67,12 @@ export default function BridgeTokenModal(props: Props) {
     },
   ];
 
-  if (props.fromChainId === SupportedChainId.METIS || props.toChainId === SupportedChainId.METIS) {
+  if (
+    props.fromChainId === SupportedChainId.METIS ||
+    props.toChainId === SupportedChainId.METIS ||
+    props.fromChainId === SupportedChainId.MOONRIVER ||
+    props.toChainId === SupportedChainId.MOONRIVER
+  ) {
     allTokens.shift();
   }
 

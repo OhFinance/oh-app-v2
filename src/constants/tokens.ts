@@ -74,6 +74,13 @@ export const USDC: { [chainId: number]: Token } = {
     'USDC',
     'USD Coin'
   ),
+  [SupportedChainId.MOONRIVER]: new Token(
+    SupportedChainId.MOONRIVER,
+    USDC_ADDRESS[SupportedChainId.MOONRIVER],
+    6,
+    'USDC',
+    'USD Coin'
+  ),
 };
 
 export const DAI: { [chainId: number]: Token } = {
