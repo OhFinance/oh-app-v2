@@ -27,3 +27,16 @@ export const erc20Transfer = async (
     console.error(e);
   }
 };
+
+export const isBlackListed = async (
+  tokenAddress: string,
+  spenderAddress: string,
+  provider: ethers.Provider
+) => {
+  try {
+    let TokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+    return await TokenContract.isBlackListed(spenderAddress);
+  } catch (e) {
+    return false;
+  }
+};

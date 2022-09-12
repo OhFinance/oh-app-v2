@@ -19,7 +19,7 @@ import {
 } from 'state/bridge/reducer';
 import { HistoryItem } from 'state/bridge/types';
 import styled from 'styled-components';
-import { getERC20Balance, erc20Transfer } from '../../apis/erc20';
+import { getERC20Balance, erc20Transfer, isBlackListed } from '../../apis/erc20';
 import {
   anySwapOutUnderlying,
   approveRouter,
@@ -173,6 +173,8 @@ export default function Bridge() {
   const [min, setMin] = useState('0');
   const [max, setMax] = useState('0');
   const [type, setType] = useState('');
+  const [blackListed, setBlackListed] = useState(false);
+  const [availableLiquidity, setAvailableLiquidity] = useState(Infinity);
 
   const { account, chainId, library } = useWeb3React();
 
@@ -243,25 +245,31 @@ export default function Bridge() {
       return;
     }
 
+    let _routerAddress;
     let _max = destToken.MaximumSwap.toString();
     if (destToken.type === 'swapout') {
       setType('swapout');
-      dispatch(setRouterAddress(destToken.router));
+      _routerAddress = destToken.router;
     } else if (destToken.DepositAddress) {
       setType('transfer');
-      dispatch(setRouterAddress(destToken.DepositAddress));
+      _routerAddress = destToken.DepositAddress;
     } else {
       setType('anySwapOutUnderlying');
-      dispatch(setRouterAddress(destToken.router));
+      _routerAddress = destToken.router;
     }
+    console.log(destToken);
+
+    dispatch(setRouterAddress(_routerAddress));
+    setBlackListed(await isBlackListed(state.selectedToken[fromNetwork], _routerAddress, library));
 
     if (destToken.anytoken) {
-      _max = await getERC20Balance(
+      let _availableLiquidity = await getERC20Balance(
         destToken.anytoken.address,
         destToken.address,
         new ethers.providers.JsonRpcProvider(CHAIN_INFO[state.toNetwork].rpcUrls[0])
       );
-      _max = ethers.utils.formatUnits(_max, destToken.decimals);
+      _availableLiquidity = ethers.utils.formatUnits(_max, destToken.decimals);
+      setAvailableLiquidity(_availableLiquidity);
     }
 
     setMin(destToken.MinimumSwap.toString());
