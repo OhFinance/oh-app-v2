@@ -1,6 +1,8 @@
 import { Token } from '@uniswap/sdk-core';
 import { useWeb3React } from '@web3-react/core';
+import Skeleton from 'components/Skeleton';
 import BridgeTokenModal from 'components/_modals/bridgeModals/bridgeTokenModal';
+import WarningModal from 'components/_modals/common/WarningModal';
 import { CHAIN_INFO, L1ChainInfo, SupportedChainId } from 'constants/chains';
 import { tokenLogos } from 'constants/tokens';
 import { ethers } from 'ethers';
@@ -8,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { BsArrowRightShort } from 'react-icons/bs';
 import { useDispatch, useStore } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 import { save } from 'redux-localstorage-simple';
 import {
   addHistory,
@@ -28,6 +31,8 @@ import {
 } from '../../apis/multichain';
 import ToFromBox from '../../components/Bridge/ToFromBox';
 import BridgeNetworkModal from '../../components/_modals/bridgeModals/bridgeNetworkModal';
+
+const OH_PINK = '#E7018C';
 
 const ToFromContainer = styled.div({
   display: 'flex',
@@ -83,10 +88,10 @@ const SubmitButton = styled.button(({ theme, disabled }) => ({
   borderRadius: '20px',
   height: '50px',
   width: '100%',
-  backgroundColor: disabled ? 'grey' : '#E7018C',
+  backgroundColor: disabled ? 'grey' : OH_PINK,
   marginTop: '20px',
   color: theme.bg4,
-  border: disabled ? 'solid 2px grey' : 'solid 2px #E7018C',
+  border: disabled ? 'solid 2px grey' : 'solid 2px ' + OH_PINK,
   '&:-webkit-outer-spin-button': {
     opacity: '1',
   },
@@ -156,6 +161,24 @@ const BalanceText = styled.p({
   fontSize: '12px',
 });
 
+const SpinnerContainer = styled.div({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '20px',
+});
+
+const TokenInfoContainer = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  textAlign: 'left',
+  width: '100%',
+  marginTop: '10px',
+});
+const TokenInfo = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+});
+
 export default function Bridge() {
   const state: BridgeState = useStore().getState().bridge;
   const dispatch = useDispatch();
@@ -173,6 +196,8 @@ export default function Bridge() {
   const [min, setMin] = useState('0');
   const [max, setMax] = useState('0');
   const [type, setType] = useState('');
+  const [liquidityWarningModalOpen, setLiquidityWarningModalOpen] = useState(true);
+  const [blacklistWarningModalOpen, setBlacklistWarningModalOpen] = useState(false);
   const [blackListed, setBlackListed] = useState(false);
   const [availableLiquidity, setAvailableLiquidity] = useState(Infinity);
 
@@ -213,6 +238,7 @@ export default function Bridge() {
   }, [account, state.selectedToken, fromNetwork, library, state.routerAddress]);
 
   const fetchBridgeParams = async () => {
+    setLoading(true);
     dispatch(setRouterAddress);
     setMin('0');
     setMax('0');
@@ -229,21 +255,25 @@ export default function Bridge() {
       !state.toNetwork ||
       !chainId
     ) {
+      setLoading(false);
       return;
     }
     const data = await fetch(`https://bridgeapi.anyswap.exchange/v4/tokenlistv4/${chainId}`);
     const tokenList = await data.json();
     const tokenInfo = tokenList[`evm${state.selectedToken[fromNetwork].address.toLowerCase()}`];
     if (!tokenInfo) {
+      setLoading(false);
       return;
     }
     const destChain = tokenInfo.destChains[state.toNetwork];
     if (!destChain) {
+      setLoading(false);
       return;
     }
 
     const destToken = destChain[Object.keys(destChain)[0]];
     if (!destToken) {
+      setLoading(false);
       return;
     }
 
@@ -279,6 +309,7 @@ export default function Bridge() {
     setFeePercentage(destToken.SwapFeeRatePerMillion.toString());
     setMinFee(destToken.MinimumSwapFee.toString());
     setMaxFee(destToken.MaximumSwapFee.toString());
+    setLoading(false);
     fetchInfo();
   };
 
@@ -448,6 +479,20 @@ export default function Bridge() {
 
   return (
     <>
+      <WarningModal
+        title="Warning"
+        isOpen={liquidityWarningModalOpen}
+        setModalOpen={setLiquidityWarningModalOpen}
+      >
+        There is not enough liquidity for the token you want to swap so you will get Wrapped tokens
+      </WarningModal>
+      <WarningModal
+        title="Blacklisted Router"
+        isOpen={blacklistWarningModalOpen}
+        setModalOpen={setBlacklistWarningModalOpen}
+      >
+        This router has been blacklisted and the transaction cannot be completed at this time
+      </WarningModal>
       <BridgeNetworkModal
         title="From Networks"
         isOpen={bridgeFromModalOpen}
@@ -566,23 +611,38 @@ export default function Bridge() {
         </BridgeAmountContainer>
       </BridgeTokenContainer>
       {state.routerAddress && (isApproved || type === 'transfer') ? (
-        <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
-          {loading ? 'Loading...' : 'Submit'}
-        </SubmitButton>
+        loading ? (
+          <SpinnerContainer>
+            <ClipLoader color={OH_PINK} />
+          </SpinnerContainer>
+        ) : (
+          <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
+            {'Submit'}
+          </SubmitButton>
+        )
+      ) : loading ? (
+        <SpinnerContainer>
+          <ClipLoader color={OH_PINK} />
+        </SpinnerContainer>
       ) : (
         <SubmitButton disabled={!approveDisabledCheck()} onClick={submitApprove}>
-          {loading ? 'Loading...' : 'Approve'}
+          {'Approve'}
         </SubmitButton>
       )}
       {/*TODO: replace*/}
       {state.selectedToken && fromNetwork && state.selectedToken[fromNetwork] && (
-        <div style={{ textAlign: 'left', width: '100%', marginTop: '10px' }}>
-          Min bridge amount: {min}
-          <br />
-          Max bridge amount: {max}
-          <br />
-          fee: {feeAmount.toFixed(2)} {state.selectedToken[fromNetwork].symbol}
-        </div>
+        <TokenInfoContainer style={{ textAlign: 'left', width: '100%', marginTop: '10px' }}>
+          <TokenInfo>Min bridge amount: {loading ? <Skeleton width={'20%'} /> : min}</TokenInfo>
+          <TokenInfo>Max bridge amount: {loading ? <Skeleton width={'20%'} /> : max}</TokenInfo>
+          <TokenInfo>
+            fee:{' '}
+            {loading ? (
+              <Skeleton width={'10%'} />
+            ) : (
+              `${feeAmount.toFixed(2)} ${state.selectedToken[fromNetwork].symbol}`
+            )}
+          </TokenInfo>
+        </TokenInfoContainer>
       )}
     </>
   );

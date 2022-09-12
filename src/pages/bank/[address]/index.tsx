@@ -19,14 +19,14 @@ import Button from '~/components/Button';
 import PigPic from '~/components/_modals/common/animations/pig.svg';
 import { useActiveWeb3React } from '~/hooks/web3';
 import { ThemedText } from '~/theme';
-import UnstyledButton from '../../components/UnstyledButton';
-import { banksByChainContract } from '../../constants/banks';
-import { SupportedChainId } from '../../constants/chains';
-import { switchToNetwork } from '../../utilities/switchToNetwork';
-import DepositCard from './[address]/DepositCard';
+import UnstyledButton from '../../../components/UnstyledButton';
+import { banksByChainContract } from '../../../constants/banks';
+import { SupportedChainId } from '../../../constants/chains';
+import { switchToNetwork } from '../../../utilities/switchToNetwork';
+import DepositCard from './DepositCard';
 
 // nextjs bullies us if we don't do this
-const Chart: any = dynamic(() => import('./[address]/Chart'), { ssr: false });
+const Chart: any = dynamic(() => import('./Chart'), { ssr: false });
 
 const Grid = styled.div({
   display: 'grid',
@@ -208,7 +208,13 @@ export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
   const params = new URLSearchParams(window.location.search);
-  const address = params.has('address') ? params.get('address') : undefined;
+  const address = window.location.pathname.split('/')[2]
+    ? window.location.pathname.split('/')[2]
+    : router?.query?.address
+    ? router?.query?.address
+    : params.has('address')
+    ? params.get('address')
+    : undefined;
 
   const bank = useMemo(
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
@@ -276,7 +282,7 @@ export default function BankPage() {
         <FourOhFourContent>
           <img src={PigPic} alt="sad piggy" />
           <ThemedText.H1>
-            Ah <b>OH!</b> This bank was not found.
+            Uh <b>OH!</b> This bank was not found.
           </ThemedText.H1>
           <Button onClick={handleClick} size="large">
             <b>Back to banks</b>

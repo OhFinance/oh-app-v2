@@ -55,6 +55,7 @@
     "react-icons": "^4.4.0",
     "react-popper": "^2.2.5",
     "react-redux": "^7.2.6",
+    "react-spinners": "^0.13.4",
     "rebass": "^4.0.7",
     "recharts": "^2.1.6",
     "redux-localstorage-simple": "^2.4.1",
