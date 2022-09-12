@@ -76,7 +76,18 @@ export default function BridgeTokenModal(props: Props) {
     allTokens.shift();
   }
 
+  if (props.toChainId === SupportedChainId.METIS) {
+    allTokens.pop();
+  }
+
   if (props.fromChainId === props.toChainId) {
+    allTokens = [];
+  }
+
+  if (
+    props.fromChainId !== SupportedChainId.ETHEREUM_MAINNET &&
+    props.toChainId !== SupportedChainId.ETHEREUM_MAINNET
+  ) {
     allTokens = [];
   }
 

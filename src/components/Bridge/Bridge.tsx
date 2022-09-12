@@ -196,7 +196,7 @@ export default function Bridge() {
   const [min, setMin] = useState('0');
   const [max, setMax] = useState('0');
   const [type, setType] = useState('');
-  const [liquidityWarningModalOpen, setLiquidityWarningModalOpen] = useState(true);
+  const [liquidityWarningModalOpen, setLiquidityWarningModalOpen] = useState(false);
   const [blacklistWarningModalOpen, setBlacklistWarningModalOpen] = useState(false);
   const [blackListed, setBlackListed] = useState(false);
   const [availableLiquidity, setAvailableLiquidity] = useState(Infinity);
@@ -318,6 +318,11 @@ export default function Bridge() {
   }, [account, state.selectedToken, fromNetwork, state.toNetwork, chainId, library]);
 
   const submitApprove = async () => {
+    if (blackListed) {
+      setBlacklistWarningModalOpen(true);
+      return;
+    }
+
     setLoading(true);
     try {
       await approveRouter(state.selectedToken[fromNetwork].address, state.routerAddress, library);
@@ -328,7 +333,22 @@ export default function Bridge() {
     setLoading(false);
   };
 
+  const submitBridgeHelper = async () => {
+    if (blackListed) {
+      setBlacklistWarningModalOpen(true);
+      return;
+    }
+
+    if (parseFloat(amount) > parseFloat(availableLiquidity)) {
+      setLiquidityWarningModalOpen(true);
+      return;
+    }
+
+    submitBridge();
+  };
+
   const submitBridge = async () => {
+    setLiquidityWarningModalOpen(false);
     setLoading(true);
     let autoSuccess = false;
     let tx;
@@ -485,6 +505,7 @@ export default function Bridge() {
         setModalOpen={setLiquidityWarningModalOpen}
       >
         There is not enough liquidity for the token you want to swap so you will get Wrapped tokens
+        <button onClick={submitBridge}>Continue anyway</button>
       </WarningModal>
       <WarningModal
         title="Blacklisted Router"
@@ -616,7 +637,7 @@ export default function Bridge() {
             <ClipLoader color={OH_PINK} />
           </SpinnerContainer>
         ) : (
-          <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridge}>
+          <SubmitButton disabled={!bridgePreflightCheck()} onClick={submitBridgeHelper}>
             {'Submit'}
           </SubmitButton>
         )
