@@ -7,7 +7,6 @@ const WarningContainer = styled.div({
   justifyContent: 'center',
   flexDirection: 'column',
   alignItems: 'center',
-
   width: '100%',
 });
 
@@ -27,6 +26,10 @@ const WarningTitle = styled.p({
   marginTop: '0px',
 });
 
+const Container = styled.div({
+  marginBottom: '-40px',
+});
+
 interface WarningModalProps {
   title: string;
   isOpen: boolean;
@@ -37,12 +40,14 @@ interface WarningModalProps {
 export default function WarningModal(props: WarningModalProps) {
   return (
     <OhModal title={''} isOpen={props.isOpen} onDismiss={() => props.setModalOpen(false)}>
-      <WarningContainer>
-        <WarningImage src={warningImage} alt="Warning sign" />
-        <WarningTitle>{props.title}</WarningTitle>
-      </WarningContainer>
+      <Container>
+        <WarningContainer>
+          <WarningImage src={warningImage} alt="Warning sign" />
+          <WarningTitle>{props.title}</WarningTitle>
+        </WarningContainer>
 
-      <WarningText>{props.children}</WarningText>
+        <WarningText>{props.children}</WarningText>
+      </Container>
     </OhModal>
   );
 }

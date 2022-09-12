@@ -22,7 +22,7 @@ import {
 } from 'state/bridge/reducer';
 import { HistoryItem } from 'state/bridge/types';
 import styled from 'styled-components';
-import { getERC20Balance, erc20Transfer, isBlackListed } from '../../apis/erc20';
+import { erc20Transfer, getERC20Balance, isBlackListed } from '../../apis/erc20';
 import {
   anySwapOutUnderlying,
   approveRouter,
@@ -177,6 +177,19 @@ const TokenInfoContainer = styled.div({
 const TokenInfo = styled.div({
   display: 'flex',
   flexDirection: 'row',
+});
+
+const ContinueButton = styled.button({
+  backgroundColor: OH_PINK,
+  marginTop: '30px',
+  border: 'none',
+  borderRadius: '20px',
+  color: 'white',
+  padding: '10px 15px 10px 15px',
+});
+
+const BlacklistWarningText = styled.div({
+  marginBottom: '50px',
 });
 
 export default function Bridge() {
@@ -505,14 +518,16 @@ export default function Bridge() {
         setModalOpen={setLiquidityWarningModalOpen}
       >
         There is not enough liquidity for the token you want to swap so you will get Wrapped tokens
-        <button onClick={submitBridge}>Continue anyway</button>
+        <ContinueButton onClick={submitBridge}>Continue anyway</ContinueButton>
       </WarningModal>
       <WarningModal
         title="Blacklisted Router"
         isOpen={blacklistWarningModalOpen}
         setModalOpen={setBlacklistWarningModalOpen}
       >
-        This router has been blacklisted and the transaction cannot be completed at this time
+        <BlacklistWarningText>
+          This router has been blacklisted and the transaction cannot be completed at this time
+        </BlacklistWarningText>
       </WarningModal>
       <BridgeNetworkModal
         title="From Networks"
