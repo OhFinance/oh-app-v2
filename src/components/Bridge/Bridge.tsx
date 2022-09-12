@@ -211,6 +211,8 @@ export default function Bridge() {
   const [type, setType] = useState('');
   const [liquidityWarningModalOpen, setLiquidityWarningModalOpen] = useState(false);
   const [blacklistWarningModalOpen, setBlacklistWarningModalOpen] = useState(false);
+  const [amountWarningModalOpen, setAmountWarningModalOpen] = useState(false);
+  const [amountWarningModalText, setAmountWarningModalText] = useState('');
   const [blackListed, setBlackListed] = useState(false);
   const [availableLiquidity, setAvailableLiquidity] = useState(Infinity);
 
@@ -349,15 +351,23 @@ export default function Bridge() {
   const submitBridgeHelper = async () => {
     if (blackListed) {
       setBlacklistWarningModalOpen(true);
-      return;
-    }
-
-    if (parseFloat(amount) > parseFloat(availableLiquidity)) {
+    } else if (parseFloat(amount) > parseFloat(availableLiquidity)) {
       setLiquidityWarningModalOpen(true);
-      return;
+    } else if (
+      !state.selectedToken[fromNetwork] ||
+      ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals).gt(userBalance)
+    ) {
+      setAmountWarningModalText('Amount is greater than your balance.');
+      setAmountWarningModalOpen(true);
+    } else if (parseFloat(amount) > parseFloat(max)) {
+      setAmountWarningModalText('Amount is greater than the maximum.');
+      setAmountWarningModalOpen(true);
+    } else if (parseFloat(amount) < parseFloat(min)) {
+      setAmountWarningModalText('Amount is lower than the minimum.');
+      setAmountWarningModalOpen(true);
+    } else {
+      submitBridge();
     }
-
-    submitBridge();
   };
 
   const submitBridge = async () => {
@@ -417,9 +427,6 @@ export default function Bridge() {
     if (!state.routerAddress) {
       return false;
     }
-    if (parseFloat(amount) > parseFloat(max) || parseFloat(amount) < parseFloat(min)) {
-      return false;
-    }
     if (loading) {
       return false;
     }
@@ -427,12 +434,6 @@ export default function Bridge() {
       return false;
     }
     if (fromNetwork !== chainId) {
-      return false;
-    }
-    if (
-      !state.selectedToken[fromNetwork] ||
-      ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals).gt(userBalance)
-    ) {
       return false;
     }
     if (!ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals).gt('0')) {
@@ -529,6 +530,13 @@ export default function Bridge() {
         <BlacklistWarningText>
           This router has been blacklisted and the transaction cannot be completed at this time
         </BlacklistWarningText>
+      </WarningModal>
+      <WarningModal
+        title="Invalid Amount"
+        isOpen={amountWarningModalOpen}
+        setModalOpen={setAmountWarningModalOpen}
+      >
+        <BlacklistWarningText>{amountWarningModalText}</BlacklistWarningText>
       </WarningModal>
       <BridgeNetworkModal
         title="From Networks"
