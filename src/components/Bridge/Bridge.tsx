@@ -220,6 +220,8 @@ export default function Bridge() {
     setMinFee('0');
     setMaxFee('0');
     setType('');
+    setBlackListed(false);
+    setAvailableLiquidity(Infinity);
     if (
       !state.selectedToken ||
       !fromNetwork ||
