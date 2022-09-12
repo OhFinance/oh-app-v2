@@ -27,6 +27,9 @@ const Icon = styled.img({
   marginRight: '5px',
   marginLeft: 'auto',
 });
+const InfoText = styled.div({
+  marginTop: '20px',
+});
 
 interface Props {
   title: string;
@@ -51,6 +54,7 @@ export default function BridgeTokenModal(props: Props) {
       tokenInfo: USDC,
       '1to43114': 'https://bridge.avax.network/',
       '1to1088': 'https://bridge.metis.io/home',
+      '1088to1': 'https://bridge.metis.io/home',
     },
     {
       name: 'USDT',
@@ -58,12 +62,15 @@ export default function BridgeTokenModal(props: Props) {
       tokenInfo: USDT,
       '1to43114': 'https://bridge.avax.network/',
       '1to1088': 'https://bridge.metis.io/home',
+      '1088to1': 'https://bridge.metis.io/home',
     },
     {
       name: 'DAI',
       logo: tokenLogos[DAI[1].symbol],
       tokenInfo: DAI,
       '1to43114': 'https://bridge.avax.network/',
+      '1to1088': 'https://bridge.metis.io/home',
+      '1088to1': 'https://bridge.metis.io/home',
     },
   ];
 
@@ -74,10 +81,6 @@ export default function BridgeTokenModal(props: Props) {
     props.toChainId === SupportedChainId.MOONRIVER
   ) {
     allTokens.shift();
-  }
-
-  if (props.toChainId === SupportedChainId.METIS) {
-    allTokens.pop();
   }
 
   if (props.fromChainId === props.toChainId) {
@@ -118,6 +121,8 @@ export default function BridgeTokenModal(props: Props) {
           )}
         </TokenItem>
       ))}
+
+      {allTokens.length === 0 && <InfoText>No tokens available</InfoText>}
     </OhModal>
   );
 }

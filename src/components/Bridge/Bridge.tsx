@@ -289,12 +289,12 @@ export default function Bridge() {
       setType('anySwapOutUnderlying');
       _routerAddress = destToken.router;
     }
-    console.log(destToken);
+    //console.log(destToken);
 
     dispatch(setRouterAddress(_routerAddress));
     setBlackListed(await isBlackListed(state.selectedToken[fromNetwork], _routerAddress, library));
 
-    if (destToken.anytoken) {
+    if (destToken.anytoken && destToken.isLiquidity) {
       let _availableLiquidity = await getERC20Balance(
         destToken.anytoken.address,
         destToken.address,
@@ -417,6 +417,7 @@ export default function Bridge() {
       return false;
     }
     if (
+      !state.selectedToken[fromNetwork] ||
       ethers.utils.parseUnits(amount, state.selectedToken[fromNetwork].decimals).gt(userBalance)
     ) {
       return false;
