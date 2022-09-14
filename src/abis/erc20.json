@@ -1,6 +1,15 @@
 [
   {
     "constant": true,
+    "inputs": [{ "name": "", "type": "address" }],
+    "name": "isBlackListed",
+    "outputs": [{ "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "name",
     "outputs": [{ "name": "", "type": "string" }],

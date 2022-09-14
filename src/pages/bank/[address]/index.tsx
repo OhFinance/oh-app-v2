@@ -207,7 +207,15 @@ const ranges: {
 export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
-  const { address } = router.query;
+  const params = new URLSearchParams(window.location.search);
+  const address = window.location.pathname.split('/')[2]
+    ? window.location.pathname.split('/')[2]
+    : router?.query?.address
+    ? router?.query?.address
+    : params.has('address')
+    ? params.get('address')
+    : undefined;
+
   const bank = useMemo(
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
     [address, chainId]
@@ -274,7 +282,7 @@ export default function BankPage() {
         <FourOhFourContent>
           <img src={PigPic} alt="sad piggy" />
           <ThemedText.H1>
-            Ah <b>OH!</b> This bank was not found.
+            Uh <b>OH!</b> This bank was not found.
           </ThemedText.H1>
           <Button onClick={handleClick} size="large">
             <b>Back to banks</b>
