@@ -4,7 +4,8 @@ type AddressMap = { [chainId: number]: string };
 export const OH_ADDRESS: AddressMap = {
   [SupportedChainId.ETHEREUM_MAINNET]: '0x16ba8Efe847EBDFef99d399902ec29397D403C30',
   [SupportedChainId.RINKEBY]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
-
+  [SupportedChainId.MOONRIVER]: '0xD96ddb35C6268CB3085003248853c39F3BfFfB4b',
+  [SupportedChainId.METIS]: '0x1CcCA1cE62c62F7Be95d4A67722a8fDbed6EEcb4',
   [SupportedChainId.KOVAN]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
   [SupportedChainId.AVALANCHE]: '0x937E077aBaEA52d3abf879c9b9d3f2eBd15BAA21',
 };

@@ -315,7 +315,7 @@ export default function Bridge() {
         destToken.address,
         new ethers.providers.JsonRpcProvider(CHAIN_INFO[state.toNetwork].rpcUrls[0])
       );
-      _availableLiquidity = ethers.utils.formatUnits(_max, destToken.decimals);
+      _availableLiquidity = _max;
       setAvailableLiquidity(_availableLiquidity);
     }
 
@@ -417,6 +417,7 @@ export default function Bridge() {
 
       dispatch(addHistory(historyItem));
       save();
+      fetchInfo();
     } catch (e) {
       console.error(e);
     }
@@ -481,7 +482,7 @@ export default function Bridge() {
   } else if (feeAmount > parseFloat(maxFee)) {
     feeAmount = parseFloat(maxFee);
   } else if (feeAmount < parseFloat(minFee)) {
-    feeAmount = parseFloat(maxFee);
+    feeAmount = parseFloat(minFee);
   }
 
   const changeNetwork = async (chainId) => {
