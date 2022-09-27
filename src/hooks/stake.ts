@@ -1,15 +1,15 @@
 import { Token } from '@uniswap/sdk-core';
-import { MASTER_OH_ADDRESS } from 'constants/addresses';
-import { OH, VeOH } from 'constants/tokens';
 import { BigNumber } from 'ethers';
 import { formatEther, formatUnits, parseEther, parseUnits } from 'ethers/lib/utils';
 import { useCallback, useEffect, useState } from 'react';
-import { scalePrice, sqrt } from 'utilities/numberUtilities';
-import ERC20_ABI from '~/abis/erc20.json';
+import ERC20_ABI from '../abis/erc20.json';
 import MASTER_OH_ABI from '../abis/master_oh.json';
 import ohABI from '../abis/oh_token.json';
 import veOHABI from '../abis/ve_oh.json';
+import { MASTER_OH_ADDRESS } from '../constants/addresses';
+import { OH, VeOH } from '../constants/tokens';
 import { usePriceStore } from '../stores/usePriceStore';
+import { scalePrice, sqrt } from '../utilities/numberUtilities';
 import { useContract } from './contracts/useContract';
 import { useActiveWeb3React } from './web3';
 

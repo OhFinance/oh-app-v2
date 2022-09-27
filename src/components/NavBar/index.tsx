@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { activeTabType } from 'pages/stake';
 import styled from 'styled-components';
 
 interface NavType {
@@ -42,11 +43,23 @@ const SettingsButton = styled.div`
   cursor: pointer;
 `;
 
-const NavBar = () => {
+interface NavBarProps {
+  activeTab: activeTabType;
+  setActiveTab: (activeTab: activeTabType) => void;
+}
+const NavBar = (props: NavBarProps) => {
   return (
     <Container>
       <List>
-        <ListItem active>OH! Boost</ListItem>
+        <ListItem active={props.activeTab == 'SWAP'} onClick={() => props.setActiveTab('SWAP')}>
+          Swap
+        </ListItem>
+        <ListItem active={props.activeTab == 'POOL'} onClick={() => props.setActiveTab('POOL')}>
+          Pool
+        </ListItem>
+        <ListItem active={props.activeTab == 'BOOST'} onClick={() => props.setActiveTab('BOOST')}>
+          OH! Boost
+        </ListItem>
       </List>
       <SettingsButton>
         <Image src="/img/settings.svg" width={20} height={20} alt="settings" />

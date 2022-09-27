@@ -6,6 +6,8 @@ export interface AppColors {
   bg2: Color;
   bg3: Color;
   bg4: Color;
+  bgPink: Color;
+  bgDisabledPink: Color;
 
   buttonBG: Color;
   buttonDisabled: Color;
