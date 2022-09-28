@@ -1,6 +1,7 @@
 import Spinner from 'components/Spinner';
 import StakeBoost from 'components/StakeBoost';
 import StakePool from 'components/StakePool';
+import StakeSwap from 'components/StakeSwap/StakeSwap';
 import { useState } from 'react';
 import styled from 'styled-components';
 import NavBar from '../../components/NavBar';
@@ -64,6 +65,9 @@ export const StakePage = () => {
           setActionType={(actionType: actionTypeType) => setActionType(actionType)}
         />
       );
+      break;
+    case SWAP:
+      content = <StakeSwap />;
       break;
     default:
       content = <StakePool />;
