@@ -36,6 +36,20 @@ export const OH: { [chainId: number]: Token } = {
     'OH',
     'Oh! Finance'
   ),
+  [SupportedChainId.MOONRIVER]: new Token(
+    SupportedChainId.MOONRIVER,
+    OH_ADDRESS[1285],
+    18,
+    'OH',
+    'Oh! Finance'
+  ),
+  [SupportedChainId.METIS]: new Token(
+    SupportedChainId.METIS,
+    OH_ADDRESS[1088],
+    18,
+    'OH',
+    'Oh! Finance'
+  ),
 };
 
 export const USDC: { [chainId: number]: Token } = {

@@ -2,7 +2,6 @@ import { useStore } from 'react-redux';
 import styled from 'styled-components';
 import BridgeHistoryEntry from './BridgeHistoryEntry';
 
-const Container = styled.div({});
 const HistoryTitleContainer = styled.div({});
 const HistoryTitle = styled.p({
   color: 'grey',
@@ -15,8 +14,6 @@ const HistoryContainer = styled.div({
   borderRadius: '20px',
 });
 
-const HistoryContent = styled.div({});
-
 export default function BridgeHistory() {
   const store = useStore();
 
@@ -25,9 +22,14 @@ export default function BridgeHistory() {
   if (history.length == 0) {
     historyContent.push(<>Your Transactions will appear here...</>);
   } else {
-    historyContent = history.map((historyContent, index) => {
-      return <BridgeHistoryEntry key={index} transaction={historyContent} />;
-    });
+    for (let i = history.length - 1; i >= 0; i--) {
+      historyContent.push(
+        <>
+          <BridgeHistoryEntry key={i} transaction={history[i]} />
+          <br />
+        </>
+      );
+    }
   }
 
   return (
