@@ -18,6 +18,7 @@ import {
   getAprInfo,
 } from 'apis/MasterOh';
 import { ethers } from 'ethers';
+import OhModal from 'components/_modals/common/OhModal';
 
 const Container = styled.div(({ theme }) => ({
   width: '100%',
@@ -216,6 +217,9 @@ const StakePoolItem = (props: StakePoolItemProps) => {
   const [stakeable, setStakeable] = useState('0.00');
   const [isApproved, setIsApproved] = useState(false);
   const [aprInfo, setAprInfo] = useState<AprInfo>({});
+  const [depositModalOpen, setDepositModalOpen] = useState(false);
+  const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
+  const [amount, setAmount] = useState('0.0');
 
   const fetchInfo = async () => {
     if (!chainId || !library) {
@@ -250,6 +254,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       const _userInfo = await getUserInfo(account, props.pid, chainId, library);
       await (await withdraw(props.pid, _userInfo.amount, chainId, library)).wait();
       props.onUnstake();
+      fetchInfo();
     } catch (e) {
       console.error(e);
     }
@@ -261,15 +266,52 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         const userBal = await getUserBal(account, props.tokenAddress, chainId, library);
         await (await deposit(props.pid, userBal, chainId, library)).wait();
         props.onStake();
+        fetchInfo();
       } catch (e) {
         console.error(e);
       }
     } else {
       try {
         await approveToken(account, props.tokenAddress, chainId, library);
+        setIsApproved(true);
       } catch (e) {
         console.error(e);
       }
+    }
+  };
+
+  const submitApprove = async () => {
+    try {
+      await (await approveToken(account, props.tokenAddress, chainId, library)).wait();
+      setIsApproved(true);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const submitDeposit = async () => {
+    try {
+      await (
+        await deposit(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library)
+      ).wait();
+      props.onUnstake();
+      fetchInfo();
+      setDepositModalOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const submitWithdraw = async () => {
+    try {
+      await (
+        await withdraw(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library)
+      ).wait();
+      props.onUnstake();
+      fetchInfo();
+      setWithdrawModalOpen(false);
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -281,12 +323,74 @@ const StakePoolItem = (props: StakePoolItemProps) => {
     }
   };
 
+  const depositPreflightCheck = () => {
+    if (parseFloat(amount) > parseFloat(stakeable)) {
+      return false;
+    }
+    if (parseFloat(amount) === 0) {
+      return false;
+    }
+    return true;
+  };
+
+  const withdrawPreflightCheck = () => {
+    if (parseFloat(amount) > parseFloat(myDeposit)) {
+      return false;
+    }
+    if (parseFloat(amount) === 0) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleAmount = async (_amount) => {
+    if (!isNaN(_amount)) {
+      setAmount(_amount);
+    }
+  };
+
   useEffect(() => {
     fetchInfo();
   }, [chainId, account, library]);
 
   return (
     <Container>
+      <OhModal
+        isOpen={depositModalOpen}
+        onDismiss={() => {
+          setDepositModalOpen(false);
+          setAmount('0.0');
+        }}
+        title={'Deposit'}
+      >
+        <input value={amount} onChange={(e) => handleAmount(e.target.value)} type="text" />
+        <button onClick={() => setAmount(stakeable)}>Max: {stakeable}</button>
+
+        {isApproved ? (
+          <button disabled={!depositPreflightCheck()} onClick={submitDeposit}>
+            Submit
+          </button>
+        ) : (
+          <button onClick={submitApprove}>Approve</button>
+        )}
+      </OhModal>
+
+      <OhModal
+        isOpen={withdrawModalOpen}
+        onDismiss={() => {
+          setWithdrawModalOpen(false);
+          setAmount('0.0');
+        }}
+        title={'Withdraw'}
+      >
+        <input value={amount} onChange={(e) => handleAmount(e.target.value)} type="text" />
+        <button onClick={() => setAmount(myDeposit)}>Max: {myDeposit}</button>
+
+        <button disabled={!withdrawPreflightCheck()} onClick={submitWithdraw}>
+          Submit
+        </button>
+      </OhModal>
+
       <UpperContainer>
         <ContainerLeft>
           <TokenInfo>
@@ -311,8 +415,8 @@ const StakePoolItem = (props: StakePoolItemProps) => {
           </ContentContainer>
         </>
         <ActionButtonsContainer>
-          <ActionButtons>Deposit</ActionButtons>
-          <ActionButtons>Withdraw</ActionButtons>
+          <ActionButtons onClick={() => setDepositModalOpen(true)}>Deposit</ActionButtons>
+          <ActionButtons onClick={() => setWithdrawModalOpen(true)}>Withdraw</ActionButtons>
         </ActionButtonsContainer>
       </UpperContainer>
       <LowerContainer>
