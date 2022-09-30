@@ -8,6 +8,7 @@ const CHAIN_ID_NETWORK_ARGUMENT: {
   readonly [chainId in FormaticSupportedChains]: string | undefined;
 } = {
   1: undefined,
+  3: 'goerli',
   4: 'rinkeby',
   42: 'kovan',
   43114: 'avalanche',

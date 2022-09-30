@@ -4,16 +4,18 @@ type AddressMap = { [chainId: number]: string };
 
 export const MASTER_OH_ADDRESS: AddressMap = {
   [SupportedChainId.RINKEBY]: '0x7585eCC8267f1b32F3E4D057C1eE9016f043D4a9',
+  [SupportedChainId.GOERLI]: '0xbc257221440DF4eCE3B17cb26cf8f763C248f178',
 };
 
 export const VEOH_ADDRESS: AddressMap = {
   [SupportedChainId.RINKEBY]: '0xee661c2ab32bacb90418ad2ccf413e11994f5072',
+  [SupportedChainId.GOERLI]: '0xA0c4F57fc408F34973075352E75D6Fa18c9155e9',
 };
 
 export const OH_ADDRESS: AddressMap = {
   [SupportedChainId.ETHEREUM_MAINNET]: '0x16ba8Efe847EBDFef99d399902ec29397D403C30',
   [SupportedChainId.RINKEBY]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
-
+  [SupportedChainId.GOERLI]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
   [SupportedChainId.KOVAN]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
   [SupportedChainId.AVALANCHE]: '0x937E077aBaEA52d3abf879c9b9d3f2eBd15BAA21',
 };

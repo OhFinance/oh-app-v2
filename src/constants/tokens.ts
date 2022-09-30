@@ -43,6 +43,13 @@ export const OH: { [chainId: number]: Token } = {
     'OH',
     'Oh! Finance'
   ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    OH_ADDRESS[3],
+    18,
+    'OH',
+    'Oh! Finance'
+  ),
   [SupportedChainId.KOVAN]: new Token(
     SupportedChainId.KOVAN,
     OH_ADDRESS[42],

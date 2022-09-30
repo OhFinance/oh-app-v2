@@ -124,22 +124,24 @@ const StakePoolActionItem = (props: StakePoolActionItemProp) => {
               </BodyTextContainer>
             </Body>
           </LeftContentContainer>
-          <RightContentContainer>
-            <Header>
-              {props.rightTitle ? (
-                <TitleText>{props.rightTitle}</TitleText>
-              ) : (
-                <TitleText> </TitleText>
-              )}
-            </Header>
-            <Body>
-              <TokenIcon src={props.rightIcon} />
-              <BodyTextContainer>
-                <BodyText>{props.rightAmount}</BodyText>
-                <BodyText>{props.rightSymbol}</BodyText>
-              </BodyTextContainer>
-            </Body>
-          </RightContentContainer>
+          {props.rightIcon && (
+            <RightContentContainer>
+              <Header>
+                {props.rightTitle ? (
+                  <TitleText>{props.rightTitle}</TitleText>
+                ) : (
+                  <TitleText> </TitleText>
+                )}
+              </Header>
+              <Body>
+                <TokenIcon src={props.rightIcon} />
+                <BodyTextContainer>
+                  <BodyText>{props.rightAmount}</BodyText>
+                  <BodyText>{props.rightSymbol}</BodyText>
+                </BodyTextContainer>
+              </Body>
+            </RightContentContainer>
+          )}
         </ContentContainer>
         <Footer>{props.footer}</Footer>
       </FooterContainer>

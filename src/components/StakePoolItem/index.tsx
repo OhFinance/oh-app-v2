@@ -1,10 +1,23 @@
 import StakePoolActionItem from 'components/StakePoolActionItem';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { BiHelpCircle } from 'react-icons/bi';
 import { BsArrowDownCircleFill } from 'react-icons/bs';
 import { Tooltip, TooltipProps } from 'react-tippy';
 import styled from 'styled-components';
+import { useActiveWeb3React } from 'hooks/web3';
+import {
+  getUserInfo,
+  getPendingRewards,
+  getUserBal,
+  deposit,
+  withdraw,
+  isTokenApproved,
+  approveToken,
+  AprInfo,
+  getAprInfo,
+} from 'apis/MasterOh';
+import { ethers } from 'ethers';
 
 const Container = styled.div(({ theme }) => ({
   width: '100%',
@@ -162,6 +175,9 @@ const HorizontalContainer = styled.div({
 });
 
 interface StakePoolItemProps {
+  pid: number;
+  tokenAddress: string;
+  decimals: number;
   tokenSymbol: string;
   tokenIcon: string;
   rewardIcon: string;
@@ -172,7 +188,6 @@ interface StakePoolItemProps {
   reward2Amount?: string;
   coverageRatio: string;
   poolDeposits: string;
-  myDeposits: string;
   baseApr: string;
   medianBoostedApr: string;
   myBoostedApr: string;
@@ -187,10 +202,89 @@ interface StakePoolItemProps {
   stakeableTokenSymbol: string;
   stakeableTokenIcon: string;
   unstakeAllFunction: Function;
+  onStake: Function;
+  unUnstake: Function;
+  onClaim: Function;
 }
 
 const StakePoolItem = (props: StakePoolItemProps) => {
+  const { chainId, account, library } = useActiveWeb3React();
+
   const [expandContent, setExpandContent] = useState(false);
+  const [myDeposit, setMyDeposit] = useState('0.00');
+  const [pendingOh, setPendingOh] = useState('0.00');
+  const [stakeable, setStakeable] = useState('0.00');
+  const [isApproved, setIsApproved] = useState(false);
+  const [aprInfo, setAprInfo] = useState<AprInfo>({});
+
+  const fetchInfo = async () => {
+    if (!chainId || !library) {
+      return;
+    }
+
+    const _aprInfo = await getAprInfo(account, props.pid, chainId, library);
+    setAprInfo(_aprInfo);
+
+    if (!account) {
+      return;
+    }
+
+    const _isApproved = await isTokenApproved(account, props.tokenAddress, chainId, library);
+    setIsApproved(_isApproved);
+
+    const _userInfo = await getUserInfo(account, props.pid, chainId, library);
+    const stakedAmount = ethers.utils.formatUnits(_userInfo.amount, props.decimals);
+    setMyDeposit(parseFloat(stakedAmount).toFixed(2));
+
+    const rewardInfo = await getPendingRewards(account, props.pid, chainId, library);
+    const ohAmount = ethers.utils.formatEther(rewardInfo.pendingOh, props.decimals);
+    setPendingOh(parseFloat(ohAmount).toFixed(2));
+
+    const userBal = await getUserBal(account, props.tokenAddress, chainId, library);
+    const _stakeable = ethers.utils.formatUnits(userBal, props.decimals);
+    setStakeable(parseFloat(_stakeable).toFixed(2));
+  };
+
+  const submitWithdrawAll = async () => {
+    try {
+      const _userInfo = await getUserInfo(account, props.pid, chainId, library);
+      await (await withdraw(props.pid, _userInfo.amount, chainId, library)).wait();
+      props.onUnstake();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const submitDepositAll = async () => {
+    if (isApproved) {
+      try {
+        const userBal = await getUserBal(account, props.tokenAddress, chainId, library);
+        await (await deposit(props.pid, userBal, chainId, library)).wait();
+        props.onStake();
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      try {
+        await approveToken(account, props.tokenAddress, chainId, library);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const submitClaim = async () => {
+    try {
+      await (await deposit(props.pid, 0, chainId, library)).wait();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchInfo();
+  }, [chainId, account, library]);
+
   return (
     <Container>
       <UpperContainer>
@@ -207,13 +301,13 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         <>
           <ContentContainer>
             <GreyText>Pool Deposits</GreyText>
-            <ValueText>{props.myDeposits}</ValueText>
-            <GreyText>6.33M {props.tokenSymbol}</GreyText>
+            <ValueText>{props.poolDeposits}</ValueText>
+            <GreyText>{props.tokenSymbol}</GreyText>
           </ContentContainer>
           <ContentContainer>
             <GreyText>My Deposits</GreyText>
-            <ValueText>{props.myDeposits}</ValueText>
-            <GreyText>My Deposits</GreyText>
+            <ValueText>{myDeposit}</ValueText>
+            <GreyText>{props.tokenSymbol}</GreyText>
           </ContentContainer>
         </>
         <ActionButtonsContainer>
@@ -237,7 +331,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               trigger="mouseenter"
             >
               <GreyTextHorizontalContainer>
-                <GreyText>Base APR: </GreyText> {props.baseApr}% <BiHelpCircle />
+                <GreyText>Base APR: </GreyText> {aprInfo.baseApr || '--'}% <BiHelpCircle />
               </GreyTextHorizontalContainer>
             </TooltipComponent>
             <TooltipComponent
@@ -247,7 +341,8 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               trigger="mouseenter"
             >
               <GreyTextHorizontalContainer>
-                <GreyText>Median Boosted APR: </GreyText> {props.medianBoostedApr}% <BiHelpCircle />
+                <GreyText>Median Boosted APR: </GreyText> {aprInfo.medianBoostedApr || '--'}%{' '}
+                <BiHelpCircle />
               </GreyTextHorizontalContainer>
             </TooltipComponent>
             <TooltipComponent
@@ -257,7 +352,8 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               trigger="mouseenter"
             >
               <GreyTextHorizontalContainer>
-                <GreyText>My Boosted APR: </GreyText> {props.myBoostedApr}% <BiHelpCircle />
+                <GreyText>My Boosted APR: </GreyText> {aprInfo.myBoostedApr || '--'}%{' '}
+                <BiHelpCircle />
               </GreyTextHorizontalContainer>
             </TooltipComponent>
           </HorizontalContainer>
@@ -288,41 +384,41 @@ const StakePoolItem = (props: StakePoolItemProps) => {
           <HorizontalContainer>
             <StakePoolActionItem
               leftTitle="Earned"
-              leftAmount={props.rewardAmount}
+              leftAmount={pendingOh}
               leftIcon={props.rewardIcon}
               leftSymbol={props.rewardSymbol}
-              rightIcon={props.rewardIcon2}
+              //rightIcon={props.rewardIcon2}
               rightAmount={props.reward2Amount}
               rightSymbol={props.reward2Symbol}
               actionText={'Claim'}
-              action={props.claimFunction}
+              action={submitClaim}
             />
             <StakePoolActionItem
               leftTitle="Staked"
               leftIcon={props.stakedTokenIcon}
-              leftAmount={props.stakedAmount}
-              leftSymbol={props.stakedTokenSymbol}
+              leftAmount={myDeposit}
+              leftSymbol={props.tokenSymbol}
               rightTitle="Stakeable"
-              rightAmount={props.stakeableAmount}
+              rightAmount={stakeable}
               rightIcon={props.stakeableTokenIcon}
-              rightSymbol={props.stakeableTokenSymbol}
+              rightSymbol={props.tokenSymbol}
               divider={true}
-              actionText={'Stake All'}
-              action={props.stakeAllFunction}
+              actionText={isApproved ? 'Stake All' : 'Approve'}
+              action={submitDepositAll}
               footer={`Earned ${props.rewardSymbol} will automatically be claimed on staking`}
             />
             <StakePoolActionItem
               leftTitle="Staked"
               leftIcon={props.stakedTokenIcon}
-              leftAmount={props.stakedAmount}
-              leftSymbol={props.stakedTokenSymbol}
+              leftAmount={myDeposit}
+              leftSymbol={props.tokenSymbol}
               rightTitle="Stakeable"
-              rightAmount={props.stakeableAmount}
+              rightAmount={stakeable}
               rightIcon={props.stakeableTokenIcon}
-              rightSymbol={props.stakeableTokenSymbol}
+              rightSymbol={props.tokenSymbol}
               divider={true}
               actionText={'Unstake All'}
-              action={props.unstakeAllFunction}
+              action={submitWithdrawAll}
               footer={`Earned ${props.rewardSymbol} will automatically be claimed on staking`}
             />
           </HorizontalContainer>

@@ -3,6 +3,7 @@ import { SupportedChainId } from '~/constants/chains';
 const EXPLORER_URLS: { [chainId: number]: string } = {
   [SupportedChainId.ETHEREUM_MAINNET]: 'etherscan.io',
   [SupportedChainId.RINKEBY]: 'rinkeby.etherscan.io',
+  [SupportedChainId.GOERLI]: 'goerli.etherscan.io',
   [SupportedChainId.KOVAN]: 'kovan.etherscan.io',
   [SupportedChainId.AVALANCHE]: 'snowtrace.io',
   [SupportedChainId.MOONRIVER]: 'moonriver.moonscan.io',
