@@ -1,3 +1,4 @@
+import { useActiveWeb3React } from 'hooks/web3';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { BsChevronDown } from 'react-icons/bs';
 import styled from 'styled-components';
@@ -181,6 +182,7 @@ const MaxButton = styled.button(({ theme }) => ({
 }));
 
 const StakeSwap = () => {
+  const { account } = useActiveWeb3React();
   return (
     <Container>
       <LogoContainer>
@@ -207,7 +209,11 @@ const StakeSwap = () => {
         <ToInput type={'number'} placeholder={'0.0'} />
       </ContentContainer>
       <ConnectButtonContainer></ConnectButtonContainer>
-      <ConnectButton> Connect Wallet</ConnectButton>
+      {account ? (
+        <ConnectButton> Swap</ConnectButton>
+      ) : (
+        <ConnectButton> Connect Wallet</ConnectButton>
+      )}
     </Container>
   );
 };

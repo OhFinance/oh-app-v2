@@ -1,24 +1,25 @@
+import {
+  approveToken,
+  AprInfo,
+  deposit,
+  getAprInfo,
+  getPendingRewards,
+  getUserBal,
+  getUserInfo,
+  isTokenApproved,
+  withdraw,
+} from 'apis/MasterOh';
 import StakePoolActionItem from 'components/StakePoolActionItem';
-import { useState, useEffect } from 'react';
+import OhModal from 'components/_modals/common/OhModal';
+import { getTokenIcon } from 'constants/tokens';
+import { ethers } from 'ethers';
+import { useActiveWeb3React } from 'hooks/web3';
+import { useEffect, useState } from 'react';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { BiHelpCircle } from 'react-icons/bi';
 import { BsArrowDownCircleFill } from 'react-icons/bs';
 import { Tooltip, TooltipProps } from 'react-tippy';
 import styled from 'styled-components';
-import { useActiveWeb3React } from 'hooks/web3';
-import {
-  getUserInfo,
-  getPendingRewards,
-  getUserBal,
-  deposit,
-  withdraw,
-  isTokenApproved,
-  approveToken,
-  AprInfo,
-  getAprInfo,
-} from 'apis/MasterOh';
-import { ethers } from 'ethers';
-import OhModal from 'components/_modals/common/OhModal';
 
 const Container = styled.div(({ theme }) => ({
   width: '100%',
@@ -105,15 +106,19 @@ const ActionButtons = styled.button(({ theme }) => ({
   boxShadow: '5px 5px 50px ' + theme.bgPink,
 }));
 
-const LowerContainer = styled.div(({ theme }) => ({
+interface LowerContainerProps {
+  expandContent: boolean;
+}
+const LowerContainer = styled.div<LowerContainerProps>((props) => ({
   width: '100%',
-  backgroundColor: theme.bg2,
+  backgroundColor: props.theme.bg2,
   padding: '20px',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
   borderRadius: '20px',
+  boxShadow: props.expandContent ? `0px 10px 13px ${props.theme.bgPink}` : `none`,
 }));
 
 const RewardContainer = styled.div({
@@ -165,6 +170,7 @@ const ExpandLowerText = styled.p({
   fontSize: '20px',
   margin: '0',
 });
+
 const HorizontalContainer = styled.div({
   width: '100%',
   display: 'flex',
@@ -173,6 +179,43 @@ const HorizontalContainer = styled.div({
   alignItems: 'center',
   borderRadius: '20px',
   margin: '10px',
+});
+
+const ModalInput = styled.input(({ theme }) => ({
+  textAlign: 'right',
+
+  backgroundColor: theme.inputBG,
+  height: '40px',
+  margin: '15px',
+  borderRadius: '10px',
+  border: 'none',
+  color: '#A4AADF',
+  width: '100%',
+}));
+
+const ModalButtons = styled.button(({ theme }) => ({
+  backgroundColor: theme.bgPink,
+  height: '30px',
+  width: '80%',
+  margin: '5px',
+  color: 'white',
+  border: 'none',
+  borderRadius: '20px',
+  '&:hover': {
+    backgroundColor: '#ad056b',
+    cursor: 'pointer',
+  },
+  '&:active': {
+    backgroundColor: '#c41a81',
+    cursor: 'pointer',
+  },
+}));
+const ModalContent = styled.div({
+  display: 'flex',
+  width: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
 });
 
 interface StakePoolItemProps {
@@ -187,24 +230,9 @@ interface StakePoolItemProps {
   rewardIcon2?: string;
   reward2Symbol?: string;
   reward2Amount?: string;
-  coverageRatio: string;
-  poolDeposits: string;
-  baseApr: string;
-  medianBoostedApr: string;
-  myBoostedApr: string;
-
-  claimFunction: Function;
-  stakedAmount: string;
-  stakedTokenSymbol: string;
-  stakedTokenIcon: string;
-  stakeAllFunction: Function;
-
-  stakeableAmount: string;
-  stakeableTokenSymbol: string;
-  stakeableTokenIcon: string;
-  unstakeAllFunction: Function;
+  poolDeposits: string | number;
   onStake: Function;
-  unUnstake: Function;
+  onUnstake: Function;
   onClaim: Function;
 }
 
@@ -363,16 +391,18 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         }}
         title={'Deposit'}
       >
-        <input value={amount} onChange={(e) => handleAmount(e.target.value)} type="text" />
-        <button onClick={() => setAmount(stakeable)}>Max: {stakeable}</button>
+        <ModalContent>
+          <ModalInput value={amount} onChange={(e) => handleAmount(e.target.value)} type="text" />
+          <ModalButtons onClick={() => setAmount(stakeable)}>Max: {stakeable}</ModalButtons>
 
-        {isApproved ? (
-          <button disabled={!depositPreflightCheck()} onClick={submitDeposit}>
-            Submit
-          </button>
-        ) : (
-          <button onClick={submitApprove}>Approve</button>
-        )}
+          {isApproved ? (
+            <ModalButtons disabled={!depositPreflightCheck()} onClick={submitDeposit}>
+              Submit
+            </ModalButtons>
+          ) : (
+            <ModalButtons onClick={submitApprove}>Approve</ModalButtons>
+          )}
+        </ModalContent>
       </OhModal>
 
       <OhModal
@@ -383,12 +413,14 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         }}
         title={'Withdraw'}
       >
-        <input value={amount} onChange={(e) => handleAmount(e.target.value)} type="text" />
-        <button onClick={() => setAmount(myDeposit)}>Max: {myDeposit}</button>
+        <ModalContent>
+          <ModalInput value={amount} onChange={(e) => handleAmount(e.target.value)} type="text" />
+          <ModalButtons onClick={() => setAmount(myDeposit)}>Max: {myDeposit}</ModalButtons>
 
-        <button disabled={!withdrawPreflightCheck()} onClick={submitWithdraw}>
-          Submit
-        </button>
+          <ModalButtons disabled={!withdrawPreflightCheck()} onClick={submitWithdraw}>
+            Submit
+          </ModalButtons>
+        </ModalContent>
       </OhModal>
 
       <UpperContainer>
@@ -397,10 +429,6 @@ const StakePoolItem = (props: StakePoolItemProps) => {
             <TokenIcon src={props.tokenIcon} alt="tokenIcon" />
             <TokenSymbol>{props.tokenSymbol}</TokenSymbol>
           </TokenInfo>
-          <GreyTextHorizontalContainer>
-            <GreyText>Coverage Ratio: </GreyText>{' '}
-            <CoverageRatioAmount>{props.coverageRatio}</CoverageRatioAmount>
-          </GreyTextHorizontalContainer>
         </ContainerLeft>
         <>
           <ContentContainer>
@@ -419,7 +447,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
           <ActionButtons onClick={() => setWithdrawModalOpen(true)}>Withdraw</ActionButtons>
         </ActionButtonsContainer>
       </UpperContainer>
-      <LowerContainer>
+      <LowerContainer expandContent={expandContent}>
         <HorizontalContainer>
           <RewardContainer>
             <Reward>REWARD</Reward>
@@ -491,7 +519,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               leftAmount={pendingOh}
               leftIcon={props.rewardIcon}
               leftSymbol={props.rewardSymbol}
-              //rightIcon={props.rewardIcon2}
+              rightIcon={props.rewardIcon2}
               rightAmount={props.reward2Amount}
               rightSymbol={props.reward2Symbol}
               actionText={'Claim'}
@@ -499,12 +527,12 @@ const StakePoolItem = (props: StakePoolItemProps) => {
             />
             <StakePoolActionItem
               leftTitle="Staked"
-              leftIcon={props.stakedTokenIcon}
+              leftIcon={getTokenIcon(chainId, props.tokenAddress)}
               leftAmount={myDeposit}
               leftSymbol={props.tokenSymbol}
               rightTitle="Stakeable"
               rightAmount={stakeable}
-              rightIcon={props.stakeableTokenIcon}
+              rightIcon={getTokenIcon(chainId, props.tokenAddress)}
               rightSymbol={props.tokenSymbol}
               divider={true}
               actionText={isApproved ? 'Stake All' : 'Approve'}
@@ -513,12 +541,12 @@ const StakePoolItem = (props: StakePoolItemProps) => {
             />
             <StakePoolActionItem
               leftTitle="Staked"
-              leftIcon={props.stakedTokenIcon}
+              leftIcon={getTokenIcon(chainId, props.tokenAddress)}
               leftAmount={myDeposit}
               leftSymbol={props.tokenSymbol}
               rightTitle="Stakeable"
               rightAmount={stakeable}
-              rightIcon={props.stakeableTokenIcon}
+              rightIcon={getTokenIcon(chainId, props.tokenAddress)}
               rightSymbol={props.tokenSymbol}
               divider={true}
               actionText={'Unstake All'}

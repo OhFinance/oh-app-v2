@@ -45,6 +45,27 @@ export const OH_USDC_BANK = {
   [SupportedChainId.AVALANCHE]: '0x8B1Be96dc17875ee01cC1984e389507Bb227CaAB', // usdc.e
 };
 
+// note: double check the rinkeby addresses
+export const USDT_ADDRESS: AddressMap = {
+  [SupportedChainId.RINKEBY]: '0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD',
+  [SupportedChainId.ETHEREUM_MAINNET]: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+  [SupportedChainId.MOONRIVER]: '0xb44a9b6905af7c801311e8f4e76932ee959c663c',
+  [SupportedChainId.METIS]: '0xbb06dca3ae6887fabf931640f67cab3e3a16f4dc',
+  [SupportedChainId.AVALANCHE]: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7',
+};
+
+export const DAI_ADDRESS: AddressMap = {
+  [SupportedChainId.RINKEBY]: '0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658',
+  [SupportedChainId.ETHEREUM_MAINNET]: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  [SupportedChainId.MOONRIVER]: '0x80a16016cc4a2e6a2caca8a4a498b1699ff0f844',
+  [SupportedChainId.METIS]: '0x4651b38e7ec14bb3db731369bfe5b08f2466bd0a',
+  [SupportedChainId.AVALANCHE]: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70',
+};
+
+export const OH_USDT_ADDRESS: AddressMap = {
+  [SupportedChainId.RINKEBY]: '0x132CFc9F2f5Ce678730D97fd06053940CC1a9B15',
+};
+
 const V2_FACTORY_ADDRESS = '';
 
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS);

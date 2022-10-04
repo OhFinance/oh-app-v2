@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 
 const Container = styled.div({
+  width: '30%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
-  width: '30%',
 });
 const FooterContainer = styled.div(({ theme }) => ({
+  height: '180px',
   backgroundColor: theme.bg4,
   borderRadius: '20px',
   padding: '20px',
@@ -28,6 +29,7 @@ const LeftContentContainer = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   border-right: ${(props) => (props.rightLine ? `1px ${props.theme.blue} solid` : 'none')};
+  padding-right: ${(props) => (props.rightLine ? `3px` : 'none')};
   margin-right: 3px;
 `;
 
@@ -99,7 +101,6 @@ interface StakePoolActionItemProp {
   rightAmount: string;
   rightSymbol: string;
 
-  footerNote?: string;
   divider?: boolean;
   actionText: string;
   action: Function;
