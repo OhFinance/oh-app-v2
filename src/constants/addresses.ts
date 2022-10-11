@@ -35,6 +35,7 @@ export const USDC_ADDRESS: AddressMap = {
   [SupportedChainId.MOONRIVER]: '0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d',
   [SupportedChainId.KOVAN]: '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', // compound usdc
   [SupportedChainId.AVALANCHE]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664', // usdc.e
+  [SupportedChainId.GOERLI]: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F', // https://developers.circle.com/docs/usdc-on-testnet     USD//C (USDC)
 };
 
 export const OH_USDC_BANK = {
@@ -52,6 +53,7 @@ export const USDT_ADDRESS: AddressMap = {
   [SupportedChainId.MOONRIVER]: '0xb44a9b6905af7c801311e8f4e76932ee959c663c',
   [SupportedChainId.METIS]: '0xbb06dca3ae6887fabf931640f67cab3e3a16f4dc',
   [SupportedChainId.AVALANCHE]: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7',
+  [SupportedChainId.GOERLI]: '0x509Ee0d083DdF8AC028f2a56731412edD63223B9',
 };
 
 export const DAI_ADDRESS: AddressMap = {
@@ -60,10 +62,17 @@ export const DAI_ADDRESS: AddressMap = {
   [SupportedChainId.MOONRIVER]: '0x80a16016cc4a2e6a2caca8a4a498b1699ff0f844',
   [SupportedChainId.METIS]: '0x4651b38e7ec14bb3db731369bfe5b08f2466bd0a',
   [SupportedChainId.AVALANCHE]: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70',
+  [SupportedChainId.GOERLI]: '0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844', // DAI
 };
 
+// NOTE: add the necessary addresses here
 export const OH_USDT_ADDRESS: AddressMap = {
   [SupportedChainId.RINKEBY]: '0x132CFc9F2f5Ce678730D97fd06053940CC1a9B15',
+  [SupportedChainId.GOERLI]: '0xA00f202f46D956a36C1bB96A9F4c715107A860a8',
+};
+
+export const OH_USDC_ADDRESS: AddressMap = {
+  [SupportedChainId.GOERLI]: '0xCA9237CA1E2847Ba0F022072EA8d8E3029121b36',
 };
 
 const V2_FACTORY_ADDRESS = '';

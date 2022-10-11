@@ -1,9 +1,10 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
-import MasterOHABI from '../abis/master_oh.json';
-import ERC20ABI from '../abis/erc20.json';
-import { MASTER_OH_ADDRESS, VEOH_ADDRESS } from '../constants/addresses';
 import { getOhTokenPrice } from '~/services/ohTokenPriceService';
+import ERC20ABI from '../abis/erc20.json';
+import MasterOHABI from '../abis/master_oh.json';
+import RewarderABI from '../abis/rewarder.json';
+import { MASTER_OH_ADDRESS } from '../constants/addresses';
 
 export const deposit = async (
   poolID: number,
@@ -173,4 +174,58 @@ export const approveToken = async (
   return await (
     await token.approve(MASTER_OH_ADDRESS[chainID], ethers.constants.MaxUint256)
   ).wait();
+};
+
+export const getRewardTokenInfo = async (chainID: number, provider: ethers.Provider) => {
+  const contract = new ethers.Contract(MASTER_OH_ADDRESS[chainID], MasterOHABI, provider);
+
+  const rewardTokenAddress = await contract.oh();
+  const rewardTokenContract = new ethers.Contract(rewardTokenAddress, ERC20ABI, provider);
+  const rewardTokenSymbol = await rewardTokenContract.symbol();
+
+  return { rewardTokenAddress, rewardTokenSymbol };
+};
+
+export const getSecondaryRewardInfo = async (
+  userAddress: string,
+  poolID: number,
+  chainID: number,
+  provider: ethers.Provider
+) => {
+  const contract = new ethers.Contract(MASTER_OH_ADDRESS[chainID], MasterOHABI, provider);
+
+  const pool = await contract.poolInfo(poolID);
+  if (pool.rewarder === ethers.constants.AddressZero) {
+    return {};
+  }
+
+  const rewarder = new ethers.Contract(pool.rewarder, RewarderABI, provider);
+
+  const rewardTokenAddress = await rewarder.rewardToken();
+  const rewardTokenContract = new ethers.Contract(rewardTokenAddress, ERC20ABI, provider);
+
+  const rewardTokenSymbol = await rewardTokenContract.symbol();
+
+  if (userAddress) {
+    const rewardTokenAmount = await pendingTokens(userAddress);
+    return { rewardTokenAddress, rewardTokenSymbol, rewardTokenAmount };
+  } else {
+    return { rewardTokenAddress, rewardTokenSymbol };
+  }
+};
+
+export const getOhPerSec = async (
+  chainID: number,
+  provider: ethers.Provider
+): Promise<BigNumber> => {
+  let contract = new ethers.Contract(MASTER_OH_ADDRESS[chainID], MasterOHABI, provider);
+  return await contract.ohPerSec();
+};
+export const useDialutingRepartition = async (chainID: number, provider: ethers.Provider) => {
+  let contract = new ethers.Contract(MASTER_OH_ADDRESS[chainID], MasterOHABI, provider);
+  return await contract.dilutingPartition();
+};
+export const getTotalAdjustedAllocPoint = async (chainID: number, provider: ethers.Provider) => {
+  let contract = new ethers.Contract(MASTER_OH_ADDRESS[chainID], MasterOHABI, provider);
+  return await contract.totalAllocPoint();
 };

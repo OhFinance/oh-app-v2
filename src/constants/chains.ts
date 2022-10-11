@@ -5,7 +5,7 @@ const moonriverLogoUrl = '/img/chains/moonriver.svg';
 
 export enum SupportedChainId {
   ETHEREUM_MAINNET = 1,
-  GOERLI = 3,
+  GOERLI = 5,
   RINKEBY = 4,
   KOVAN = 42,
   METIS = 1088,

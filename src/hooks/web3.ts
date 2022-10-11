@@ -1,8 +1,21 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react';
+import { Token } from '@uniswap/sdk-core';
 import { useWeb3React } from '@web3-react/core';
+import {
+  getOhPerSec,
+  getPoolInfo,
+  getTotalAdjustedAllocPoint,
+  Pool,
+  useDialutingRepartition,
+} from 'apis/MasterOh';
+import { MASTER_OH_ADDRESS } from 'constants/addresses';
+import { BigNumber, ethers } from 'ethers';
+import { parseEther, parseUnits } from 'ethers/lib/utils';
 import { useEffect, useState } from 'react';
+import { getOhTokenPrice } from 'services/ohTokenPriceService';
 import { isMobile } from '~/utilities/userAgent';
+import ERC20ABI from '../abis/erc20.json';
 import { gnosisSafe, injected } from '../connectors';
 import { IS_IN_IFRAME, NetworkContextName } from '../constants/misc';
 
@@ -106,3 +119,39 @@ export function useInactiveListener(suppress = false) {
     return undefined;
   }, [active, error, suppress, activate]);
 }
+
+export const UseMedianBoostedAPR = async (
+  poolId: number,
+  chainId: number,
+  provider: ethers.Provider
+): Promise<BigNumber> => {
+  const price = await getOhTokenPrice();
+  const ohPerSec: BigNumber = await getOhPerSec(chainId, provider);
+  const totalAdjustedAllocPoint = await getTotalAdjustedAllocPoint(chainId, provider);
+  const dialutingRepartition = await useDialutingRepartition(chainId, provider);
+  const poolInfo: Pool = (await getPoolInfo(chainId, provider))[poolId];
+
+  const lpToken = new Token(chainId, poolInfo.lpToken, poolInfo.decimals, poolInfo.tokenSymbol);
+  const token = new ethers.Contract(poolInfo.lpToken, ERC20ABI, provider);
+  const totalStaked = await token.balanceOf(MASTER_OH_ADDRESS[chainId]);
+
+  if (!poolInfo || poolInfo?.sumOfFactors?.eq(0) || totalStaked?.eq(BigNumber.from('0'))) {
+    return BigNumber.from(0);
+  }
+
+  return poolInfo && ohPerSec && totalStaked
+    ? ohPerSec
+        .mul(parseEther('1'))
+        // note: undefined value
+        .mul(poolInfo?.adjustedAllocPoint)
+        .div(totalAdjustedAllocPoint)
+        .mul(BigNumber.from(1_000).sub(dialutingRepartition))
+        .div(1_000)
+        .div(2) // (0.5 * sumOfFactors) / sumOfFactors
+        .div(totalStaked?.quotient.toString())
+        .mul(60 * 60 * 24 * 360)
+        .mul(price)
+        .div(parseUnits('1', 18 + (18 - lpToken?.decimals)))
+        .mul(100)
+    : BigNumber.from(0);
+};

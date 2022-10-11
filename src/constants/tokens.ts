@@ -1,4 +1,5 @@
 import { Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core';
+import ohUsdcIcon from '../assets/img/oh-usdc.svg';
 import ohUsdtIcon from '../assets/img/oh-usdt.svg';
 import daiIcon from '../assets/img/tokens/dai-logo.png';
 import ohIcon from '../assets/img/tokens/ohfinance_32.png';
@@ -9,6 +10,7 @@ import usdcIcon from '../assets/img/tokens/usd-coin-usdc-logo.svg';
 import {
   DAI_ADDRESS,
   OH_ADDRESS,
+  OH_USDC_ADDRESS,
   OH_USDT_ADDRESS,
   USDC_ADDRESS,
   USDT_ADDRESS,
@@ -59,7 +61,7 @@ export const OH: { [chainId: number]: Token } = {
   ),
   [SupportedChainId.GOERLI]: new Token(
     SupportedChainId.GOERLI,
-    OH_ADDRESS[3],
+    OH_ADDRESS[5],
     18,
     'OH',
     'Oh! Finance'
@@ -95,6 +97,13 @@ export const USDC: { [chainId: number]: Token } = {
     'USDC',
     'USD Coin'
   ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    USDC_ADDRESS[5],
+    6,
+    'USDC',
+    'USD Coin'
+  ),
   [SupportedChainId.KOVAN]: new Token(
     SupportedChainId.KOVAN,
     USDC_ADDRESS[42],
@@ -119,6 +128,7 @@ export const DAI: { [chainId: number]: Token } = {
     'DAI',
     'Dai'
   ),
+  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, DAI_ADDRESS[5], 18, 'DAI', 'Dai'),
   [SupportedChainId.AVALANCHE]: new Token(
     SupportedChainId.AVALANCHE,
     DAI_ADDRESS[43114],
@@ -181,6 +191,23 @@ export const OH_USDT: { [chainId: number]: Token } = {
     'OH-USDT',
     'Oh! USDT'
   ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    OH_USDT_ADDRESS[SupportedChainId.GOERLI],
+    6,
+    'OH-USDT',
+    'Oh! USDT'
+  ),
+};
+
+export const OH_USDC: { [chainId: number]: Token } = {
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    OH_USDC_ADDRESS[SupportedChainId.GOERLI],
+    6,
+    'OH-USDC',
+    'Oh! USDC'
+  ),
 };
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
@@ -225,7 +252,8 @@ export const tokenLogos = {
   [DAI[1].symbol]: daiIcon,
   // note: get a higher quality photo
   [OH[1].symbol]: ohIcon,
-  [OH_USDT[4].symbol]: ohUsdtIcon,
+  [OH_USDT[5].symbol]: ohUsdtIcon,
+  [OH_USDC[5].symbol]: ohUsdcIcon,
 
   default: questionmarkImage,
 };
@@ -256,6 +284,9 @@ export const getTokenIcon = (currentNetwork: number, tokenAddress: string) => {
       break;
     case OH_USDT[currentNetwork]?.address:
       tokenSymbol = OH_USDT[currentNetwork].symbol;
+      break;
+    case OH_USDC[currentNetwork]?.address:
+      tokenSymbol = OH_USDC[currentNetwork].symbol;
       break;
     default:
       tokenSymbol = 'default';

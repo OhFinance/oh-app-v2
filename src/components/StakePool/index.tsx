@@ -1,7 +1,7 @@
 import { useActiveWeb3React } from 'hooks/web3';
 import { useEffect, useState } from 'react';
 
-import { getPoolInfo, Pool } from 'apis/MasterOh';
+import { getPoolInfo, Pool, getRewardTokenInfo } from 'apis/MasterOh';
 import Spinner from 'components/Spinner';
 import StakePoolItem from 'components/StakePoolItem';
 import { getTokenIcon } from 'constants/tokens';
@@ -26,11 +26,16 @@ const StakePool = () => {
   const [pools, setPools] = useState<Pool[]>([]);
   const [loadingPools, setLoadingPools] = useState(true);
   const [staked, setStaked] = useState(0);
+  const [rewardToken, setRewardToken] = useState('');
+  const [rewardSymbol, setRewardSymbol] = useState('');
 
   const fetchInfo = async () => {
     if (!chainId || !library) {
       return;
     }
+    const rewardInfo = await getRewardTokenInfo(chainId, library);
+    setRewardToken(rewardInfo.rewardTokenAddress);
+    setRewardSymbol(rewardInfo.rewardTokenSymbol);
     const _pools = await getPoolInfo(chainId, library);
     setPools(_pools);
   };
@@ -59,9 +64,8 @@ const StakePool = () => {
                 tokenSymbol={pool.symbol}
                 tokenIcon={getTokenIcon(chainId, pool.lpToken)}
                 poolDeposits={pool.tvl || 0}
-                rewardIcon={ohUsdcIcon}
+                rewardIcon={getTokenIcon(chainId, rewardToken)}
                 rewardSymbol={'OH!'}
-                rewardAmount={'123'}
                 onStake={fetchInfo}
                 onUnstake={fetchInfo}
                 onClaim={fetchInfo}

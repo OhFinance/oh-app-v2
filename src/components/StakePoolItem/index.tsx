@@ -4,28 +4,36 @@ import {
   deposit,
   getAprInfo,
   getPendingRewards,
+  getSecondaryRewardInfo,
   getUserBal,
   getUserInfo,
   isTokenApproved,
   withdraw,
 } from 'apis/MasterOh';
+import Spinner from 'components/Spinner';
 import StakePoolActionItem from 'components/StakePoolActionItem';
 import OhModal from 'components/_modals/common/OhModal';
+import WarningModal from 'components/_modals/common/WarningModal';
 import { getTokenIcon } from 'constants/tokens';
-import { ethers } from 'ethers';
-import { useActiveWeb3React } from 'hooks/web3';
+import { BigNumber, ethers } from 'ethers';
+import { useActiveWeb3React, UseMedianBoostedAPR } from 'hooks/web3';
 import { useEffect, useState } from 'react';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { AiOutlineCloseCircle, AiOutlineDownCircle } from 'react-icons/ai';
 import { BiHelpCircle } from 'react-icons/bi';
-import { BsArrowDownCircleFill } from 'react-icons/bs';
+
 import { Tooltip, TooltipProps } from 'react-tippy';
 import styled from 'styled-components';
 
-const Container = styled.div(({ theme }) => ({
+interface ContainerProps {
+  expandContent?: boolean;
+}
+const Container = styled.div<ContainerProps>((props) => ({
   width: '100%',
-  backgroundColor: theme.bg4,
+  backgroundColor: '#000B35',
+  boxShadow: '0px 0 20px #00288D inset',
   margin: '20px',
   borderRadius: '20px',
+  marginBottom: props.expandContent ? '80px' : '0',
 }));
 
 const UpperContainer = styled.div(({ theme }) => ({
@@ -54,7 +62,7 @@ const TokenIcon = styled.img({
 const TokenSymbol = styled.p({
   color: 'white',
   fontSize: '30px',
-  margin: '0px',
+  margin: '0 0 0 5px',
 });
 
 const GreyTextHorizontalContainer = styled.div({
@@ -111,14 +119,26 @@ interface LowerContainerProps {
 }
 const LowerContainer = styled.div<LowerContainerProps>((props) => ({
   width: '100%',
-  backgroundColor: props.theme.bg2,
+  backgroundColor: '#00124B',
+  boxShadow: '0px 0 40px #00288D inset',
   padding: '20px',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
   borderRadius: '20px',
-  boxShadow: props.expandContent ? `0px 10px 13px ${props.theme.bgPink}` : `none`,
+  position: 'relative',
+}));
+
+const LowerShadowContainer = styled.div<LowerContainerProps>((props) => ({
+  height: '30%',
+  width: '100%',
+  borderRadius: '20px',
+  position: 'absolute',
+  boxShadow: props.expandContent ? `0px 0px 100px ${props.theme.bgPink}` : `none`,
+  bottom: '5px',
+  left: '0',
+  zIndex: '-5',
 }));
 
 const RewardContainer = styled.div({
@@ -154,22 +174,25 @@ interface ExpandLowerButtonProps {
 }
 
 const ExpandLowerButton = styled.button<ExpandLowerButtonProps>`
-  background-color: ${(props) => (props.expanded ? 'grey' : props.theme.blue)};
+  background-color: ${(props) => (props.expanded ? props.theme.buttonDisabled : props.theme.blue)};
   width: 200px;
   height: 50px;
   border-radius: 20px;
   border: none;
   margin: 0;
 `;
-const ExpandLowerText = styled.p({
+interface ExpandLowerTextProps {
+  expandContent: boolean;
+}
+const ExpandLowerText = styled.p<ExpandLowerTextProps>((props) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   alignText: 'center',
-  color: '#004F7D',
+  color: props.expandContent ? '#9896B1' : '#004E7D',
   fontSize: '20px',
   margin: '0',
-});
+}));
 
 const HorizontalContainer = styled.div({
   width: '100%',
@@ -183,18 +206,18 @@ const HorizontalContainer = styled.div({
 
 const ModalInput = styled.input(({ theme }) => ({
   textAlign: 'right',
-
   backgroundColor: theme.inputBG,
   height: '40px',
   margin: '15px',
+  padding: '10px',
   borderRadius: '10px',
   border: 'none',
   color: '#A4AADF',
   width: '100%',
 }));
 
-const ModalButtons = styled.button(({ theme }) => ({
-  backgroundColor: theme.bgPink,
+const ModalButtons = styled.button((props) => ({
+  backgroundColor: props.theme.bgPink,
   height: '30px',
   width: '80%',
   margin: '5px',
@@ -209,6 +232,9 @@ const ModalButtons = styled.button(({ theme }) => ({
     backgroundColor: '#c41a81',
     cursor: 'pointer',
   },
+  '&:disabled': {
+    backgroundColor: props.theme.bgDisabledPink,
+  },
 }));
 const ModalContent = styled.div({
   display: 'flex',
@@ -216,6 +242,11 @@ const ModalContent = styled.div({
   justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
+});
+const SpinnerContainer = styled.div({
+  margin: '25px 0 15px 0',
+  display: 'flex',
+  justifyContent: 'center',
 });
 
 interface StakePoolItemProps {
@@ -226,10 +257,6 @@ interface StakePoolItemProps {
   tokenIcon: string;
   rewardIcon: string;
   rewardSymbol: string;
-  rewardAmount: string;
-  rewardIcon2?: string;
-  reward2Symbol?: string;
-  reward2Amount?: string;
   poolDeposits: string | number;
   onStake: Function;
   onUnstake: Function;
@@ -248,14 +275,38 @@ const StakePoolItem = (props: StakePoolItemProps) => {
   const [depositModalOpen, setDepositModalOpen] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const [amount, setAmount] = useState('0.0');
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
+  const [warningModalText, setWarningModalText] = useState('Warning');
+  const [transactionInProgress, setTransactionInProgress] = useState(false);
+  const [reward2Amount, setReward2Amount] = useState(0);
+  const [reward2Symbol, setReward2Symbol] = useState('');
+  const [reward2Address, setReward2Address] = useState('');
 
+  const [medianBoostedApr, setMedianBoostedApr] = useState('0.0');
+
+  const openWarningModal = (message: string) => {
+    setWarningModalText(message);
+    setWarningModalOpen(true);
+  };
   const fetchInfo = async () => {
     if (!chainId || !library) {
       return;
     }
 
+    const tempMedianBoostedApr: BigNumber = await UseMedianBoostedAPR(props.pid, chainId, library);
+    setMedianBoostedApr(tempMedianBoostedApr.toString());
+
     const _aprInfo = await getAprInfo(account, props.pid, chainId, library);
     setAprInfo(_aprInfo);
+    const _secondaryRewardInfo = await getSecondaryRewardInfo(account, props.pid, chainId, library);
+
+    if (_secondaryRewardInfo.rewardTokenAmount) {
+      setReward2Amount(_secondaryRewardInfo.rewardTokenAmount);
+    }
+    if (_secondaryRewardInfo.rewardTokenAddress) {
+      setReward2Address(_secondaryRewardInfo.rewardTokenAddress);
+      setReward2Symbol(_secondaryRewardInfo.rewardTokenSymbol);
+    }
 
     if (!account) {
       return;
@@ -278,76 +329,128 @@ const StakePoolItem = (props: StakePoolItemProps) => {
   };
 
   const submitWithdrawAll = async () => {
+    setTransactionInProgress(true);
     try {
       const _userInfo = await getUserInfo(account, props.pid, chainId, library);
-      await (await withdraw(props.pid, _userInfo.amount, chainId, library)).wait();
+      await withdraw(props.pid, _userInfo.amount, chainId, library);
       props.onUnstake();
       fetchInfo();
+      setTransactionInProgress(false);
     } catch (e) {
       console.error(e);
+
+      openWarningModal(
+        'Something went wrong while unstaking all, please check your balance and try again later'
+      );
+
+      fetchInfo();
+      setTransactionInProgress(false);
     }
   };
 
   const submitDepositAll = async () => {
+    setTransactionInProgress(true);
     if (isApproved) {
       try {
         const userBal = await getUserBal(account, props.tokenAddress, chainId, library);
-        await (await deposit(props.pid, userBal, chainId, library)).wait();
+        await deposit(props.pid, userBal, chainId, library);
         props.onStake();
         fetchInfo();
+        setTransactionInProgress(false);
       } catch (e) {
         console.error(e);
+        fetchInfo();
+
+        openWarningModal(
+          'Something went wrong while staking all, please check your balance and try again later'
+        );
+
+        setTransactionInProgress(false);
       }
     } else {
       try {
         await approveToken(account, props.tokenAddress, chainId, library);
         setIsApproved(true);
+        setTransactionInProgress(false);
       } catch (e) {
         console.error(e);
+        openWarningModal(
+          'Something went wrong while approving, please check your balance and try again later'
+        );
+        setTransactionInProgress(false);
       }
     }
   };
 
   const submitApprove = async () => {
+    setTransactionInProgress(true);
     try {
-      await (await approveToken(account, props.tokenAddress, chainId, library)).wait();
+      await approveToken(account, props.tokenAddress, chainId, library);
       setIsApproved(true);
+      fetchInfo();
+      setTransactionInProgress(false);
     } catch (e) {
       console.error(e);
+      fetchInfo();
+      openWarningModal(
+        'Something went wrong while approving, please check your balance and try again later'
+      );
+      setTransactionInProgress(false);
     }
   };
 
   const submitDeposit = async () => {
     try {
-      await (
-        await deposit(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library)
-      ).wait();
+      setTransactionInProgress(true);
+      await deposit(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library);
       props.onUnstake();
       fetchInfo();
       setDepositModalOpen(false);
+      setTransactionInProgress(false);
     } catch (e) {
       console.error(e);
+      openWarningModal(
+        'Something went wrong while depositing, please check your balance and try again later'
+      );
+      fetchInfo();
+      setDepositModalOpen(false);
+      setTransactionInProgress(false);
     }
   };
 
   const submitWithdraw = async () => {
     try {
-      await (
-        await withdraw(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library)
-      ).wait();
+      setTransactionInProgress(true);
+      await withdraw(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library);
+
       props.onUnstake();
       fetchInfo();
       setWithdrawModalOpen(false);
+      setTransactionInProgress(false);
     } catch (e) {
       console.error(e);
+      openWarningModal(
+        'Something went wrong while withdrawing, please check your deposited balance and try again later'
+      );
+
+      fetchInfo();
+      setTransactionInProgress(false);
     }
   };
 
   const submitClaim = async () => {
+    setTransactionInProgress(true);
     try {
-      await (await deposit(props.pid, 0, chainId, library)).wait();
+      await deposit(props.pid, 0, chainId, library);
+      fetchInfo();
+      setTransactionInProgress(false);
     } catch (e) {
       console.error(e);
+      openWarningModal(
+        'Something went wrong while claiming. Please make sure you have rewards to claim and try again.'
+      );
+      fetchInfo();
+      setTransactionInProgress(false);
     }
   };
 
@@ -382,12 +485,32 @@ const StakePoolItem = (props: StakePoolItemProps) => {
   }, [chainId, account, library]);
 
   return (
-    <Container>
+    <Container expandContent={expandContent}>
+      <WarningModal
+        isOpen={warningModalOpen}
+        title={'Something Went Wrong!'}
+        setModalOpen={(isOpen: boolean) => setWarningModalOpen(isOpen)}
+      >
+        {warningModalText}
+      </WarningModal>
+      <OhModal
+        isOpen={transactionInProgress}
+        onDismiss={() => {
+          // should not dismiss. will be dismissed automatically
+        }}
+        title={''}
+      >
+        <SpinnerContainer>
+          <Spinner />
+          <p>Transaction in progress...</p>
+        </SpinnerContainer>
+      </OhModal>
       <OhModal
         isOpen={depositModalOpen}
         onDismiss={() => {
           setDepositModalOpen(false);
           setAmount('0.0');
+          setTransactionInProgress(false);
         }}
         title={'Deposit'}
       >
@@ -410,6 +533,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         onDismiss={() => {
           setWithdrawModalOpen(false);
           setAmount('0.0');
+          setTransactionInProgress(false);
         }}
         title={'Withdraw'}
       >
@@ -433,12 +557,14 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         <>
           <ContentContainer>
             <GreyText>Pool Deposits</GreyText>
-            <ValueText>{props.poolDeposits}</ValueText>
-            <GreyText>{props.tokenSymbol}</GreyText>
+            <ValueText>$ {props.poolDeposits}</ValueText>
+            <GreyText>
+              {props.poolDeposits} {props.tokenSymbol}
+            </GreyText>
           </ContentContainer>
           <ContentContainer>
             <GreyText>My Deposits</GreyText>
-            <ValueText>{myDeposit}</ValueText>
+            <ValueText>$ {myDeposit}</ValueText>
             <GreyText>{props.tokenSymbol}</GreyText>
           </ContentContainer>
         </>
@@ -452,7 +578,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
           <RewardContainer>
             <Reward>REWARD</Reward>
             <TokenIcon src={props.rewardIcon} />
-            {props.rewardIcon2 ? <TokenIcon src={props.rewardIcon2} /> : <></>}
+            {reward2Address ? <TokenIcon src={getTokenIcon(chainId, reward2Address)} /> : <></>}
           </RewardContainer>
 
           <HorizontalContainer>
@@ -473,7 +599,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               trigger="mouseenter"
             >
               <GreyTextHorizontalContainer>
-                <GreyText>Median Boosted APR: </GreyText> {aprInfo.medianBoostedApr || '--'}%{' '}
+                <GreyText>Median Boosted APR: </GreyText> {medianBoostedApr || '--'}%{' '}
                 <BiHelpCircle />
               </GreyTextHorizontalContainer>
             </TooltipComponent>
@@ -493,7 +619,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
             onClick={() => setExpandContent(!expandContent)}
             expanded={expandContent}
           >
-            <ExpandLowerText>
+            <ExpandLowerText expandContent={expandContent}>
               {expandContent ? (
                 <>
                   Close
@@ -505,7 +631,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
                 <>
                   Stake
                   <ReactIconContainer>
-                    <BsArrowDownCircleFill />
+                    <AiOutlineDownCircle />
                   </ReactIconContainer>
                 </>
               )}
@@ -519,11 +645,12 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               leftAmount={pendingOh}
               leftIcon={props.rewardIcon}
               leftSymbol={props.rewardSymbol}
-              rightIcon={props.rewardIcon2}
-              rightAmount={props.reward2Amount}
-              rightSymbol={props.reward2Symbol}
+              rightIcon={reward2Address ? getTokenIcon(chainId, reward2Address) : null}
+              rightAmount={reward2Amount}
+              rightSymbol={reward2Symbol}
               actionText={'Claim'}
               action={submitClaim}
+              actionDisabled={parseFloat(pendingOh) == 0}
             />
             <StakePoolActionItem
               leftTitle="Staked"
@@ -538,6 +665,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               actionText={isApproved ? 'Stake All' : 'Approve'}
               action={submitDepositAll}
               footer={`Earned ${props.rewardSymbol} will automatically be claimed on staking`}
+              actionDisabled={isApproved && parseFloat(stakeable) == 0}
             />
             <StakePoolActionItem
               leftTitle="Staked"
@@ -552,7 +680,9 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               actionText={'Unstake All'}
               action={submitWithdrawAll}
               footer={`Earned ${props.rewardSymbol} will automatically be claimed on staking`}
+              actionDisabled={parseFloat(myDeposit) == 0}
             />
+            <LowerShadowContainer expandContent={expandContent} />
           </HorizontalContainer>
         ) : (
           <></>

@@ -8,8 +8,8 @@ const Container = styled.div({
   flexDirection: 'column',
 });
 const FooterContainer = styled.div(({ theme }) => ({
-  height: '180px',
-  backgroundColor: theme.bg4,
+  height: '160px',
+  backgroundColor: '#000D38',
   borderRadius: '20px',
   padding: '20px',
   paddingBottom: '30px',
@@ -59,8 +59,8 @@ const Footer = styled.p({
 });
 
 const TokenIcon = styled.img({
-  width: '50px',
-  height: '50px',
+  width: '40px',
+  height: '40px',
   marginRight: '5px',
 });
 const BodyTextContainer = styled.div({
@@ -70,6 +70,7 @@ const BodyTextContainer = styled.div({
 
 const BodyText = styled.p({
   margin: '0px',
+  fontSize: '12px',
 });
 const TitleText = styled.p(({ theme }) => ({
   margin: '0',
