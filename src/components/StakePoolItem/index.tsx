@@ -16,6 +16,7 @@ import OhModal from 'components/_modals/common/OhModal';
 import WarningModal from 'components/_modals/common/WarningModal';
 import { getTokenIcon } from 'constants/tokens';
 import { BigNumber, ethers } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 import { useActiveWeb3React, UseMedianBoostedAPR } from 'hooks/web3';
 import { useEffect, useState } from 'react';
 import { AiOutlineCloseCircle, AiOutlineDownCircle } from 'react-icons/ai';
@@ -294,7 +295,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
     }
 
     const tempMedianBoostedApr: BigNumber = await UseMedianBoostedAPR(props.pid, chainId, library);
-    setMedianBoostedApr(tempMedianBoostedApr.toString());
+    setMedianBoostedApr(parseFloat(formatEther(tempMedianBoostedApr)).toFixed(2));
 
     const _aprInfo = await getAprInfo(account, props.pid, chainId, library);
     setAprInfo(_aprInfo);

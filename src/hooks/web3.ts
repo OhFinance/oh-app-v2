@@ -135,22 +135,21 @@ export const UseMedianBoostedAPR = async (
   const token = new ethers.Contract(poolInfo.lpToken, ERC20ABI, provider);
   const totalStaked = await token.balanceOf(MASTER_OH_ADDRESS[chainId]);
 
-  if (!poolInfo || poolInfo?.sumOfFactors?.eq(0) || totalStaked?.eq(BigNumber.from('0'))) {
+  if (!poolInfo || totalStaked?.eq(BigNumber.from('0'))) {
     return BigNumber.from(0);
   }
 
   return poolInfo && ohPerSec && totalStaked
     ? ohPerSec
         .mul(parseEther('1'))
-        // note: undefined value
-        .mul(poolInfo?.adjustedAllocPoint)
+        .mul(poolInfo?.allocPoint)
         .div(totalAdjustedAllocPoint)
         .mul(BigNumber.from(1_000).sub(dialutingRepartition))
         .div(1_000)
         .div(2) // (0.5 * sumOfFactors) / sumOfFactors
-        .div(totalStaked?.quotient.toString())
+        .div(totalStaked)
         .mul(60 * 60 * 24 * 360)
-        .mul(price)
+        .mul(parseEther(price.toString()))
         .div(parseUnits('1', 18 + (18 - lpToken?.decimals)))
         .mul(100)
     : BigNumber.from(0);
