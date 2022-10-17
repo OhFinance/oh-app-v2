@@ -105,7 +105,7 @@ export const getAprInfo = async (
     const oneYearBoostedRewardsValue =
       (ohPerSec * 60 * 60 * 24 * 365 * ohTokenPrice * allocFactor * nonDilutingPartition * factor) /
       (sumOfFactors * 1000);
-    const myBoostedApr = ((oneYearBaseRewardsValue + oneYearBoostedRewardsValue) * 100) / tvl;
+    const myBoostedApr = (oneYearBoostedRewardsValue * 100) / tvl;
     return {
       baseApr: baseApr.toFixed(2),
       medianBoostedApr: medianBoostedApr.toFixed(2),
