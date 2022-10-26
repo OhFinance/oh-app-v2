@@ -14,6 +14,7 @@ import Spinner from 'components/Spinner';
 import StakePoolActionItem from 'components/StakePoolActionItem';
 import OhModal from 'components/_modals/common/OhModal';
 import WarningModal from 'components/_modals/common/WarningModal';
+import { CHAIN_INFO } from 'constants/chains';
 import { getTokenIcon } from 'constants/tokens';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
@@ -21,6 +22,7 @@ import { useActiveWeb3React, UseMedianBoostedAPR } from 'hooks/web3';
 import { useEffect, useState } from 'react';
 import { AiOutlineCloseCircle, AiOutlineDownCircle } from 'react-icons/ai';
 import { BiHelpCircle } from 'react-icons/bi';
+import { HiCheckCircle } from 'react-icons/hi';
 
 import { Tooltip, TooltipProps } from 'react-tippy';
 import styled from 'styled-components';
@@ -249,6 +251,20 @@ const SpinnerContainer = styled.div({
   display: 'flex',
   justifyContent: 'center',
 });
+const TransactionCompleteIcon = styled.div({
+  fontSize: '50px',
+  height: '50px',
+  margin: '0',
+  color: 'green',
+});
+const TransactionCompleteContainer = styled.div({
+  margin: '0 0 25px 0',
+  display: 'flex',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  width: '100%',
+  textAlign: 'center',
+});
 
 interface StakePoolItemProps {
   pid: number;
@@ -279,6 +295,8 @@ const StakePoolItem = (props: StakePoolItemProps) => {
   const [warningModalOpen, setWarningModalOpen] = useState(false);
   const [warningModalText, setWarningModalText] = useState('Warning');
   const [transactionInProgress, setTransactionInProgress] = useState(false);
+  const [transactionModalOpen, setTransactionModalOpen] = useState(false);
+  const [transactionHash, setTransactionHash] = useState('');
   const [reward2Amount, setReward2Amount] = useState(0);
   const [reward2Symbol, setReward2Symbol] = useState('');
   const [reward2Address, setReward2Address] = useState('');
@@ -288,6 +306,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
   const openWarningModal = (message: string) => {
     setWarningModalText(message);
     setWarningModalOpen(true);
+    setTransactionModalOpen(false);
   };
   const fetchInfo = async () => {
     if (!chainId || !library) {
@@ -329,11 +348,18 @@ const StakePoolItem = (props: StakePoolItemProps) => {
     setStakeable(parseFloat(_stakeable).toFixed(2));
   };
 
-  const submitWithdrawAll = async () => {
+  const startTransaction = () => {
+    setTransactionHash('');
     setTransactionInProgress(true);
+    setTransactionModalOpen(true);
+  };
+
+  const submitWithdrawAll = async () => {
+    startTransaction();
     try {
       const _userInfo = await getUserInfo(account, props.pid, chainId, library);
-      await withdraw(props.pid, _userInfo.amount, chainId, library);
+      const withdrawTx = await withdraw(props.pid, _userInfo.amount, chainId, library);
+      setTransactionHash(withdrawTx.transactionHash);
       props.onUnstake();
       fetchInfo();
       setTransactionInProgress(false);
@@ -345,16 +371,16 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       );
 
       fetchInfo();
-      setTransactionInProgress(false);
     }
   };
 
   const submitDepositAll = async () => {
-    setTransactionInProgress(true);
+    startTransaction();
     if (isApproved) {
       try {
         const userBal = await getUserBal(account, props.tokenAddress, chainId, library);
-        await deposit(props.pid, userBal, chainId, library);
+        const depositTx = await deposit(props.pid, userBal, chainId, library);
+        setTransactionHash(depositTx.transactionHash);
         props.onStake();
         fetchInfo();
         setTransactionInProgress(false);
@@ -365,8 +391,6 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         openWarningModal(
           'Something went wrong while staking all, please check your balance and try again later'
         );
-
-        setTransactionInProgress(false);
       }
     } else {
       try {
@@ -378,15 +402,15 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         openWarningModal(
           'Something went wrong while approving, please check your balance and try again later'
         );
-        setTransactionInProgress(false);
       }
     }
   };
 
   const submitApprove = async () => {
-    setTransactionInProgress(true);
+    startTransaction();
     try {
-      await approveToken(account, props.tokenAddress, chainId, library);
+      const approveTx = await approveToken(account, props.tokenAddress, chainId, library);
+      setTransactionHash(approveTx.transactionHash);
       setIsApproved(true);
       fetchInfo();
       setTransactionInProgress(false);
@@ -396,14 +420,19 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       openWarningModal(
         'Something went wrong while approving, please check your balance and try again later'
       );
-      setTransactionInProgress(false);
     }
   };
 
   const submitDeposit = async () => {
     try {
-      setTransactionInProgress(true);
-      await deposit(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library);
+      startTransaction();
+      const depositTx = await deposit(
+        props.pid,
+        ethers.utils.parseUnits(amount, props.decimals),
+        chainId,
+        library
+      );
+      setTransactionHash(depositTx.transactionHash);
       props.onUnstake();
       fetchInfo();
       setDepositModalOpen(false);
@@ -415,14 +444,19 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       );
       fetchInfo();
       setDepositModalOpen(false);
-      setTransactionInProgress(false);
     }
   };
 
   const submitWithdraw = async () => {
     try {
-      setTransactionInProgress(true);
-      await withdraw(props.pid, ethers.utils.parseUnits(amount, props.decimals), chainId, library);
+      startTransaction();
+      const withdrawTx = await withdraw(
+        props.pid,
+        ethers.utils.parseUnits(amount, props.decimals),
+        chainId,
+        library
+      );
+      setTransactionHash(withdrawTx.transactionHash);
 
       props.onUnstake();
       fetchInfo();
@@ -433,16 +467,16 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       openWarningModal(
         'Something went wrong while withdrawing, please check your deposited balance and try again later'
       );
-
       fetchInfo();
-      setTransactionInProgress(false);
+      setWithdrawModalOpen(false);
     }
   };
 
   const submitClaim = async () => {
-    setTransactionInProgress(true);
+    startTransaction();
     try {
-      await deposit(props.pid, 0, chainId, library);
+      const depositTx = await deposit(props.pid, 0, chainId, library);
+      setTransactionHash(depositTx.transactionHash);
       fetchInfo();
       setTransactionInProgress(false);
     } catch (e) {
@@ -451,7 +485,6 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         'Something went wrong while claiming. Please make sure you have rewards to claim and try again.'
       );
       fetchInfo();
-      setTransactionInProgress(false);
     }
   };
 
@@ -495,23 +528,42 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         {warningModalText}
       </WarningModal>
       <OhModal
-        isOpen={transactionInProgress}
+        isOpen={transactionModalOpen}
         onDismiss={() => {
-          // should not dismiss. will be dismissed automatically
+          // can only be dismissed if transaction is not in progress
+          if (!transactionInProgress) {
+            setTransactionModalOpen(false);
+          }
         }}
         title={''}
       >
-        <SpinnerContainer>
-          <Spinner />
-          <p>Transaction in progress...</p>
-        </SpinnerContainer>
+        {transactionInProgress ? (
+          <SpinnerContainer>
+            <Spinner />
+            <p>Transaction in progress...</p>
+          </SpinnerContainer>
+        ) : (
+          <TransactionCompleteContainer>
+            <TransactionCompleteIcon>
+              <HiCheckCircle />
+            </TransactionCompleteIcon>
+            <p>Transaction Complete!</p>
+            <a
+              target={'_blank'}
+              rel={'noopener noreferrer'}
+              href={`${CHAIN_INFO[chainId].explorer}tx/${transactionHash}`}
+            >
+              {transactionHash ? 'View on explorer' : 'Loading...'}
+            </a>
+          </TransactionCompleteContainer>
+        )}
       </OhModal>
       <OhModal
         isOpen={depositModalOpen}
         onDismiss={() => {
           setDepositModalOpen(false);
           setAmount('0.0');
-          setTransactionInProgress(false);
+          setTransactionModalOpen(false);
         }}
         title={'Deposit'}
       >
@@ -534,7 +586,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
         onDismiss={() => {
           setWithdrawModalOpen(false);
           setAmount('0.0');
-          setTransactionInProgress(false);
+          setTransactionModalOpen(false);
         }}
         title={'Withdraw'}
       >

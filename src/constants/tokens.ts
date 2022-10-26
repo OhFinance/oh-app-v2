@@ -42,6 +42,13 @@ export const VeOH: { [chainId: number]: Token } = {
     'veOH',
     'veOH! Finance'
   ),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    VEOH_ADDRESS[SupportedChainId.GOERLI],
+    18,
+    'veOH',
+    'veOH! Finance'
+  ),
 };
 
 export const OH: { [chainId: number]: Token } = {

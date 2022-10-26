@@ -4,12 +4,12 @@ type AddressMap = { [chainId: number]: string };
 
 export const MASTER_OH_ADDRESS: AddressMap = {
   [SupportedChainId.RINKEBY]: '0x7585eCC8267f1b32F3E4D057C1eE9016f043D4a9',
-  [SupportedChainId.GOERLI]: '0xbc257221440DF4eCE3B17cb26cf8f763C248f178',
+  [SupportedChainId.GOERLI]: '0xbA8CADF04d1a8d4bF413bFBD1E261f7A22Bd9c28',
 };
 
 export const VEOH_ADDRESS: AddressMap = {
   [SupportedChainId.RINKEBY]: '0xee661c2ab32bacb90418ad2ccf413e11994f5072',
-  [SupportedChainId.GOERLI]: '0xA0c4F57fc408F34973075352E75D6Fa18c9155e9',
+  [SupportedChainId.GOERLI]: '0x854263Ae2e05f579A276410196b708f47CFF7700',
 };
 
 export const OH_ADDRESS: AddressMap = {

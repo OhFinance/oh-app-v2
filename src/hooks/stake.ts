@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core';
-import { BigNumber } from 'ethers';
+import { ZERO_ADDRESS } from 'constants/misc';
+import { BigNumber, ethers } from 'ethers';
 import { formatEther, formatUnits, parseEther, parseUnits } from 'ethers/lib/utils';
 import { useCallback, useEffect, useState } from 'react';
 import ERC20_ABI from '../abis/erc20.json';
@@ -14,7 +15,7 @@ import { useContract } from './contracts/useContract';
 import { useActiveWeb3React } from './web3';
 
 export const useOHBalance = () => {
-  const { chainId = 4, account } = useActiveWeb3React();
+  const { chainId = 5, account } = useActiveWeb3React();
   const [balance, setBalance] = useState<number>(0);
   const ohToken = OH[chainId];
   const ohContract = useContract(ohToken.address, ohABI);
@@ -33,7 +34,7 @@ export const useOHBalance = () => {
 };
 
 export const useVeOHBalance = () => {
-  const { chainId = 4, account } = useActiveWeb3React();
+  const { chainId = 5, account } = useActiveWeb3React();
   const [balance, setBalance] = useState<number>(0);
   const veOHToken = VeOH[chainId];
   const veOHContract = useContract(veOHToken.address, veOHABI);
@@ -48,7 +49,7 @@ export const useVeOHBalance = () => {
 };
 
 export const useVeOHClaimable = () => {
-  const { chainId = 4, account } = useActiveWeb3React();
+  const { chainId = 5, account } = useActiveWeb3React();
   const [balance, setBalance] = useState<number>(0);
   const veOHToken = VeOH[chainId];
   const veOHContract = useContract(veOHToken.address, veOHABI);
@@ -63,7 +64,7 @@ export const useVeOHClaimable = () => {
 };
 
 export const useClaimVeOH = () => {
-  const { chainId = 4, account } = useActiveWeb3React();
+  const { chainId = 5, account } = useActiveWeb3React();
   const veOHToken = VeOH[chainId];
   const veOHContract = useContract(veOHToken.address, veOHABI);
 
@@ -82,7 +83,7 @@ export const useClaimVeOH = () => {
 };
 
 export const useOHStaked = () => {
-  const { account, chainId = 4 } = useActiveWeb3React();
+  const { account, chainId = 5 } = useActiveWeb3React();
   const [staked, setStaked] = useState<number>(0);
   const veOH = VeOH[chainId];
   const veOHContract = useContract(veOH.address, veOHABI);
@@ -97,7 +98,7 @@ export const useOHStaked = () => {
 };
 
 export const useInvestedBalance = (token: Token) => {
-  const { chainId = 4 } = useActiveWeb3React();
+  const { chainId = 5 } = useActiveWeb3React();
   const tokenContract = useContract(token.address, ERC20_ABI);
   const [supply, setSupply] = useState<number>(0);
   useEffect(() => {
@@ -115,19 +116,22 @@ export const useConfirmOHStake = () => {
   const ohToken = OH[chainId];
   const ohContract = useContract(ohToken.address, ohABI);
   const [approved, setApproved] = useState<boolean>(false);
-  const [value, setValue] = useState<BigNumber>(parseEther('0'));
 
   const [loading, setLoading] = useState(false);
-  const confirmStake = useCallback(async () => {
-    setLoading(true);
-    try {
-      const tx = await veOHContract.functions.deposit(value);
-      await tx.wait();
-      setApproved(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [value, veOHContract]);
+  const confirmStake = useCallback(
+    async (stakeAmount) => {
+      setLoading(true);
+      try {
+        const value = parseEther(stakeAmount);
+        const tx = await veOHContract.functions.deposit(value);
+        await tx.wait();
+        setApproved(false);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [veOHContract]
+  );
 
   const approveStake = useCallback(
     async (amount: string) => {
@@ -137,7 +141,6 @@ export const useConfirmOHStake = () => {
         const tx = await ohContract.functions.approve(veOH.address, value);
         await tx.wait();
         setApproved(true);
-        setValue(value);
       } finally {
         setLoading(false);
       }
@@ -145,7 +148,27 @@ export const useConfirmOHStake = () => {
     [ohContract, veOH]
   );
 
-  return { loading, confirmStake, approveStake, approved };
+  const updateAllowance = useCallback(
+    async (sender: string, amount: string) => {
+      setLoading(true);
+      try {
+        if (!amount) {
+          setApproved(false);
+        } else {
+          const value = parseEther(amount);
+          const allowance = ethers.BigNumber.from(
+            (await ohContract.functions.allowance(sender, veOH.address)).toString()
+          );
+          setApproved(allowance.gte(value));
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    [ohContract, veOH]
+  );
+
+  return { loading, confirmStake, approveStake, approved, updateAllowance };
 };
 
 export const useWithdrawOHStake = () => {
@@ -171,7 +194,7 @@ export const useWithdrawOHStake = () => {
 };
 
 export const useOHBoostStats = () => {
-  const { chainId = 4 } = useActiveWeb3React();
+  const { chainId = 5 } = useActiveWeb3React();
   const [veOHSupply, setVeOHSupply] = useState<number>(0);
   const [ohSupply, setOHSupply] = useState<number>(0);
   const [ohStaked, setOHStaked] = useState<number>(0);
@@ -209,7 +232,7 @@ export const useProxyTokenBalance = (token: Token) => {
 };
 
 export const usePoolInfo = (pid: number) => {
-  const { chainId = 4 } = useActiveWeb3React();
+  const { chainId = 5 } = useActiveWeb3React();
   const masterContract = useContract(MASTER_OH_ADDRESS[chainId], MASTER_OH_ABI);
   const zero = BigNumber.from(0);
   const [dilutingPartition, setDilutingPartition] = useState(zero);
@@ -223,15 +246,21 @@ export const usePoolInfo = (pid: number) => {
     masterContract?.functions
       .dilutingPartition()
       .then(([partition]) => setDilutingPartition(partition));
+
     masterContract?.functions.ohPerSec().then(([rate]) => setOhPerSecond(rate));
     masterContract?.functions.totalAllocPoint().then(([point]) => setTotalAlloc(point));
-    masterContract?.functions.poolInfo([pid]).then(([info]) => setPoolInfo(info));
     masterContract?.functions
       .poolInfo([pid])
-      .then(({ sumOfFactors }) => setsumOfFactors(sumOfFactors));
+      .then(([info]) => setPoolInfo(info))
+      .catch(() => setPoolInfo(ZERO_ADDRESS));
     masterContract?.functions
       .poolInfo([pid])
-      .then(({ allocPoint }) => setPoolAllocPoints(allocPoint));
+      .then(({ sumOfFactors }) => setsumOfFactors(sumOfFactors))
+      .catch(() => setsumOfFactors(ethers.BigNumber.from('0')));
+    masterContract?.functions
+      .poolInfo([pid])
+      .then(({ allocPoint }) => setPoolAllocPoints(allocPoint))
+      .catch(() => setPoolAllocPoints(ethers.BigNumber.from('0')));
   }, [masterContract, pid]);
 
   return { dilutingPartition, ohPerSecond, totalAlloc, poolAllocPoints, poolInfo, sumOfFactors };
@@ -242,7 +271,7 @@ export const useUserInfo = (pid: Number, account?: string) => {
     amount: BigNumber.from(0),
     factor: BigNumber.from(0),
   });
-  const { chainId = 4 } = useActiveWeb3React();
+  const { chainId = 5 } = useActiveWeb3React();
   const masterContract = useContract(MASTER_OH_ADDRESS[chainId], MASTER_OH_ABI);
   useEffect(() => {
     masterContract?.functions
