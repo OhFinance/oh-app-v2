@@ -69,21 +69,28 @@ function createChartObject(data: { tvl: number; timestamp: string }[]): {
 export function useFetchChartCallback() {
   const dispatch = useAppDispatch();
 
-  return useCallback(async () => {
-    return axios
-      .get<{ data: { tvl: number; timestamp: string }[] }>(
-        `https://api.oh.finance/tvl/history?addr=all&chain=-1&start=0`
-      )
-      .then(({ data }) => {
-        // set
-        const obj = createChartObject(data.data);
-        dispatch(setChart(obj));
-        return obj;
-      })
-      .catch((err) => {
-        throw err;
-      });
-  }, [dispatch]);
+  return useCallback(
+    async (chain?: number, address?: string) => {
+      if (!chain || !address) {
+        return;
+      }
+
+      return axios
+        .get<{ data: { tvl: number; timestamp: string }[] }>(
+          `https://api.oh.finance/tvl/history?addr=${address}&chain=${chain}&start=0`
+        )
+        .then(({ data }) => {
+          // set
+          const obj = createChartObject(data.data);
+          dispatch(setChart(obj));
+          return obj;
+        })
+        .catch((err) => {
+          throw err;
+        });
+    },
+    [dispatch]
+  );
 }
 
 export function useChart(timeframe: ChartTimeRange): null | CandlestickData[] {

@@ -3,9 +3,9 @@ import { useVirtualPrice } from 'hooks/calls/bank/useVirtualPrice';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { transparentize } from 'polished';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Flex } from 'rebass';
-import { useChart } from 'state/application/hooks';
+import { useChart, useFetchChartCallback } from 'state/application/hooks';
 import { ChartTimeRange } from 'state/application/reducer';
 import { Field } from 'state/stake/reducer';
 import { useTokenBalance } from 'state/wallet/hooks';
@@ -207,13 +207,38 @@ const ranges: {
 export default function BankPage() {
   const { account, library, chainId } = useActiveWeb3React();
   const router = useRouter();
-  const { address } = router.query;
+  const params = new URLSearchParams(window.location.search);
+  const address = window.location.pathname.split('/')[2]
+    ? window.location.pathname.split('/')[2]
+    : router?.query?.address
+    ? router?.query?.address
+    : params.has('address')
+    ? params.get('address')
+    : undefined;
+
   const bank = useMemo(
     () => (typeof address === 'string' && chainId ? banksByChainContract[chainId][address] : null),
     [address, chainId]
   );
 
   const [selectedRange, setSelectedRange] = useState<ChartTimeRange>('hour');
+  const fetchTvlChart = useFetchChartCallback();
+
+  const fetchTvlChartCallback: (tries?: number) => Promise<boolean> = useCallback(
+    async (tries: number = 0): Promise<boolean> => {
+      return fetchTvlChart(chainId, bank?.contractAddress)
+        .then(() => true)
+        .catch((err) => {
+          if (tries >= 5) {
+            console.error(err);
+            return false;
+          }
+          console.debug('Error fetch TVL chart, retrying...', err.message);
+          return fetchTvlChartCallback(tries + 1);
+        });
+    },
+    [fetchTvlChart, chainId, bank]
+  );
 
   const chart = useChart(selectedRange);
 
@@ -238,6 +263,10 @@ export default function BankPage() {
     }
   }, [chainId, bank, library]);
 
+  useEffect(() => {
+    fetchTvlChartCallback();
+  }, [fetchTvlChartCallback]);
+
   if (!bank) {
     const handleClick = () => {
       router.push('/');
@@ -253,7 +282,7 @@ export default function BankPage() {
         <FourOhFourContent>
           <img src={PigPic} alt="sad piggy" />
           <ThemedText.H1>
-            Ah <b>OH!</b> This bank was not found.
+            Uh <b>OH!</b> This bank was not found.
           </ThemedText.H1>
           <Button onClick={handleClick} size="large">
             <b>Back to banks</b>

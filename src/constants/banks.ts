@@ -2,7 +2,7 @@ import { Token } from '@uniswap/sdk-core';
 import hum from 'assets/img/hum.svg';
 import mfam from 'assets/img/mfam.png';
 import aave from '~/assets/img/aave.svg';
-import { Aave, Hummus, Moonwell } from '~/assets/img/bank_headers';
+import { Aave, Hummus, Moonwell, Yeti } from '~/assets/img/bank_headers';
 import comp from '~/assets/img/comp.svg';
 import crv from '~/assets/img/crv.svg';
 import ohDaie from '~/assets/img/oh-dai-e.png';
@@ -57,6 +57,58 @@ export const banks: { [chainId: number]: Bank[] } = {
     },
   ],
   [SupportedChainId.AVALANCHE]: [
+    {
+      image: ohUsdce,
+      header: Yeti,
+      name: 'Oh! USDC',
+      symbol: 'OH-USDC',
+      description: 'Risk-Optimized Lending and Yield Farming',
+      contractAddress: '0xe001DeCc1763F8BadBbc1b10c2D6db0900f9B928',
+      ohToken: new Token(
+        SupportedChainId.AVALANCHE,
+        '0xe001DeCc1763F8BadBbc1b10c2D6db0900f9B928',
+        6,
+        'OH-USDC',
+        'Oh! USDC'
+      ),
+      underlyingToken: new Token(
+        SupportedChainId.AVALANCHE,
+        '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+        6,
+        'USDC',
+        'USDC'
+      ),
+      strategies: [
+        { protocol: 'Yeti', image: aave },
+        { protocol: 'Curve', image: crv },
+      ],
+    },
+    {
+      image: ohUsdte,
+      header: Yeti,
+      name: 'Oh! USDT',
+      symbol: 'OH-USDT',
+      description: 'Risk-Optimized Lending and Yield Farming',
+      contractAddress: '0xB3ce618F43b53Cdc12077FB937f9fF465BcE1f60',
+      ohToken: new Token(
+        SupportedChainId.AVALANCHE,
+        '0xB3ce618F43b53Cdc12077FB937f9fF465BcE1f60',
+        6,
+        'OH-USDT',
+        'Oh! USDT'
+      ),
+      underlyingToken: new Token(
+        SupportedChainId.AVALANCHE,
+        '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
+        6,
+        'USDT',
+        'USDT'
+      ),
+      strategies: [
+        { protocol: 'Yeti', image: aave },
+        { protocol: 'Curve', image: crv },
+      ],
+    },
     {
       image: ohUsdce,
       header: Aave,

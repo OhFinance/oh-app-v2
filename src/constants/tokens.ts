@@ -6,7 +6,6 @@ import ohIcon from '../assets/img/tokens/ohfinance_32.png';
 import questionmarkImage from '../assets/img/tokens/questionmarkCircle.png';
 import usdtIcon from '../assets/img/tokens/tether-usdt-logo.svg';
 import usdcIcon from '../assets/img/tokens/usd-coin-usdc-logo.svg';
-
 import {
   DAI_ADDRESS,
   OH_ADDRESS,
@@ -87,6 +86,20 @@ export const OH: { [chainId: number]: Token } = {
     'OH',
     'Oh! Finance'
   ),
+  [SupportedChainId.MOONRIVER]: new Token(
+    SupportedChainId.MOONRIVER,
+    OH_ADDRESS[1285],
+    18,
+    'OH',
+    'Oh! Finance'
+  ),
+  [SupportedChainId.METIS]: new Token(
+    SupportedChainId.METIS,
+    OH_ADDRESS[1088],
+    18,
+    'OH',
+    'Oh! Finance'
+  ),
 };
 
 export const USDC: { [chainId: number]: Token } = {
@@ -122,7 +135,21 @@ export const USDC: { [chainId: number]: Token } = {
     SupportedChainId.AVALANCHE,
     USDC_ADDRESS[43114],
     6,
-    'USDC.e',
+    'USDC',
+    'USD Coin'
+  ),
+  [SupportedChainId.METIS]: new Token(
+    SupportedChainId.METIS,
+    USDC_ADDRESS[SupportedChainId.METIS],
+    6,
+    'USDC',
+    'USD Coin'
+  ),
+  [SupportedChainId.MOONRIVER]: new Token(
+    SupportedChainId.MOONRIVER,
+    USDC_ADDRESS[SupportedChainId.MOONRIVER],
+    6,
+    'USDC',
     'USD Coin'
   ),
 };

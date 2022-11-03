@@ -16,6 +16,8 @@ export const OH_ADDRESS: AddressMap = {
   [SupportedChainId.ETHEREUM_MAINNET]: '0x16ba8Efe847EBDFef99d399902ec29397D403C30',
   [SupportedChainId.RINKEBY]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
   [SupportedChainId.GOERLI]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
+  [SupportedChainId.MOONRIVER]: '0xD96ddb35C6268CB3085003248853c39F3BfFfB4b',
+  [SupportedChainId.METIS]: '0x1CcCA1cE62c62F7Be95d4A67722a8fDbed6EEcb4',
   [SupportedChainId.KOVAN]: '0x6b461A994d76d8248a6B439D4a19cDfd821409eE',
   [SupportedChainId.AVALANCHE]: '0x937E077aBaEA52d3abf879c9b9d3f2eBd15BAA21',
 };
@@ -36,6 +38,7 @@ export const USDC_ADDRESS: AddressMap = {
   [SupportedChainId.KOVAN]: '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', // compound usdc
   [SupportedChainId.AVALANCHE]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664', // usdc.e
   [SupportedChainId.GOERLI]: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F', // https://developers.circle.com/docs/usdc-on-testnet     USD//C (USDC)
+  [SupportedChainId.METIS]: '0xea32a96608495e54156ae48931a7c20f0dcc1a21',
 };
 
 export const OH_USDC_BANK = {
@@ -78,3 +81,8 @@ export const OH_USDC_ADDRESS: AddressMap = {
 const V2_FACTORY_ADDRESS = '';
 
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS);
+
+
+export const MULTICHAIN_ROUTER_ADDRESS: AddressMap = {
+  [SupportedChainId.ETHEREUM_MAINNET]: '0x6b7a87899490EcE95443e979cA9485CBE7E71522',
+};
