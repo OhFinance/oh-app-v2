@@ -82,6 +82,7 @@ interface CurrencyInputProps {
   hideAvailableBalance?: boolean;
   onReset?: () => void;
   disabled?: boolean;
+  updateAllowance?: (sender: string, amount: string) => Promise<void>;
 }
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." characters via in a non-capturing group
@@ -97,6 +98,7 @@ export function CurrencyInput({
   hideAvailableBalance,
   onReset,
   disabled,
+  updateAllowance,
 }: CurrencyInputProps) {
   const { account } = useActiveWeb3React();
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined);
@@ -121,6 +123,8 @@ export function CurrencyInput({
             value={value}
             onChange={(event) => {
               enforcer(event.target.value.replace(/,/g, '.'));
+              // updateAllowance is an optional function, make sure it exists
+              if (updateAllowance) updateAllowance(account, event.target.value.toString());
             }}
             type="text"
             inputMode="decimal"

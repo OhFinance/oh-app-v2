@@ -216,7 +216,11 @@ export const CalculatorModal = () => {
             </LabelFlex>
 
             <span>
-              {(totalStaked ? (100 * +selectedTokenAmount) / +totalStaked : 0).toFixed(2)}%
+              {(parseInt(totalStaked)
+                ? (100 * +selectedTokenAmount) / +parseInt(totalStaked)
+                : 0
+              ).toFixed(2)}
+              %
             </span>
           </Stats>
         </FullWidthColumn>

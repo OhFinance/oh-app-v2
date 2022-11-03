@@ -5,6 +5,7 @@ const moonriverLogoUrl = '/img/chains/moonriver.svg';
 
 export enum SupportedChainId {
   ETHEREUM_MAINNET = 1,
+  GOERLI = 5,
   RINKEBY = 4,
   KOVAN = 42,
   METIS = 1088,
@@ -14,6 +15,7 @@ export enum SupportedChainId {
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.ETHEREUM_MAINNET,
+  SupportedChainId.GOERLI,
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
   SupportedChainId.METIS,
@@ -23,6 +25,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.ETHEREUM_MAINNET,
+  SupportedChainId.GOERLI,
   SupportedChainId.RINKEBY,
   SupportedChainId.KOVAN,
   SupportedChainId.METIS,
@@ -91,6 +94,13 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Rinkeby',
     logoUrl: '',
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
+  },
+  [SupportedChainId.GOERLI]: {
+    docs: 'https://docs.uniswap.org/',
+    explorer: 'https://goerli.etherscan.io/',
+    label: 'Goerli',
+    logoUrl: '',
+    nativeCurrency: { name: 'Goerli ETH', symbol: 'goerliETH', decimals: 18 },
   },
 
   [SupportedChainId.KOVAN]: {

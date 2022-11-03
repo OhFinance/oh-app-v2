@@ -53,7 +53,13 @@ export const StakeAction: React.FC<IProps> = ({ type, onCancel }) => {
 
   const [value, setValue] = useState('0.0');
 
-  const { confirmStake, loading: confirmLoading, approveStake, approved } = useConfirmOHStake();
+  const {
+    confirmStake,
+    loading: confirmLoading,
+    approveStake,
+    approved,
+    updateAllowance,
+  } = useConfirmOHStake();
   const { withdrawStake, loading: withdrawLoading } = useWithdrawOHStake();
 
   const disabled =
@@ -64,7 +70,7 @@ export const StakeAction: React.FC<IProps> = ({ type, onCancel }) => {
     type === 'withdraw'
       ? withdrawStake(value).then(getStaked)
       : approved
-      ? confirmStake().then(getStaked)
+      ? confirmStake(value).then(getStaked)
       : approveStake(value);
   };
   const onMax = () => {
@@ -89,9 +95,9 @@ export const StakeAction: React.FC<IProps> = ({ type, onCancel }) => {
         value={value}
         onUserInput={(value) => setValue(value)}
         onMax={onMax}
-        disabled={loading || approved}
         showMaxButton
         hideAvailableBalance
+        updateAllowance={updateAllowance}
       />
       <FullWidthColumn gap={15}>
         <SpacedRow>

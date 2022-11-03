@@ -1,4 +1,3 @@
-import React from 'react';
 import { Text, TextProps as TextPropsOriginal } from 'rebass';
 import styled, {
   createGlobalStyle,
@@ -50,6 +49,8 @@ function colors(darkMode: boolean): AppColors {
     bg2: '#001F71',
     bg3: '#001657',
     bg4: '#001553',
+    bgPink: '#E7018C',
+    bgDisabledPink: '#312D63',
 
     inputBG: '#000230',
     buttonBG: 'rgba(231, 1, 140, 1)',

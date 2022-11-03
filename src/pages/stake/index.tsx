@@ -1,12 +1,12 @@
-import NavBar from 'components/NavBar';
-import Stake from 'components/Stake';
-import StakeAction from 'components/StakeAction';
-import StyledCloseButton from 'components/StyledCloseButton';
-import { FullWidthColumn } from 'components/_containers/FullWidthColumn';
-import SpacedRow from 'components/_containers/SpacedRow';
-import Image from 'next/image';
+import Spinner from 'components/Spinner';
+import StakeBoost from 'components/StakeBoost';
+import StakePool from 'components/StakePool';
+import StakeSwap from 'components/StakeSwap/StakeSwap';
 import { useState } from 'react';
 import styled from 'styled-components';
+import NavBar from '../../components/NavBar';
+import { FullWidthColumn } from '../../components/_containers/FullWidthColumn';
+import SpacedRow from '../../components/_containers/SpacedRow';
 
 const Container = styled(FullWidthColumn)(({ theme }) => ({
   backgroundColor: theme.bg1,
@@ -47,31 +47,44 @@ const Shadow = styled.div({
   zIndex: -1,
 });
 
+const BOOST = 'BOOST';
+const SWAP = 'SWAP';
+const POOL = 'POOL';
+export type activeTabType = 'BOOST' | 'SWAP' | 'POOL';
+export type actionTypeType = 'withdraw' | 'deposit';
 export const StakePage = () => {
-  const [actionType, setActionType] = useState<'withdraw' | 'deposit'>();
+  const [actionType, setActionType] = useState<actionTypeType>();
+  const [activeTab, setActiveTab] = useState<activeTabType>(POOL);
+
+  let content = <Spinner />;
+  switch (activeTab) {
+    case BOOST:
+      content = (
+        <StakeBoost
+          actionType={actionType}
+          setActionType={(actionType: actionTypeType) => setActionType(actionType)}
+        />
+      );
+      break;
+    case SWAP:
+      content = <StakeSwap />;
+      break;
+    default:
+      content = <StakePool />;
+      break;
+  }
 
   return (
     <FullWidthColumn flexGrow={1}>
       <Wrapper>
-        <Shadow />
-        <NavBar />
-        <Container>
-          <HeaderContainer>
-            <LogoContainer>
-              <Image src="/img/logo.svg" layout="fill" alt="logo" />
-            </LogoContainer>
-            <StyledCloseButton color="#009CE2" />
-          </HeaderContainer>
-          {actionType ? (
-            <StakeAction type={actionType} onCancel={() => setActionType(undefined)} />
-          ) : (
-            <Stake
-              onStake={() => setActionType('deposit')}
-              onUnStake={() => setActionType('withdraw')}
-            />
-          )}
-        </Container>
+        {activeTab == BOOST || activeTab == SWAP ? <Shadow /> : <></>}
+        <NavBar
+          activeTab={activeTab}
+          setActiveTab={(activeTab: activeTabType) => setActiveTab(activeTab)}
+        />
+        {activeTab == BOOST || activeTab == SWAP ? content : <></>}
       </Wrapper>
+      {activeTab == POOL ? content : <></>}
     </FullWidthColumn>
   );
 };
