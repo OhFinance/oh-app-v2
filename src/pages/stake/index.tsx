@@ -77,11 +77,11 @@ export const StakePage = () => {
   return (
     <FullWidthColumn flexGrow={1}>
       <Wrapper>
-        {activeTab == BOOST || activeTab == SWAP ? <Shadow /> : <></>}
         <NavBar
           activeTab={activeTab}
           setActiveTab={(activeTab: activeTabType) => setActiveTab(activeTab)}
         />
+        {activeTab == BOOST || activeTab == SWAP ? <Shadow /> : <></>}
         {activeTab == BOOST || activeTab == SWAP ? content : <></>}
       </Wrapper>
       {activeTab == POOL ? content : <></>}

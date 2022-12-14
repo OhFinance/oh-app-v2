@@ -3,13 +3,21 @@ import { SupportedChainId } from './chains';
 type AddressMap = { [chainId: number]: string };
 
 export const MASTER_OH_ADDRESS: AddressMap = {
+  [SupportedChainId.ETHEREUM_MAINNET]: '0x1B6A4f5Afec356ae098f97B5379e258f4A683597',
   [SupportedChainId.RINKEBY]: '0x7585eCC8267f1b32F3E4D057C1eE9016f043D4a9',
   [SupportedChainId.GOERLI]: '0xbA8CADF04d1a8d4bF413bFBD1E261f7A22Bd9c28',
+  [SupportedChainId.MOONRIVER]: '0xe0C9C8860291338C160D43616d1A6eE88Dfef5a7',
+  [SupportedChainId.METIS]: '0x49C9CbD886D4CE0773A6eC8197BBBc2A56676569',
+  [SupportedChainId.AVALANCHE]: '0xB46AA8C2038Ed6913E64991959fb35894c2A4F4B',
 };
 
 export const VEOH_ADDRESS: AddressMap = {
+  [SupportedChainId.ETHEREUM_MAINNET]: '0xE4fb6e4Ad1F0aF8F50969d4e1fEfCD5796FB538c',
   [SupportedChainId.RINKEBY]: '0xee661c2ab32bacb90418ad2ccf413e11994f5072',
   [SupportedChainId.GOERLI]: '0x854263Ae2e05f579A276410196b708f47CFF7700',
+  [SupportedChainId.MOONRIVER]: '0x9ecA6ED84Dd0Af33F522292dfC06743820ca1726',
+  [SupportedChainId.METIS]: '0x8049dD33A384a50a40FB469AC9fb23d2aE574F20',
+  [SupportedChainId.AVALANCHE]: '0xff80302396211CFc15a9d2e3f65DcFfFA13EbA59',
 };
 
 export const OH_ADDRESS: AddressMap = {
@@ -81,7 +89,6 @@ export const OH_USDC_ADDRESS: AddressMap = {
 const V2_FACTORY_ADDRESS = '';
 
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS);
-
 
 export const MULTICHAIN_ROUTER_ADDRESS: AddressMap = {
   [SupportedChainId.ETHEREUM_MAINNET]: '0x6b7a87899490EcE95443e979cA9485CBE7E71522',

@@ -92,11 +92,14 @@ export function Navbar() {
         <LogoSVG src={logo} />
       </Logo>
       <HeaderContent>
-        <NavLink href="https://docs.oh.finance/">FAQ</NavLink>
+        <NavLink href="https://docs.oh.finance/protocol/about-oh-finance" target="_blank">
+          FAQ
+        </NavLink>
         <NavLink href="https://docs.oh.finance/" target="_blank">
           Docs
         </NavLink>
         <NavLink href={'/bridge'}>Bridge</NavLink>
+        <NavLink href={'/stake'}>Stake</NavLink>
         <NetworkModal isOpen={networkModalOpen} setModalOpen={setNetworkModalOpen} />
         <NetworkSelector />
 

@@ -34,6 +34,13 @@ export const USDC_RINKEBY = new Token(
 );
 
 export const VeOH: { [chainId: number]: Token } = {
+  [SupportedChainId.ETHEREUM_MAINNET]: new Token(
+    SupportedChainId.ETHEREUM_MAINNET,
+    VEOH_ADDRESS[SupportedChainId.ETHEREUM_MAINNET],
+    18,
+    'veOH',
+    'veOH! Finance'
+  ),
   [SupportedChainId.RINKEBY]: new Token(
     SupportedChainId.RINKEBY,
     VEOH_ADDRESS[SupportedChainId.RINKEBY],
@@ -44,6 +51,27 @@ export const VeOH: { [chainId: number]: Token } = {
   [SupportedChainId.GOERLI]: new Token(
     SupportedChainId.GOERLI,
     VEOH_ADDRESS[SupportedChainId.GOERLI],
+    18,
+    'veOH',
+    'veOH! Finance'
+  ),
+  [SupportedChainId.METIS]: new Token(
+    SupportedChainId.METIS,
+    VEOH_ADDRESS[SupportedChainId.METIS],
+    18,
+    'veOH',
+    'veOH! Finance'
+  ),
+  [SupportedChainId.MOONRIVER]: new Token(
+    SupportedChainId.MOONRIVER,
+    VEOH_ADDRESS[SupportedChainId.MOONRIVER],
+    18,
+    'veOH',
+    'veOH! Finance'
+  ),
+  [SupportedChainId.AVALANCHE]: new Token(
+    SupportedChainId.AVALANCHE,
+    VEOH_ADDRESS[SupportedChainId.AVALANCHE],
     18,
     'veOH',
     'veOH! Finance'

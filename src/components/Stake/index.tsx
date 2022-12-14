@@ -16,7 +16,6 @@ import {
   useVeOHClaimable,
 } from 'hooks/stake';
 import Image from 'next/image';
-import { AiOutlineCalculator } from 'react-icons/ai';
 import { useToggleModal } from 'state/application/hooks';
 import { ApplicationModal } from 'state/application/reducer';
 import styled from 'styled-components';
@@ -111,42 +110,51 @@ export const Stake: React.FC<IProps> = ({ onStake, onUnStake }) => {
       getClaimable();
     });
   };
+
   return (
     <>
       <CalculatorModal />
       <FullWidthColumn gap={10}>
         <FullWidthColumn>
-          <Heading>Stake OH! Boost to Yield</Heading>
+          <Heading>Stake OH to Boost Yield</Heading>
           <Image src="/img/oh-token.png" width={255} height={266} alt="token" />
         </FullWidthColumn>
         <SpacedRow>
           <CenteredRow>
-            <div style={{ marginRight: 10 }}>
-              <Image src="/img/oh-token.svg" width={50} height={50} alt="token" />
-            </div>
-            <div>
-              <StatsValue>{formatShortAmount(ohSupply)}</StatsValue>
-              <StatsLabel>OH! Supply</StatsLabel>
-            </div>
-          </CenteredRow>
-          <CenteredRow>
-            <div>
+            <FullWidthColumn>
               <div>
-                <StatsValue>{ohStaked}</StatsValue>
-                <span> OH!</span>
+                <StatsValue>{formatShortAmount(veOHSupply)}</StatsValue>
+                <span> veOH</span>
               </div>
-              <StatsLabel>OH! Supply Staked</StatsLabel>
-            </div>
+              <StatsLabel>veOH Total Supply</StatsLabel>
+            </FullWidthColumn>
+          </CenteredRow>
+
+          <VSeperator />
+          <CenteredRow>
+            <FullWidthColumn>
+              <div>
+                <StatsValue>{formatShortAmount(ohStaked)}</StatsValue>
+                <span> OH</span>
+              </div>
+              <StatsLabel>OH Supply Staked</StatsLabel>
+            </FullWidthColumn>
           </CenteredRow>
           <VSeperator />
           <CenteredRow>
-            <div>
-              <StatsValue>{formatShortAmount(veOHSupply)}</StatsValue>
-              <StatsLabel>OH! Boost Mined</StatsLabel>
-            </div>
+            {/* <div style={{ marginRight: 10 }}>
+              <Image src="/img/oh-token.svg" width={50} height={50} alt="token" />
+            </div> */}
+            <FullWidthColumn>
+              <div>
+                <StatsValue>{formatShortAmount(ohSupply)}</StatsValue>
+                <span> OH</span>
+              </div>
+              <StatsLabel>OH Total Supply</StatsLabel>
+            </FullWidthColumn>
           </CenteredRow>
         </SpacedRow>
-        <CenteredRow>
+        {/* <CenteredRow>
           <div style={{ marginRight: 5 }}>
             <Image src="/img/oh_token_logo.png" width={40} height={40} alt="token" />
           </div>
@@ -155,7 +163,7 @@ export const Stake: React.FC<IProps> = ({ onStake, onUnStake }) => {
             <InfoBox text="Your veOH balance contributes to your Boosted APR." />
             (Booster Calculator <AiOutlineCalculator />)
           </CalculatorButton>
-        </CenteredRow>
+        </CenteredRow> */}
         <ColumnCenter>
           <BalanceHeadContainer>
             <Heading>My Balance</Heading>
