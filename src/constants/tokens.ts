@@ -95,7 +95,7 @@ export const OH: { [chainId: number]: Token } = {
   ),
   [SupportedChainId.GOERLI]: new Token(
     SupportedChainId.GOERLI,
-    OH_ADDRESS[5],
+    OH_ADDRESS[SupportedChainId.GOERLI],
     18,
     'OH',
     'Oh! Finance'
@@ -147,7 +147,7 @@ export const USDC: { [chainId: number]: Token } = {
   ),
   [SupportedChainId.GOERLI]: new Token(
     SupportedChainId.GOERLI,
-    USDC_ADDRESS[5],
+    USDC_ADDRESS[SupportedChainId.GOERLI],
     6,
     'USDC',
     'USD Coin'
@@ -190,7 +190,13 @@ export const DAI: { [chainId: number]: Token } = {
     'DAI',
     'Dai'
   ),
-  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, DAI_ADDRESS[5], 18, 'DAI', 'Dai'),
+  [SupportedChainId.GOERLI]: new Token(
+    SupportedChainId.GOERLI,
+    DAI_ADDRESS[SupportedChainId.GOERLI],
+    18,
+    'DAI',
+    'Dai'
+  ),
   [SupportedChainId.AVALANCHE]: new Token(
     SupportedChainId.AVALANCHE,
     DAI_ADDRESS[43114],
@@ -314,8 +320,8 @@ export const tokenLogos = {
   [DAI[1].symbol]: daiIcon,
   // note: get a higher quality photo
   [OH[1].symbol]: ohIcon,
-  [OH_USDT[5].symbol]: ohUsdtIcon,
-  [OH_USDC[5].symbol]: ohUsdcIcon,
+  [OH_USDT[SupportedChainId.GOERLI].symbol]: ohUsdtIcon,
+  [OH_USDC[SupportedChainId.GOERLI].symbol]: ohUsdcIcon,
 
   default: questionmarkImage,
 };

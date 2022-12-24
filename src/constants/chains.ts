@@ -103,6 +103,7 @@ export const CHAIN_INFO: ChainInfo = {
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
   },
   [SupportedChainId.GOERLI]: {
+    name: 'Goerli',
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://goerli.etherscan.io/',
     label: 'Goerli',
