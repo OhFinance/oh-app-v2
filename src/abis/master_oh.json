@@ -432,7 +432,7 @@
   },
   {
     "inputs": [],
-    "name": "dialutingRepartition",
+    "name": "dilutingPartition",
     "outputs": [
       {
         "internalType": "uint256",

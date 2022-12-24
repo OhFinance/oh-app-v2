@@ -15,6 +15,7 @@ export enum ApplicationModal {
   DEPOSIT,
   WITHDRAW,
   NETWORK_SELECTOR,
+  STAKE_CALCULATOR,
 }
 
 type Alert = { props: AlertProps; key: string; removeAfterMs: number | null; show: boolean };

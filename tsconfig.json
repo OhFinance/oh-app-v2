@@ -15,7 +15,7 @@
     "isolatedModules": true,
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "*": ["src/*"],
       "~/*": ["src/*"],
