@@ -1,13 +1,14 @@
 import {
   approveToken,
   AprInfo,
+  checkTokenAllowanceAndBalance,
+  compareAllowance,
   deposit,
   getAprInfo,
   getPendingRewards,
   getSecondaryRewardInfo,
   getUserBal,
   getUserInfo,
-  isTokenApproved,
   withdraw,
 } from 'apis/MasterOh';
 import Spinner from 'components/Spinner';
@@ -288,6 +289,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
   const [pendingOh, setPendingOh] = useState('0.00');
   const [stakeable, setStakeable] = useState('0.00');
   const [isApproved, setIsApproved] = useState(false);
+  const [isStakeAllApproved, setIsStakeAllApproved] = useState(false);
   const [aprInfo, setAprInfo] = useState<AprInfo>({});
   const [depositModalOpen, setDepositModalOpen] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
@@ -314,7 +316,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
     }
 
     const tempMedianBoostedApr: BigNumber = await UseMedianBoostedAPR(props.pid, chainId, library);
-    setMedianBoostedApr(parseFloat(formatEther(tempMedianBoostedApr)).toFixed(2));
+    setMedianBoostedApr(formatEther(tempMedianBoostedApr));
 
     const _aprInfo = await getAprInfo(account, props.pid, chainId, library);
     setAprInfo(_aprInfo);
@@ -332,20 +334,25 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       return;
     }
 
-    const _isApproved = await isTokenApproved(account, props.tokenAddress, chainId, library);
-    setIsApproved(_isApproved);
+    setIsApproved(
+      await compareAllowance(amount, props.decimals, account, props.tokenAddress, chainId, library)
+    );
+
+    setIsStakeAllApproved(
+      await checkTokenAllowanceAndBalance(account, props.tokenAddress, chainId, library)
+    );
 
     const _userInfo = await getUserInfo(account, props.pid, chainId, library);
     const stakedAmount = ethers.utils.formatUnits(_userInfo.amount, props.decimals);
-    setMyDeposit(parseFloat(stakedAmount).toFixed(2));
+    setMyDeposit(stakedAmount);
 
     const rewardInfo = await getPendingRewards(account, props.pid, chainId, library);
     const ohAmount = ethers.utils.formatEther(rewardInfo.pendingOh, props.decimals);
-    setPendingOh(parseFloat(ohAmount).toFixed(2));
+    setPendingOh(ohAmount);
 
     const userBal = await getUserBal(account, props.tokenAddress, chainId, library);
     const _stakeable = ethers.utils.formatUnits(userBal, props.decimals);
-    setStakeable(parseFloat(_stakeable).toFixed(2));
+    setStakeable(_stakeable);
   };
 
   const startTransaction = () => {
@@ -376,7 +383,7 @@ const StakePoolItem = (props: StakePoolItemProps) => {
 
   const submitDepositAll = async () => {
     startTransaction();
-    if (isApproved) {
+    if (isStakeAllApproved) {
       try {
         const userBal = await getUserBal(account, props.tokenAddress, chainId, library);
         const depositTx = await deposit(props.pid, userBal, chainId, library);
@@ -394,14 +401,17 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       }
     } else {
       try {
-        await approveToken(account, props.tokenAddress, chainId, library);
-        setIsApproved(true);
-        setTransactionInProgress(false);
+        const approveTx = await approveToken(account, props.tokenAddress, chainId, library);
+        approveTx.wait().then(async () => {
+          await fetchInfo();
+          setTransactionInProgress(false);
+        });
       } catch (e) {
         console.error(e);
         openWarningModal(
           'Something went wrong while approving, please check your balance and try again later'
         );
+        setTransactionInProgress(false);
       }
     }
   };
@@ -487,7 +497,6 @@ const StakePoolItem = (props: StakePoolItemProps) => {
       fetchInfo();
     }
   };
-
   const depositPreflightCheck = () => {
     if (parseFloat(amount) > parseFloat(stakeable)) {
       return false;
@@ -510,7 +519,25 @@ const StakePoolItem = (props: StakePoolItemProps) => {
 
   const handleAmount = async (_amount) => {
     if (!isNaN(_amount)) {
-      setAmount(_amount);
+      if (_amount === '') {
+        _amount = '0';
+      }
+      try {
+        ethers.utils.parseUnits(_amount, props.decimals);
+        setAmount(_amount);
+        setIsApproved(
+          await compareAllowance(
+            _amount,
+            props.decimals,
+            account,
+            props.tokenAddress,
+            chainId,
+            library
+          )
+        );
+      } catch (e) {
+        console.log('Error updating the deposit / withdraw amount: ', e);
+      }
     }
   };
 
@@ -652,8 +679,8 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               trigger="mouseenter"
             >
               <GreyTextHorizontalContainer>
-                <GreyText>Median Boosted APR: </GreyText> {medianBoostedApr || '--'}%{' '}
-                <BiHelpCircle />
+                <GreyText>Median Boosted APR: </GreyText>{' '}
+                {parseFloat(medianBoostedApr).toFixed(2) || '--'}% <BiHelpCircle />
               </GreyTextHorizontalContainer>
             </TooltipComponent>
             <TooltipComponent
@@ -715,10 +742,10 @@ const StakePoolItem = (props: StakePoolItemProps) => {
               rightIcon={getTokenIcon(chainId, props.tokenAddress)}
               rightSymbol={props.tokenSymbol}
               divider={true}
-              actionText={isApproved ? 'Stake All' : 'Approve'}
+              actionText={isStakeAllApproved ? 'Stake All' : 'Approve'}
               action={submitDepositAll}
               footer={`Earned ${props.rewardSymbol} will automatically be claimed on staking`}
-              actionDisabled={isApproved && parseFloat(stakeable) == 0}
+              actionDisabled={isStakeAllApproved && parseFloat(stakeable) == 0}
             />
             <StakePoolActionItem
               leftTitle="Staked"

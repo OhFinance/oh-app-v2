@@ -149,8 +149,29 @@ export const getUserBal = async (
   const bal = await token.balanceOf(userAddress);
   return bal;
 };
+export const getAllowance = async (
+  userAddress: string,
+  tokenAddress: string,
+  chainID: number,
+  provider: ethers.Provider
+) => {
+  let token = new ethers.Contract(tokenAddress, ERC20ABI, provider);
+  return await token.allowance(userAddress, MASTER_OH_ADDRESS[chainID]);
+};
+export const compareAllowance = async (
+  testAmount: string,
+  testDecimals: number,
+  userAddress: string,
+  tokenAddress: string,
+  chainID: number,
+  provider: ethers.Provider
+): Promise<boolean> => {
+  return ethers.utils
+    .parseUnits(testAmount, testDecimals)
+    .lte(await getAllowance(userAddress, tokenAddress, chainID, provider));
+};
 
-export const isTokenApproved = async (
+export const checkTokenAllowanceAndBalance = async (
   userAddress: string,
   tokenAddress: string,
   chainID: number,
@@ -160,7 +181,7 @@ export const isTokenApproved = async (
 
   const bal = await token.balanceOf(userAddress);
   const allowance = await token.allowance(userAddress, MASTER_OH_ADDRESS[chainID]);
-  return allowance.gt(bal);
+  return allowance.gte(bal);
 };
 
 export const approveToken = async (
