@@ -6,7 +6,6 @@ import CenteredRow from 'components/_containers/CenteredRow';
 import FullWidthColumn from 'components/_containers/FullWidthColumn';
 import OverFlowButtons from 'components/_containers/OverFlowButtons';
 import SpacedRow from 'components/_containers/SpacedRow';
-import CalculatorModal from 'components/_modals/CalculatorModal';
 import { formatEther } from 'ethers/lib/utils';
 import {
   useClaimVeOH,
@@ -113,7 +112,6 @@ export const Stake: React.FC<IProps> = ({ onStake, onUnStake }) => {
 
   return (
     <>
-      <CalculatorModal />
       <FullWidthColumn gap={10}>
         <FullWidthColumn>
           <Heading>Stake OH to Boost Yield</Heading>
